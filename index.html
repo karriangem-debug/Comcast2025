@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comcast 2025 | Digital Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo">COMCAST 2025</div>
+        <ul id="main-nav">
+            <li><a href="#" onclick="showSection('deadline-view')">Deadline</a></li>
+            <li><a href="#" onclick="showSection('profile-view')">Galeri</a></li>
+            <li id="admin-add-nav" style="display:none;"><a href="#" onclick="showSection('admin-dashboard')" class="add-btn-nav">+ Input Tugas</a></li>
+            <li><a href="#" id="admin-login-btn" onclick="showSection('login-section')">Admin</a></li>
+            <li id="logout-btn" style="display:none;"><a href="#" onclick="logout()">Logout</a></li>
+        </ul>
+    </nav>
+
+    <!-- SECTION: DEADLINE -->
+    <section id="deadline-view" class="active">
+        <div class="tab-header">
+            <button class="tab-btn" id="tab-old" onclick="filterDeadline('old')">⌛ Minggu Lalu</button>
+            <button class="tab-btn active" id="tab-now" onclick="filterDeadline('now')">🔥 Minggu Ini</button>
+            <button class="tab-btn" id="tab-next" onclick="filterDeadline('next')">📅 Minggu Depan</button>
+        </div>
+        <h2 id="view-title">Deadline Minggu Ini</h2>
+        <div id="week-display" class="week-row"></div>
+    </section>
+
+    <!-- SECTION: GALERI (SQUARE 1:1) -->
+    <section id="profile-view">
+        <h2>Galeri Kegiatan</h2>
+        
+        <div id="admin-gallery-controls" style="display:none; margin-bottom: 25px;">
+            <div class="admin-card">
+                <h4>Tambah Foto Kegiatan</h4>
+                <input type="text" id="new-photo-url" placeholder="Paste Link Foto (Drive/Lainnya)">
+                <input type="text" id="new-photo-caption" placeholder="Keterangan Kegiatan">
+                <button onclick="addGalleryPhoto()" style="background:var(--success);">Unggah ke Galeri</button>
+            </div>
+        </div>
+
+        <div id="gallery-container" class="gallery-grid"></div>
+    </section>
+
+    <!-- SECTION: LOGIN -->
+    <section id="login-section">
+        <div class="login-box">
+            <h3>Akses Admin</h3>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Masuk</button>
+        </div>
+    </section>
+
+    <!-- SECTION: ADMIN DASHBOARD -->
+    <section id="admin-dashboard">
+        <h2>Panel Tugas</h2>
+        <div class="admin-card">
+            <h3>Input / Edit Tugas</h3>
+            <input type="date" id="task-date">
+            <input type="time" id="task-time">
+            <textarea id="task-name" rows="4" placeholder="Detail tugas..."></textarea>
+            <button onclick="saveDeadline()">Simpan Deadline</button>
+            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+            <ul id="admin-deadline-list"></ul>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
