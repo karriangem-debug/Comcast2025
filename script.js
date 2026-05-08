@@ -25,7 +25,7 @@ function renderSchedule() {
                         <div class="sch-time">${it.time}</div>
                         <div class="sch-info">
                             <div class="sch-name">${it.name}</div>
-                            <div class="sch-detail">👤 ${it.lecturer || '-'} | 📍 ${it.room || '-'}</div>
+                            <div class="sch-detail">${it.lecturer || '-'} | Ruang ${it.room || '-'}</div>
                         </div>
                         ${isAdmin ? `<button onclick="deleteData('schedule', '${it.id}')" class="del-btn-sch">Hapus</button>` : ''}
                     </div>`).join('')}
