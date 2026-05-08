@@ -3,21 +3,56 @@ let schedule = JSON.parse(localStorage.getItem('schedule')) || [];
 let orgMembers = JSON.parse(localStorage.getItem('orgMembers')) || [];
 let isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-// 1. RENDER JADWAL & STRUKTUR
+// 1. RENDER JADWAL (AUTO-SORT & RAPI)
 function renderSchedule() {
-    const days = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
     const container = document.getElementById('class-schedule');
-    container.innerHTML = days.map(day => {
-        const items = schedule.filter(s => s.day === day);
-        if(!items.length) return '';
-        return `<div class="admin-card"><b>${day}</b>${items.map(it => `
-            <div style="border-top:1px solid var(--border); margin-top:10px; padding-top:10px; position:relative;">
-                <small>${it.time}</small> | <b>${it.name}</b><br><small>${it.lecturer || ''} - ${it.room || ''}</small>
-                ${isAdmin ? `<button onclick="deleteData('schedule', '${it.id}')" class="del-btn" style="position:absolute; right:0; top:10px;">Hapus</button>` : ''}
-            </div>`).join('')}</div>`;
+    const daysOrder = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+    if (!schedule.length) return container.innerHTML = "<p style='text-align:center; padding:20px; opacity:0.5;'>Belum ada jadwal.</p>";
+
+    const sorted = [...schedule].sort((a, b) => {
+        const d = daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day);
+        return d !== 0 ? d : a.time.localeCompare(b.time);
+    });
+
+    container.innerHTML = daysOrder.map(day => {
+        const items = sorted.filter(s => s.day === day);
+        if (!items.length) return '';
+        return `
+            <div class="day-group">
+                <div class="day-label">${day}</div>
+                ${items.map(it => `
+                    <div class="schedule-card">
+                        <div class="sch-time">${it.time}</div>
+                        <div class="sch-info">
+                            <div class="sch-name">${it.name}</div>
+                            <div class="sch-detail">👤 ${it.lecturer || '-'} | 📍 ${it.room || '-'}</div>
+                        </div>
+                        ${isAdmin ? `<button onclick="deleteData('schedule', '${it.id}')" class="del-btn-sch">Hapus</button>` : ''}
+                    </div>`).join('')}
+            </div>`;
     }).join('');
 }
 
+// 2. RENDER DEADLINE
+function renderDeadlines() {
+    const tab = document.querySelector('.tab-btn.active').id.replace('tab-', '');
+    const container = document.getElementById('week-display');
+    const filtered = deadlines.filter(d => getCat(d.date) === tab);
+    
+    container.innerHTML = filtered.length ? filtered.map(d => `
+        <div class="item-card">
+            <b>${d.date} | ${d.time}</b>
+            <div class="task-detail">${d.name}</div>
+            <span class="countdown" data-target="${d.date}T${d.time}"></span>
+            ${isAdmin ? `
+                <div class="btn-group">
+                    <button onclick="editTask('${d.id}')" class="edit-btn">Edit</button>
+                    <button onclick="deleteData('deadlines', '${d.id}')" class="del-btn">Hapus</button>
+                </div>` : ''}
+        </div>`).join('') : "<p style='text-align:center; padding:20px; opacity:0.5;'>Kosong.</p>";
+}
+
+// 3. RENDER STRUKTUR
 function renderStructure() {
     document.getElementById('org-render-container').innerHTML = orgMembers.map(m => `
         <div class="org-box">
@@ -28,168 +63,68 @@ function renderStructure() {
         </div>`).join('');
 }
 
-// 2. IMPORT FILE HANDLER (WORD & EXCEL)
+// 4. IMPORT HANDLER (WORD & EXCEL)
 async function handleImport(type) {
-    let fileInput;
-    if(type === 'deadline') fileInput = document.getElementById('import-deadline');
-    if(type === 'schedule') fileInput = document.getElementById('import-sch-word');
-    if(type === 'org') fileInput = document.getElementById('import-org-excel');
-
-    const file = fileInput.files[0];
+    const file = document.getElementById(type === 'deadline' ? 'import-deadline' : type === 'schedule' ? 'import-sch-word' : 'import-org-excel').files[0];
     if(!file) return alert("Pilih file!");
 
-    // A. WORD HANDLER (Untuk Tugas & Jadwal)
     if(file.name.endsWith('.docx')) {
         const reader = new FileReader();
         reader.onload = async (e) => {
-            const result = await mammoth.extractRawText({arrayBuffer: e.target.result});
-            if(type === 'deadline') document.getElementById('task-name').value = result.value;
-            if(type === 'schedule') {
-                // Tarik teks jadwal ke box input mata kuliah sebagai referensi
-                document.getElementById('sch-name').value = "Cek Word: " + result.value.substring(0, 20);
-                alert("Teks Jadwal ditarik! Silakan isi detail lainnya.");
-            }
+            const res = await mammoth.extractRawText({arrayBuffer: e.target.result});
+            if(type === 'deadline') document.getElementById('task-name').value = res.value;
+            if(type === 'schedule') alert("Teks Word ditarik: " + res.value.substring(0, 50) + "...");
         };
         reader.readAsArrayBuffer(file);
-    } 
-    // B. EXCEL HANDLER (Untuk Struktur & Tugas)
-    else if(file.name.endsWith('.xlsx')) {
+    } else if(file.name.endsWith('.xlsx')) {
         const reader = new FileReader();
         reader.onload = (e) => {
-            const wb = XLSX.read(e.target.result, {type: 'binary'});
-            const data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+            const data = XLSX.utils.sheet_to_json(XLSX.read(e.target.result, {type: 'binary'}).Sheets[XLSX.read(e.target.result, {type: 'binary'}).SheetNames[0]]);
             if(type === 'org') {
-                data.forEach(row => {
-                    orgMembers.push({ id: Date.now()+Math.random(), name: row.Nama, role: row.Jabatan, photo: row.Foto });
-                });
-                localStorage.setItem('orgMembers', JSON.stringify(orgMembers));
-                alert("Anggota Berhasil Masuk!");
-                showSection('structure-view');
+                data.forEach(r => orgMembers.push({id: Date.now()+Math.random(), name: r.Nama, role: r.Jabatan, photo: r.Foto}));
+                saveAll(); renderStructure();
             }
             if(type === 'deadline') {
-                data.forEach(row => {
-                    deadlines.push({ id: Date.now()+Math.random(), date: row.Tanggal, time: row.Jam || "23:59", name: row.Tugas });
-                });
-                localStorage.setItem('deadlines', JSON.stringify(deadlines));
-                showSection('deadline-view');
+                data.forEach(r => deadlines.push({id: Date.now()+Math.random(), date: r.Tanggal, time: r.Jam || "23:59", name: r.Tugas}));
+                saveAll(); renderDeadlines();
             }
+            alert("Import Berhasil!");
         };
         reader.readAsBinaryString(file);
     }
 }
 
-// 3. COUNTDOWN TANPA SINGKATAN
-function updateCountdowns() {
-    document.querySelectorAll('.countdown').forEach(el => {
-        const diff = new Date(el.dataset.target) - new Date();
-        if(diff <= 0) { el.innerText = "WAKTU HABIS"; return; }
-        const d = Math.floor(diff/86400000), h = Math.floor((diff/3600000)%24), m = Math.floor((diff/60000)%60), s = Math.floor((diff/1000)%60);
-        el.innerText = `⏳ ${d} Hari ${h} Jam ${m} Menit ${s} Detik`;
-    });
-}
-
-// 4. SAVE FUNCTIONS
-function addSchedule() {
-    const n = document.getElementById('sch-name').value;
-    if(!n) return alert("Isi Nama Matkul!");
-    schedule.push({
-        id: Date.now(),
-        day: document.getElementById('sch-day').value,
-        time: document.getElementById('sch-time').value,
-        name: n,
-        lecturer: document.getElementById('sch-lecturer').value,
-        room: document.getElementById('sch-room').value
-    });
-    saveAll();
-    showSection('schedule-view');
-}
-
-function addMember() {
-    const n = document.getElementById('org-name').value;
-    if(!n) return alert("Isi Nama!");
-    orgMembers.push({ id: Date.now(), name: n, role: document.getElementById('org-role').value, photo: document.getElementById('org-photo').value });
-    saveAll();
-    showSection('structure-view');
-}
-
+// 5. CORE LOGIC (SAVE, EDIT, UI)
 function saveTask() {
     const id = document.getElementById('edit-id').value;
     const date = document.getElementById('task-date').value;
     const name = document.getElementById('task-name').value;
-    if(!date || !name) return alert("Isi data!");
+    if(!date || !name) return alert("Lengkapi!");
 
-    const task = { id: id || Date.now(), date, time: document.getElementById('task-time').value || "23:59", name };
-    if(id) {
-        const idx = deadlines.findIndex(t => t.id == id);
-        deadlines[idx] = task;
-    } else { deadlines.push(task); }
+    const tData = { id: id || Date.now(), date, time: document.getElementById('task-time').value || "23:59", name };
+    if(id) { const i = deadlines.findIndex(x => x.id == id); deadlines[i] = tData; } 
+    else { deadlines.push(tData); }
     
-    saveAll();
-    resetTaskForm();
-    showSection('deadline-view');
+    saveAll(); resetTaskForm(); showSection('deadline-view');
 }
 
-// 5. GLOBAL HELPERS
+function addSchedule() {
+    schedule.push({ id: Date.now(), day: document.getElementById('sch-day').value, time: document.getElementById('sch-time').value, name: document.getElementById('sch-name').value, lecturer: document.getElementById('sch-lecturer').value, room: document.getElementById('sch-room').value });
+    saveAll(); showSection('schedule-view');
+}
+
+function addMember() {
+    orgMembers.push({ id: Date.now(), name: document.getElementById('org-name').value, role: document.getElementById('org-role').value, photo: document.getElementById('org-photo').value });
+    saveAll(); showSection('structure-view');
+}
+
 function deleteData(arr, id) {
     if(confirm("Hapus?")) {
         if(arr === 'deadlines') deadlines = deadlines.filter(i => i.id != id);
         if(arr === 'schedule') schedule = schedule.filter(i => i.id != id);
         if(arr === 'orgMembers') orgMembers = orgMembers.filter(i => i.id != id);
-        saveAll();
-        location.reload();
+        saveAll(); location.reload();
     }
-}
-
-function saveAll() {
-    localStorage.setItem('deadlines', JSON.stringify(deadlines));
-    localStorage.setItem('schedule', JSON.stringify(schedule));
-    localStorage.setItem('orgMembers', JSON.stringify(orgMembers));
-}
-
-function showSection(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    if(document.getElementById('side-menu').classList.contains('open')) toggleMenu();
-    if(id === 'deadline-view') renderDeadlines();
-    if(id === 'schedule-view') renderSchedule();
-    if(id === 'structure-view') renderStructure();
-}
-
-function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    document.getElementById('theme-link').innerText = isDark ? "☀️ Light Mode" : "🌙 Dark Mode: Off";
-}
-
-function toggleMenu() {
-    document.getElementById('side-menu').classList.toggle('open');
-    document.getElementById('menu-overlay').classList.toggle('show');
-}
-
-function login() {
-    if(document.getElementById('username').value === "Comcast" && document.getElementById('password').value === "2025") {
-        localStorage.setItem('isAdmin', 'true');
-        location.reload();
-    } else { alert("Gagal!"); }
-}
-
-function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
-
-function renderDeadlines() {
-    const tab = document.querySelector('.tab-btn.active').id.replace('tab-', '');
-    const container = document.getElementById('week-display');
-    const filtered = deadlines.filter(d => getCat(d.date) === tab);
-    container.innerHTML = filtered.map(d => `
-        <div class="item-card">
-            <b>${d.date} | ${d.time}</b>
-            <div class="task-detail">${d.name}</div>
-            <span class="countdown" data-target="${d.date}T${d.time}"></span>
-            ${isAdmin ? `
-                <div class="btn-group">
-                    <button onclick="editTask('${d.id}')" class="edit-btn">Edit</button>
-                    <button onclick="deleteData('deadlines', '${d.id}')" class="del-btn">Hapus</button>
-                </div>` : ''}
-        </div>`).join('');
 }
 
 function editTask(id) {
@@ -204,16 +139,46 @@ function editTask(id) {
     document.getElementById('btn-cancel-edit').style.display = "block";
 }
 
-function resetTaskForm() {
-    document.getElementById('form-title').innerText = "INPUT TUGAS";
-    document.getElementById('edit-id').value = "";
-    document.getElementById('task-name').value = "";
-    document.getElementById('btn-cancel-edit').style.display = "none";
+function saveAll() {
+    localStorage.setItem('deadlines', JSON.stringify(deadlines));
+    localStorage.setItem('schedule', JSON.stringify(schedule));
+    localStorage.setItem('orgMembers', JSON.stringify(orgMembers));
 }
 
-function shareDataToWA() {
-    const payload = btoa(encodeURIComponent(JSON.stringify({d: deadlines, s: schedule, o: orgMembers})));
-    window.open(`https://wa.me/?text=${encodeURIComponent(window.location.origin + window.location.pathname + "?upd=" + payload)}`);
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    document.getElementById('theme-link').innerText = document.body.classList.contains('dark-theme') ? "☀️ Light Mode" : "🌙 Dark Mode: Off";
+}
+
+function toggleMenu() {
+    document.getElementById('side-menu').classList.toggle('open');
+    document.getElementById('menu-overlay').classList.toggle('show');
+}
+
+function showSection(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(document.getElementById('side-menu').classList.contains('open')) toggleMenu();
+    if(id === 'deadline-view') renderDeadlines();
+    if(id === 'schedule-view') renderSchedule();
+    if(id === 'structure-view') renderStructure();
+}
+
+function login() {
+    if(document.getElementById('username').value === "Comcast" && document.getElementById('password').value === "2025") {
+        localStorage.setItem('isAdmin', 'true'); location.reload();
+    } else alert("Salah!");
+}
+
+function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
+
+function updateCountdowns() {
+    document.querySelectorAll('.countdown').forEach(el => {
+        const diff = new Date(el.dataset.target) - new Date();
+        if(diff <= 0) return el.innerText = "WAKTU HABIS";
+        const d = Math.floor(diff/86400000), h = Math.floor((diff/3600000)%24), m = Math.floor((diff/60000)%60), s = Math.floor((diff/1000)%60);
+        el.innerText = `⏳ ${d} Hari ${h} Jam ${m} Menit ${s} Detik`;
+    });
 }
 
 function getCat(d) {
@@ -228,6 +193,18 @@ function filterDeadline(type) {
     renderDeadlines();
 }
 
+function resetTaskForm() {
+    document.getElementById('form-title').innerText = "INPUT TUGAS";
+    document.getElementById('edit-id').value = "";
+    document.getElementById('task-name').value = "";
+    document.getElementById('btn-cancel-edit').style.display = "none";
+}
+
+function shareDataToWA() {
+    const p = btoa(encodeURIComponent(JSON.stringify({d: deadlines, s: schedule, o: orgMembers})));
+    window.open(`https://wa.me/?text=${encodeURIComponent(window.location.origin + window.location.pathname + "?upd=" + p)}`);
+}
+
 window.onload = () => {
     const params = new URLSearchParams(window.location.search);
     if(params.get('upd')) {
@@ -239,8 +216,6 @@ window.onload = () => {
     }
     document.getElementById('admin-only-menu').style.display = isAdmin ? 'block' : 'none';
     document.getElementById('nav-login').style.display = isAdmin ? 'none' : 'block';
-    renderDeadlines();
-    renderSchedule();
-    renderStructure();
+    renderDeadlines(); renderSchedule(); renderStructure();
     setInterval(updateCountdowns, 1000);
 };
