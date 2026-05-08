@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025</title>
+    <title>COMCAST 2025 | Portal Kelas</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -35,9 +35,9 @@
 
         <div id="admin-only-menu" style="display:none;">
             <div class="side-header admin-tag">ADMIN CONTROL</div>
-            <a href="#" onclick="showSection('manage-deadline')">📝 Kelola Tugas</a>
-            <a href="#" onclick="showSection('manage-schedule')">🗓️ Kelola Jadwal</a>
-            <a href="#" onclick="showSection('manage-org')">👨‍👩‍👧‍👦 Kelola Struktur</a>
+            <a href="#" onclick="showSection('manage-deadline')">📝 Kelola Tugas (Edit/Import)</a>
+            <a href="#" onclick="showSection('manage-schedule')">🗓️ Kelola Jadwal (Word)</a>
+            <a href="#" onclick="showSection('manage-org')">👨‍👩‍👧‍👦 Kelola Struktur (Excel)</a>
             <a href="#" onclick="logout()" style="color: var(--red);">🚪 Logout Admin</a>
         </div>
         <a href="#" id="nav-login" onclick="showSection('login-section')">🔐 Login Admin</a>
@@ -67,14 +67,14 @@
 
     <section id="manage-deadline">
         <div class="admin-card">
-            <h3 id="form-title">INPUT TUGAS</h3>
+            <h3 id="form-title">INPUT/EDIT TUGAS</h3>
             <input type="hidden" id="edit-id">
             <input type="date" id="task-date">
             <input type="time" id="task-time">
             <textarea id="task-name" placeholder="Rincian Tugas... (Gunakan Enter)" rows="6"></textarea>
             <button onclick="saveTask()" id="btn-save-task">Simpan Tugas</button>
-            <button onclick="resetTaskForm()" id="btn-cancel-edit" style="display:none; background:#6b7280; margin-top:5px;">Batal Edit</button>
-            <div class="divider">IMPORT (WORD/EXCEL)</div>
+            <button onclick="resetTaskForm()" id="btn-cancel-edit" style="display:none; background:#6b7280;">Batal Edit</button>
+            <div class="divider"><span>IMPORT FILE</span></div>
             <input type="file" id="import-deadline" accept=".docx, .xlsx">
             <button onclick="handleImport('deadline')" style="background: #2b5797;">Proses File Tugas</button>
         </div>
@@ -93,7 +93,7 @@
             <input type="text" id="sch-lecturer" placeholder="Dosen">
             <input type="text" id="sch-room" placeholder="Ruang">
             <button onclick="addSchedule()">Tambah Manual</button>
-            <div class="divider">IMPORT JADWAL (WORD)</div>
+            <div class="divider"><span>IMPORT WORD</span></div>
             <input type="file" id="import-sch-word" accept=".docx">
             <button onclick="handleImport('schedule')" style="background: #2b5797;">Tarik Teks Word</button>
         </div>
@@ -110,8 +110,7 @@
             </select>
             <input type="text" id="org-photo" placeholder="Link Foto (URL)">
             <button onclick="addMember()">Tambah Manual</button>
-            <div class="divider">IMPORT STRUKTUR (EXCEL)</div>
-            <p style="font-size: 0.6rem; color: gray;">Kolom Excel: Nama, Jabatan, Foto</p>
+            <div class="divider"><span>IMPORT EXCEL</span></div>
             <input type="file" id="import-org-excel" accept=".xlsx">
             <button onclick="handleImport('org')" style="background: #2b5797;">Import Excel</button>
         </div>
@@ -128,7 +127,7 @@
 
     <section id="share-panel-view">
         <div class="admin-card" style="text-align: center;">
-            <button onclick="shareDataToWA()" class="btn-wa">KIRIM LINK UPDATE WA</button>
+            <button onclick="shareDataToWA()" class="btn-wa">KIRIM LINK UPDATE KE WA</button>
         </div>
     </section>
 
