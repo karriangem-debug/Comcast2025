@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>COMCAST 2025</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
+</head>
+<body class="light-theme">
+
+    <nav>
+        <div class="nav-container">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="logo-comcast">COMCAST<span>2025</span></div>
+            <div style="width: 22px;"></div>
+        </div>
+    </nav>
+
+    <div id="side-menu" class="side-nav">
+        <div class="side-header">TAMPILAN</div>
+        <a href="#" onclick="toggleTheme()" id="theme-link">🌙 Dark Mode: Off</a>
+        
+        <div class="side-header">MENU UTAMA</div>
+        <a href="#" onclick="showSection('deadline-view')">📅 Deadline Tugas</a>
+        <a href="#" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
+        <a href="#" onclick="showSection('structure-view')">👥 Struktur Kelas</a>
+        
+        <div class="side-header">AKSI</div>
+        <a href="#" onclick="showSection('share-panel-view')">📤 Bagikan ke WhatsApp</a>
+
+        <div id="admin-only-menu" style="display:none;">
+            <div class="side-header admin-tag">ADMIN CONTROL</div>
+            <a href="#" onclick="showSection('manage-deadline')">📝 Kelola Tugas</a>
+            <a href="#" onclick="showSection('manage-schedule')">🗓️ Kelola Jadwal</a>
+            <a href="#" onclick="showSection('manage-org')">👨‍👩‍👧‍👦 Kelola Struktur</a>
+            <a href="#" onclick="logout()" style="color: var(--red);">🚪 Logout Admin</a>
+        </div>
+        <a href="#" id="nav-login" onclick="showSection('login-section')">🔐 Login Admin</a>
+    </div>
+
+    <div id="menu-overlay" onclick="toggleMenu()"></div>
+
+    <section id="deadline-view" class="active">
+        <h3 class="section-title">DEADLINE TUGAS</h3>
+        <div class="tab-header">
+            <button class="tab-btn active" id="tab-now" onclick="filterDeadline('now')">MINGGU INI</button>
+            <button class="tab-btn" id="tab-next" onclick="filterDeadline('next')">MENDATANG</button>
+            <button class="tab-btn" id="tab-old" onclick="filterDeadline('old')">SELESAI</button>
+        </div>
+        <div id="week-display"></div>
+    </section>
+
+    <section id="schedule-view">
+        <h3 class="section-title">JADWAL KULIAH</h3>
+        <div id="class-schedule"></div>
+    </section>
+
+    <section id="structure-view">
+        <h3 class="section-title">STRUKTUR KELAS</h3>
+        <div id="org-render-container" class="org-container"></div>
+    </section>
+
+    <section id="manage-deadline">
+        <div class="admin-card">
+            <h3 id="form-title">INPUT TUGAS</h3>
+            <input type="hidden" id="edit-id">
+            <input type="date" id="task-date">
+            <input type="time" id="task-time">
+            <textarea id="task-name" placeholder="Rincian Tugas... (Gunakan Enter)" rows="6"></textarea>
+            <button onclick="saveTask()" id="btn-save-task">Simpan Tugas</button>
+            <button onclick="resetTaskForm()" id="btn-cancel-edit" style="display:none; background:#6b7280; margin-top:5px;">Batal Edit</button>
+            <div class="divider">IMPORT (WORD/EXCEL)</div>
+            <input type="file" id="import-deadline" accept=".docx, .xlsx">
+            <button onclick="handleImport('deadline')" style="background: #2b5797;">Proses File Tugas</button>
+        </div>
+    </section>
+
+    <section id="manage-schedule">
+        <div class="admin-card">
+            <h3>KELOLA JADWAL</h3>
+            <select id="sch-day">
+                <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
+                <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
+                <option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option>
+            </select>
+            <input type="time" id="sch-time">
+            <input type="text" id="sch-name" placeholder="Mata Kuliah">
+            <input type="text" id="sch-lecturer" placeholder="Dosen">
+            <input type="text" id="sch-room" placeholder="Ruang">
+            <button onclick="addSchedule()">Tambah Manual</button>
+            <div class="divider">IMPORT JADWAL (WORD)</div>
+            <input type="file" id="import-sch-word" accept=".docx">
+            <button onclick="handleImport('schedule')" style="background: #2b5797;">Tarik Teks Word</button>
+        </div>
+    </section>
+
+    <section id="manage-org">
+        <div class="admin-card">
+            <h3>KELOLA STRUKTUR</h3>
+            <input type="text" id="org-name" placeholder="Nama Lengkap">
+            <select id="org-role">
+                <option value="Ketua">Ketua</option><option value="Wakil">Wakil</option>
+                <option value="Sekretaris">Sekretaris</option><option value="Bendahara">Bendahara</option>
+                <option value="Anggota">Anggota</option>
+            </select>
+            <input type="text" id="org-photo" placeholder="Link Foto (URL)">
+            <button onclick="addMember()">Tambah Manual</button>
+            <div class="divider">IMPORT STRUKTUR (EXCEL)</div>
+            <p style="font-size: 0.6rem; color: gray;">Kolom Excel: Nama, Jabatan, Foto</p>
+            <input type="file" id="import-org-excel" accept=".xlsx">
+            <button onclick="handleImport('org')" style="background: #2b5797;">Import Excel</button>
+        </div>
+    </section>
+
+    <section id="login-section">
+        <div class="admin-card">
+            <h3>LOGIN ADMIN</h3>
+            <input type="text" id="username" placeholder="Username">
+            <input type="password" id="password" placeholder="Password">
+            <button onclick="login()">Masuk</button>
+        </div>
+    </section>
+
+    <section id="share-panel-view">
+        <div class="admin-card" style="text-align: center;">
+            <button onclick="shareDataToWA()" class="btn-wa">KIRIM LINK UPDATE WA</button>
+        </div>
+    </section>
+
+    <script src="script.js"></script>
+</body>
+</html>
