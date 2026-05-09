@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | Portal Kelas</title>
+    <title>COMCAST 2025🚀 | Portal Kelas</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -21,6 +21,7 @@
         </div>
     </nav>
 
+    <!-- Sidebar Menu -->
     <div id="side-menu" class="side-nav">
         <div class="side-header">TAMPILAN</div>
         <a href="#" onclick="toggleTheme()" id="theme-link">🌙 Dark Mode: Off</a>
@@ -30,12 +31,9 @@
         <a href="#" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
         <a href="#" onclick="showSection('structure-view')">👥 Struktur Kelas</a>
         
-        <div class="side-header">AKSI</div>
-        <a href="#" onclick="showSection('share-panel-view')">📤 Bagikan</a>
-
         <div id="admin-only-menu" style="display:none;">
             <div class="side-header admin-tag">ADMIN CONTROL</div>
-            <a href="#" onclick="showSection('manage-deadline')">📝 Kelola Tugas</a>
+            <a href="#" onclick="openManageDeadline()">📝 Kelola Tugas</a>
             <a href="#" onclick="showSection('manage-schedule')">🗓️ Kelola Jadwal</a>
             <a href="#" onclick="showSection('manage-org')">👨‍👩‍👧‍👦 Kelola Struktur</a>
             <a href="#" onclick="logout()" style="color: var(--red);">🚪 Logout Admin</a>
@@ -45,6 +43,7 @@
 
     <div id="menu-overlay" onclick="toggleMenu()"></div>
 
+    <!-- SECTIONS -->
     <section id="deadline-view" class="active">
         <h3 class="section-title">DEADLINE TUGAS</h3>
         <div class="tab-header">
@@ -65,18 +64,25 @@
         <div id="org-render-container" class="org-container"></div>
     </section>
 
+    <!-- ADMIN: MANAGE DEADLINE (REVISI) -->
     <section id="manage-deadline">
         <div class="admin-card">
-            <h3 id="form-title">INPUT/EDIT TUGAS</h3>
+            <h3 id="form-title">INPUT TUGAS</h3>
             <input type="hidden" id="edit-id">
+            
+            <label style="font-size:0.7rem; font-weight:800; opacity:0.6;">MATA KULIAH</label>
+            <select id="task-subject-select" onchange="autoFillTime()"></select>
+            
+            <label style="font-size:0.7rem; font-weight:800; opacity:0.6; margin-top:10px; display:block;">TANGGAL DEADLINE</label>
             <input type="date" id="task-date">
+            
+            <label style="font-size:0.7rem; font-weight:800; opacity:0.6; margin-top:10px; display:block;">JAM</label>
             <input type="time" id="task-time">
-            <textarea id="task-name" placeholder="Rincian Tugas... (Gunakan Enter)" rows="6"></textarea>
+
+            <textarea id="task-name" placeholder="Rincian Tugas..." rows="5" style="margin-top:15px;"></textarea>
+            
             <button onclick="saveTask()" id="btn-save-task">Simpan Tugas</button>
             <button onclick="resetTaskForm()" id="btn-cancel-edit" style="display:none; background:#6b7280;">Batal Edit</button>
-            <div class="divider"><span>IMPORT FILE</span></div>
-            <input type="file" id="import-deadline" accept=".docx, .xlsx">
-            <button onclick="handleImport('deadline')" style="background: #2b5797;">Proses File Tugas</button>
         </div>
     </section>
 
@@ -92,10 +98,7 @@
             <input type="text" id="sch-name" placeholder="Mata Kuliah">
             <input type="text" id="sch-lecturer" placeholder="Dosen">
             <input type="text" id="sch-room" placeholder="Ruang">
-            <button onclick="addSchedule()">Tambah Manual</button>
-            <div class="divider"><span>IMPORT WORD</span></div>
-            <input type="file" id="import-sch-word" accept=".docx">
-            <button onclick="handleImport('schedule')" style="background: #2b5797;">Tarik Teks Word</button>
+            <button onclick="addSchedule()">Tambah Jadwal</button>
         </div>
     </section>
 
@@ -109,10 +112,7 @@
                 <option value="Anggota">Anggota</option>
             </select>
             <input type="text" id="org-photo" placeholder="Link Foto (URL)">
-            <button onclick="addMember()">Tambah Manual</button>
-            <div class="divider"><span>IMPORT EXCEL</span></div>
-            <input type="file" id="import-org-excel" accept=".xlsx">
-            <button onclick="handleImport('org')" style="background: #2b5797;">Import Excel</button>
+            <button onclick="addMember()">Tambah Anggota</button>
         </div>
     </section>
 
@@ -125,12 +125,6 @@
         </div>
     </section>
 
-    <section id="share-panel-view">
-        <div class="admin-card" style="text-align: center;">
-            <button onclick="shareDataToWA()" class="btn-wa">KIRIM LINK UPDATE KE WA</button>
-        </div>
-    </section>
-
     <script src="script.js"></script>
 </body>
-</html>
+                </html>
