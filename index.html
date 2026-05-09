@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>COMCAST 2025 | Portal Kelas Pro Max</title>
-    <!-- Link CSS harus benar agar tata letak muncul -->
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -12,43 +11,41 @@
 
     <nav>
         <div class="nav-container">
-            <div class="hamburger" onclick="toggleMenu()">
+            <div class="hamburger" id="hamburger-btn" onclick="toggleMenu()">
                 <span></span><span></span><span></span>
             </div>
             <div class="logo-wrapper">
-                <!-- Efek Glow & Fade 10 Detik -->
                 <div class="logo-comcast animate-glow-fade">COMCAST<span>2025</span></div>
             </div>
             <div style="width: 22px;"></div>
         </div>
     </nav>
 
-    <!-- SIDEBAR (MENU GARIS 3) -->
+    <!-- SIDEBAR / MENU GARIS 3 -->
     <div id="side-menu" class="side-nav">
         <div class="side-header">PENGATURAN</div>
-        <a href="#" onclick="toggleTheme()" id="theme-link">🌙 Mode Gelap: Mati</a>
+        <a href="javascript:void(0)" onclick="toggleTheme()" id="theme-link">🌙 Mode Gelap: Mati</a>
         
         <div class="side-header">MENU UTAMA</div>
-        <a href="#" onclick="showSection('deadline-view')">📅 Deadline Tugas</a>
-        <a href="#" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
-        <a href="#" onclick="showSection('structure-view')">👥 Struktur Kelas</a>
+        <a href="javascript:void(0)" onclick="showSection('deadline-view')">📅 Deadline Tugas</a>
+        <a href="javascript:void(0)" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
+        <a href="javascript:void(0)" onclick="showSection('structure-view')">👥 Struktur Kelas</a>
         
-        <!-- MENU SHARE WA (SEJAJAR DENGAN MENU LAIN) -->
-        <a href="#" onclick="shareDataToWA()" style="background: #25d366; color: white; font-weight: 800; margin-top: 10px;">📲 Share Web ke WA</a>
+        <div class="side-header">SINKRONISASI</div>
+        <a href="javascript:void(0)" onclick="shareDataToWA()" style="background: #25d366; color: white !important; font-weight: 800; border-radius: 8px;">📲 Share Web ke WA</a>
         
         <div id="admin-only-menu" style="display:none;">
-            <div class="side-header admin-tag">ADMIN CONTROL</div>
-            <a href="#" onclick="openManageDeadline()">📝 Input Tugas</a>
-            <a href="#" onclick="logout()" style="color: #ef4444;">🚪 Logout Admin</a>
+            <div class="side-header">KONTROL ADMIN</div>
+            <a href="javascript:void(0)" onclick="openManageDeadline()">📝 Input Tugas</a>
+            <a href="javascript:void(0)" onclick="logout()" style="color: #ef4444;">🚪 Logout Admin</a>
         </div>
-        <a href="#" id="nav-login" onclick="showSection('login-section')">🔐 Login Admin</a>
+        <a href="javascript:void(0)" id="nav-login" onclick="showSection('login-section')">🔐 Login Admin</a>
     </div>
 
     <div id="menu-overlay" onclick="toggleMenu()"></div>
 
-    <!-- MAIN CONTENT AREA -->
-    <main>
-        <!-- Deadline View -->
+    <main id="main-content">
+        <!-- DEADLINE VIEW -->
         <section id="deadline-view" class="active">
             <h3 class="section-title">DEADLINE TUGAS</h3>
             <div class="tab-header">
@@ -59,15 +56,13 @@
             <div id="week-display"></div>
         </section>
 
-        <!-- Structure View -->
+        <!-- STRUCTURE VIEW -->
         <section id="structure-view">
             <h3 class="section-title">STRUKTUR KELAS</h3>
-            <div id="org-render-container" class="org-container">
-                <!-- Data Struktur Muncul di Sini -->
-            </div>
+            <div id="org-render-container" class="org-container"></div>
         </section>
 
-        <!-- Login Section -->
+        <!-- LOGIN SECTION -->
         <section id="login-section">
             <div class="admin-card">
                 <h3>LOGIN ADMIN</h3>
