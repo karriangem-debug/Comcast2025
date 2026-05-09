@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | Portal Kelas</title>
+    <title>COMCAST 2025 | Pro Max Edition</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
@@ -15,20 +15,29 @@
                 <span></span><span></span><span></span>
             </div>
             <div class="logo-wrapper">
-                <!-- Efek Glowing & Animasi Masuk/Keluar 10 Detik -->
                 <div class="logo-comcast animate-glow-fade">COMCAST<span>2025</span></div>
             </div>
             <div style="width: 22px;"></div>
         </div>
     </nav>
 
-    <!-- Sidebar Menu -->
     <div id="side-menu" class="side-nav">
         <div class="side-header">TAMPILAN</div>
         <a href="#" onclick="toggleTheme()" id="theme-link">🌙 Dark Mode: Off</a>
+        
+        <!-- TEMPAT KHUSUS SHARE WA DI DALAM GARIS 3 -->
+        <div class="side-header">SINKRONISASI DATA</div>
+        <div class="share-container-sidebar">
+            <button onclick="shareDataToWA()" class="btn-share-wa-sidebar">
+                📲 KIRIM DATA KE GRUP
+            </button>
+            <p class="share-desc">Klik untuk kirim update tugas terbaru agar data di HP teman-teman ikut terupdate.</p>
+        </div>
+
         <div class="side-header">MENU UTAMA</div>
         <a href="#" onclick="showSection('deadline-view')">📅 Deadline Tugas</a>
         <a href="#" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
+        
         <div id="admin-only-menu" style="display:none;">
             <div class="side-header admin-tag">ADMIN CONTROL</div>
             <a href="#" onclick="openManageDeadline()">📝 Input Tugas</a>
@@ -40,15 +49,9 @@
 
     <div id="menu-overlay" onclick="toggleMenu()"></div>
 
-    <!-- Main Content -->
+    <!-- Halaman Utama (Tanpa Tombol Share agar Bersih) -->
     <section id="deadline-view" class="active">
-        <div class="header-with-action">
-            <h3 class="section-title">DEADLINE TUGAS</h3>
-            <!-- Tombol Sinkronisasi Data ke Teman -->
-            <button onclick="shareDataToWA()" class="share-group-btn">
-                <span>📲</span> Share Ke WA
-            </button>
-        </div>
+        <h3 class="section-title">DEADLINE TUGAS</h3>
         <div class="tab-header">
             <button class="tab-btn active" id="tab-now" onclick="filterDeadline('now')">MINGGU INI</button>
             <button class="tab-btn" id="tab-next" onclick="filterDeadline('next')">MENDATANG</button>
@@ -57,26 +60,25 @@
         <div id="week-display"></div>
     </section>
 
-    <!-- Section Input Admin -->
+    <!-- Modal/Section Input Admin -->
     <section id="manage-deadline">
         <div class="admin-card">
-            <h3 id="form-title">INPUT TUGAS</h3>
-            <input type="hidden" id="edit-id">
-            <label class="label-admin">MATA KULIAH</label>
+            <h3>INPUT TUGAS PRO</h3>
+            <label class="label-admin">PILIH MATA KULIAH</label>
             <select id="task-subject-select" onchange="autoFillTime()"></select>
-            <label class="label-admin">TANGGAL</label>
+            <label class="label-admin">TANGGAL DEADLINE</label>
             <input type="date" id="task-date">
-            <label class="label-admin">JAM</label>
+            <label class="label-admin">JAM (AUTO DARI JADWAL)</label>
             <input type="time" id="task-time">
-            <textarea id="task-name" placeholder="Rincian Tugas..." rows="4"></textarea>
-            <button onclick="saveTask()">Simpan & Update Data</button>
+            <textarea id="task-name" placeholder="Rincian tugas secara detail..." rows="4" style="margin-top:15px;"></textarea>
+            <button onclick="saveTask()" class="btn-save">Simpan Tugas</button>
         </div>
     </section>
 
-    <!-- Login Section -->
+    <!-- Login -->
     <section id="login-section">
         <div class="admin-card">
-            <h3>LOGIN ADMIN</h3>
+            <h3>ADMIN LOGIN</h3>
             <input type="text" id="username" placeholder="Username">
             <input type="password" id="password" placeholder="Password">
             <button onclick="login()">Masuk</button>
