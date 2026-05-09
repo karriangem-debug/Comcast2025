@@ -1,103 +1,96 @@
-let deadlines = JSON.parse(localStorage.getItem('deadlines')) || [];
-let schedule = JSON.parse(localStorage.getItem('schedule')) || [];
-let orgMembers = JSON.parse(localStorage.getItem('orgMembers')) || [];
-let isAdmin = localStorage.getItem('isAdmin') === 'true';
+// Database State
+let state = {
+    deadlines: JSON.parse(localStorage.getItem('deadlines')) || [],
+    org: JSON.parse(localStorage.getItem('orgMembers')) || [],
+    isAdmin: localStorage.getItem('isAdmin') === 'true'
+};
 
-// 1. SINKRONISASI DATA (MENU SHARE WA)
-function shareDataToWA() {
-    const combinedData = { d: deadlines, s: schedule, o: orgMembers };
-    const dataString = btoa(unescape(encodeURIComponent(JSON.stringify(combinedData))));
-    const shareUrl = `${window.location.origin}${window.location.pathname}?update=${dataString}`;
-    
-    let text = `*📌 UPDATE PORTAL COMCAST 2025*\n\nAda update tugas/struktur terbaru. Klik link ini agar web di HP kamu otomatis ter-update:\n\n${shareUrl}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
-}
-
-// 2. FUNGSI TOGGLE MENU (GARIS 3)
+// 1. FUNGSI TOGGLE MENU (ANTY-MACET)
 function toggleMenu() {
-    const menu = document.getElementById('side-menu');
+    const sidebar = document.getElementById('side-menu');
     const overlay = document.getElementById('menu-overlay');
-    menu.classList.toggle('open');
+    sidebar.classList.toggle('open');
     overlay.classList.toggle('show');
 }
 
-// 3. FUNGSI PINDAH HALAMAN
+// 2. NAVIGASI SECTION
 function showSection(id) {
-    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
     const target = document.getElementById(id);
     if(target) target.classList.add('active');
     
-    // Tutup menu otomatis setelah klik
+    // Auto close sidebar
     if(document.getElementById('side-menu').classList.contains('open')) toggleMenu();
     if(id === 'deadline-view') renderDeadlines();
 }
 
-// 4. COOLDOWN FULL TEXT (HARI, JAM, MENIT, DETIK)
-function updateTimers() {
-    document.querySelectorAll('.countdown').forEach(el => {
-        const diff = new Date(el.dataset.target) - new Date();
-        if(diff <= 0) return el.innerText = "WAKTU PENGERJAAN TELAH SELESAI";
-        
-        const hari = Math.floor(diff/86400000);
-        const jam = Math.floor((diff/3600000)%24);
-        const menit = Math.floor((diff/60000)%60);
-        const detik = Math.floor((diff/1000)%60);
-        
-        el.innerText = `⏳ SISA WAKTU: ${hari} Hari, ${jam} Jam, ${menit} Menit, ${detik} Detik`;
-    });
+// 3. SINKRONISASI WA (FULL DATA)
+function shareDataToWA() {
+    const dataPackage = { d: state.deadlines, o: state.org };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(dataPackage))));
+    const url = `${window.location.origin}${window.location.pathname}?update=${encoded}`;
+    
+    const text = `*📌 UPDATE PORTAL COMCAST*\n\nData tugas & struktur kelas telah diperbarui. Klik link ini untuk sinkronisasi otomatis:\n\n${url}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-// 5. RENDER DEADLINE TUGAS
+// 4. COUNTDOWN MASTER (FULL TEXT)
+function startTimers() {
+    setInterval(() => {
+        document.querySelectorAll('.timer-text').forEach(el => {
+            const target = new Date(el.dataset.time) - new Date();
+            if(target <= 0) {
+                el.innerText = "WAKTU PENGERJAAN TELAH BERAKHIR";
+                return;
+            }
+            const d = Math.floor(target/86400000);
+            const h = Math.floor((target/3600000)%24);
+            const m = Math.floor((target/60000)%60);
+            const s = Math.floor((target/1000)%60);
+            
+            el.innerText = `⏳ SISA: ${d} Hari, ${h} Jam, ${m} Menit, ${s} Detik`;
+        });
+    }, 1000);
+}
+
+// 5. RENDER LOGIC
 function renderDeadlines() {
-    const container = document.getElementById('week-display');
-    const activeTab = document.querySelector('.tab-btn.active').id.replace('tab-', '');
-    
-    let filtered = deadlines.filter(d => {
-        if (activeTab === 'old') return d.status === 'old';
-        const target = new Date(d.date).setHours(0,0,0,0);
-        const today = new Date().setHours(0,0,0,0);
-        const isThisWeek = target < (today + 7*86400000);
-        return activeTab === 'now' ? (isThisWeek && d.status !== 'old') : (!isThisWeek && d.status !== 'old');
-    });
-
-    container.innerHTML = filtered.map(d => `
+    const container = document.getElementById('deadline-list');
+    container.innerHTML = state.deadlines.length ? state.deadlines.map(d => `
         <div class="item-card">
-            <div class="task-header-row">
-                <div class="task-subject">${d.subject}</div>
-                <div class="task-meta">JAM ${d.time}</div>
+            <span class="task-subject">${d.subject}</span>
+            <p style="font-size:0.85rem; opacity:0.8;">${d.name}</p>
+            <div class="countdown-box">
+                <span class="timer-text" data-time="${d.date}T${d.time}">MENGHITUNG...</span>
             </div>
-            <div style="font-size:0.9rem; margin-top:5px; font-weight:400;">${d.name}</div>
-            <span class="countdown" data-target="${d.date}T${d.time}">⏳ MENGHITUNG...</span>
         </div>
-    `).join('') || "<p style='text-align:center; padding:40px; opacity:0.5;'>Belum ada data tugas.</p>";
+    `).join('') : `<div style="text-align:center; padding:50px; opacity:0.5;">Belum Ada Tugas.</div>`;
 }
 
-// 6. RECEIVE DATA DARI URL
+// 6. INITIALIZER & SYNC
 window.onload = () => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const updateData = urlParams.get('update');
-    if (updateData) {
+    // Cek update dari link
+    const params = new URLSearchParams(window.location.search);
+    if(params.has('update')) {
         try {
-            const decoded = JSON.parse(decodeURIComponent(escape(atob(updateData))));
+            const decoded = JSON.parse(decodeURIComponent(escape(atob(params.get('update')))));
             localStorage.setItem('deadlines', JSON.stringify(decoded.d));
-            localStorage.setItem('schedule', JSON.stringify(decoded.s));
             localStorage.setItem('orgMembers', JSON.stringify(decoded.o));
-            alert("✅ SINKRONISASI BERHASIL!");
-            window.history.replaceState({}, document.title, window.location.pathname);
-            location.reload();
-        } catch (e) { console.error("Sync Error"); }
+            alert("✅ Data Berhasil Disinkronkan!");
+            window.location.href = window.location.pathname; // Clean URL
+        } catch(e) { console.error("Sync Error"); }
     }
-    
-    if (isAdmin) document.getElementById('admin-only-menu').style.display = 'block';
+
+    if(state.isAdmin) document.getElementById('admin-menu-area').style.display = 'block';
     renderDeadlines();
-    setInterval(updateTimers, 1000);
+    startTimers();
 };
 
-// Fitur Lainnya (Login, Theme) tetap sama
+// Fungsi Tambahan
 function toggleTheme() {
     document.body.classList.toggle('dark-theme');
     const isDark = document.body.classList.contains('dark-theme');
-    document.getElementById('theme-link').innerText = isDark ? "☀️ Mode Terang" : "🌙 Mode Gelap";
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 
 function login() {
@@ -106,6 +99,8 @@ function login() {
     if(u === "Comcast" && p === "2025") {
         localStorage.setItem('isAdmin', 'true');
         location.reload();
-    } else alert("Login Gagal!");
+    } else {
+        alert("Akses Admin Ditolak!");
+    }
 }
 function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
