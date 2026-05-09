@@ -2,37 +2,40 @@
 .dark-theme { --bg: #0f172a; --card: #1e293b; --text: #f9fafb; --accent: #60a5fa; --border: #374151; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body { background: var(--bg); color: var(--text); transition: 0.3s; }
+body { background: var(--bg); color: var(--text); transition: 0.3s; overflow-x: hidden; }
 
 /* NAVBAR */
-nav { background: var(--card); height: 60px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); }
+nav { background: var(--card); height: 60px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 .nav-container { width: 100%; max-width: 600px; margin: auto; display: flex; justify-content: space-between; padding: 0 20px; align-items: center; }
 
-/* LOGO GLOWING & ANIMASI */
+/* LOGO GLOWING */
 .logo-comcast { font-weight: 800; color: var(--accent); font-size: 1.1rem; }
 .animate-glow-fade { animation: glow-pulse 2s infinite alternate, fade-io 10s infinite; }
 @keyframes glow-pulse { from { text-shadow: 0 0 5px var(--accent); } to { text-shadow: 0 0 20px var(--accent); } }
 @keyframes fade-io { 0%, 10% { opacity: 0; } 20%, 80% { opacity: 1; } 90%, 100% { opacity: 0; } }
 
-/* SIDEBAR */
-.side-nav { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: var(--card); z-index: 2001; padding: 40px 15px; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+/* SIDEBAR & OVERLAY */
+.side-nav { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: var(--card); z-index: 2001; padding: 40px 15px; transition: 0.4s ease; box-shadow: 5px 0 15px rgba(0,0,0,0.1); overflow-y: auto; }
 .side-nav.open { left: 0; }
-.side-nav a { display: block; padding: 12px 15px; color: var(--text); text-decoration: none; font-size: 0.9rem; border-radius: 10px; margin-bottom: 5px; }
-.side-header { font-size: 0.7rem; font-weight: 800; color: var(--accent); margin: 20px 0 8px 15px; text-transform: uppercase; }
+.side-nav a { display: block; padding: 12px 15px; color: var(--text); text-decoration: none; font-size: 0.9rem; border-radius: 10px; margin-bottom: 8px; font-weight: 600; }
+.side-header { font-size: 0.7rem; font-weight: 800; color: var(--accent); margin: 20px 0 8px 15px; text-transform: uppercase; letter-spacing: 1px; }
 
-/* DEADLINE CARD RAMPING */
+#menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; backdrop-filter: blur(2px); }
+#menu-overlay.show { display: block; }
+
+/* KARTU DEADLINE TUGAS */
 section { display: none; padding: 20px; max-width: 600px; margin: auto; }
-section.active { display: block; }
-.item-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--border); border-left: 6px solid var(--accent); margin-bottom: 12px; }
-.task-header-row { display: flex; justify-content: space-between; align-items: center; }
-.task-subject { font-weight: 800; color: var(--accent); font-size: 0.95rem; }
-.task-meta { font-size: 0.75rem; font-weight: 700; opacity: 0.6; }
+section.active { display: block; animation: fadeIn 0.4s; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* COUNTDOWN FULL TEXT */
-.countdown { font-weight: 800; color: #ef4444; font-size: 0.65rem; display: block; margin-top: 10px; background: rgba(239, 68, 68, 0.05); padding: 5px; border-radius: 5px; }
+.item-card { background: var(--card); padding: 18px; border-radius: 15px; border: 1px solid var(--border); border-left: 6px solid var(--accent); margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+.task-header-row { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
+.task-subject { font-weight: 800; color: var(--accent); font-size: 1rem; text-transform: uppercase; }
+.task-meta { font-size: 0.75rem; font-weight: 800; padding: 2px 8px; background: rgba(37, 99, 235, 0.1); border-radius: 5px; }
+
+/* COOLDOWN FULL TEXT */
+.countdown { font-weight: 800; color: #ef4444; font-size: 0.7rem; display: block; margin-top: 12px; padding: 8px; background: rgba(239, 68, 68, 0.05); border-radius: 8px; text-align: center; border: 1px dashed rgba(239, 68, 68, 0.3); }
 
 /* HAMBURGER */
-.hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
-.hamburger span { width: 22px; height: 3px; background: var(--text); border-radius: 2px; }
-#menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 2000; }
-#menu-overlay.show { display: block; }
+.hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; padding: 10px; }
+.hamburger span { width: 24px; height: 3px; background: var(--text); border-radius: 2px; transition: 0.3s; }
