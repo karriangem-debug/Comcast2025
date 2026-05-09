@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025🚀 | Portal Kelas</title>
+    <title>COMCAST 2025 | Portal Kelas</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.4.21/mammoth.browser.min.js"></script>
 </head>
 <body class="light-theme">
 
@@ -16,7 +15,10 @@
             <div class="hamburger" onclick="toggleMenu()">
                 <span></span><span></span><span></span>
             </div>
-            <div class="logo-comcast">COMCAST<span>2025</span></div>
+            <!-- Logo dengan Animasi Glowing & Fade -->
+            <div class="logo-wrapper">
+                <div class="logo-comcast animate-glow-fade">COMCAST<span>2025</span></div>
+            </div>
             <div style="width: 22px;"></div>
         </div>
     </nav>
@@ -33,7 +35,7 @@
         
         <div id="admin-only-menu" style="display:none;">
             <div class="side-header admin-tag">ADMIN CONTROL</div>
-            <a href="#" onclick="openManageDeadline()">📝 Kelola Tugas</a>
+            <a href="#" onclick="openManageDeadline()">📝 Kelola Tugas (Dropdown)</a>
             <a href="#" onclick="showSection('manage-schedule')">🗓️ Kelola Jadwal</a>
             <a href="#" onclick="showSection('manage-org')">👨‍👩‍👧‍👦 Kelola Struktur</a>
             <a href="#" onclick="logout()" style="color: var(--red);">🚪 Logout Admin</a>
@@ -64,23 +66,18 @@
         <div id="org-render-container" class="org-container"></div>
     </section>
 
-    <!-- ADMIN: MANAGE DEADLINE (REVISI) -->
+    <!-- ADMIN SECTIONS -->
     <section id="manage-deadline">
         <div class="admin-card">
             <h3 id="form-title">INPUT TUGAS</h3>
             <input type="hidden" id="edit-id">
-            
-            <label style="font-size:0.7rem; font-weight:800; opacity:0.6;">MATA KULIAH</label>
+            <label class="label-admin">MATA KULIAH</label>
             <select id="task-subject-select" onchange="autoFillTime()"></select>
-            
-            <label style="font-size:0.7rem; font-weight:800; opacity:0.6; margin-top:10px; display:block;">TANGGAL DEADLINE</label>
+            <label class="label-admin">TANGGAL</label>
             <input type="date" id="task-date">
-            
-            <label style="font-size:0.7rem; font-weight:800; opacity:0.6; margin-top:10px; display:block;">JAM</label>
+            <label class="label-admin">JAM</label>
             <input type="time" id="task-time">
-
-            <textarea id="task-name" placeholder="Rincian Tugas..." rows="5" style="margin-top:15px;"></textarea>
-            
+            <textarea id="task-name" placeholder="Rincian Tugas..." rows="4"></textarea>
             <button onclick="saveTask()" id="btn-save-task">Simpan Tugas</button>
             <button onclick="resetTaskForm()" id="btn-cancel-edit" style="display:none; background:#6b7280;">Batal Edit</button>
         </div>
@@ -88,7 +85,7 @@
 
     <section id="manage-schedule">
         <div class="admin-card">
-            <h3>KELOLA JADWAL</h3>
+            <h3>INPUT JADWAL</h3>
             <select id="sch-day">
                 <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
                 <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
@@ -104,7 +101,7 @@
 
     <section id="manage-org">
         <div class="admin-card">
-            <h3>KELOLA STRUKTUR</h3>
+            <h3>INPUT STRUKTUR</h3>
             <input type="text" id="org-name" placeholder="Nama Lengkap">
             <select id="org-role">
                 <option value="Ketua">Ketua</option><option value="Wakil">Wakil</option>
@@ -127,4 +124,4 @@
 
     <script src="script.js"></script>
 </body>
-                </html>
+</html>
