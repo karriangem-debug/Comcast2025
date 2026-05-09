@@ -3,12 +3,61 @@ let schedule = JSON.parse(localStorage.getItem('schedule')) || [];
 let orgMembers = JSON.parse(localStorage.getItem('orgMembers')) || [];
 let isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-// 1. RENDER JADWAL (AUTO-SORT & RAPI)
+// --- CORE RENDERING ---
+
+function renderDeadlines() {
+    const container = document.getElementById('week-display');
+    const now = new Date();
+    
+    // Logic: Auto-Selesai (Jika lewat > 30 menit)
+    deadlines.forEach(d => {
+        const dTime = new Date(`${d.date}T${d.time}`);
+        if (now > new Date(dTime.getTime() + 30 * 60000)) d.status = 'old';
+    });
+
+    const activeTab = document.querySelector('.tab-btn.active').id.replace('tab-', '');
+    let filtered = deadlines.filter(d => {
+        if (activeTab === 'old') return d.status === 'old';
+        return d.status !== 'old' && getCat(d.date) === activeTab;
+    });
+
+    if (!filtered.length) {
+        container.innerHTML = "<p style='text-align:center; padding:30px; opacity:0.5;'>Tidak ada data.</p>";
+        return;
+    }
+
+    // Urutkan Tanggal & Grouping
+    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    const groups = filtered.reduce((acc, t) => {
+        const day = new Date(t.date).toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' });
+        if (!acc[day]) acc[day] = [];
+        acc[day].push(t);
+        return acc;
+    }, {});
+
+    container.innerHTML = Object.keys(groups).map(day => `
+        <div class="day-group">
+            <div class="day-label">${day}</div>
+            ${groups[day].map(d => `
+                <div class="item-card">
+                    <div class="task-subject">${d.subject || 'Tugas Umum'}</div>
+                    <div class="task-meta">📅 ${d.date} | ⏰ ${d.time} WIB</div>
+                    <div class="task-detail">${d.name}</div>
+                    <span class="countdown" data-target="${d.date}T${d.time}"></span>
+                    ${isAdmin ? `
+                        <div class="btn-group">
+                            <button onclick="editTask('${d.id}')" class="edit-btn">Edit</button>
+                            <button onclick="deleteData('deadlines', '${d.id}')" class="del-btn">Hapus</button>
+                        </div>` : ''}
+                </div>
+            `).join('')}
+        </div>
+    `).join('');
+}
+
 function renderSchedule() {
     const container = document.getElementById('class-schedule');
     const daysOrder = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-    if (!schedule.length) return container.innerHTML = "<p style='text-align:center; padding:20px; opacity:0.5;'>Belum ada jadwal.</p>";
-
     const sorted = [...schedule].sort((a, b) => {
         const d = daysOrder.indexOf(a.day) - daysOrder.indexOf(b.day);
         return d !== 0 ? d : a.time.localeCompare(b.time);
@@ -19,97 +68,74 @@ function renderSchedule() {
         if (!items.length) return '';
         return `
             <div class="day-group">
-                <div class="day-label">${day}</div>
+                <div class="day-label" style="background:var(--accent)">${day}</div>
                 ${items.map(it => `
                     <div class="schedule-card">
                         <div class="sch-time">${it.time}</div>
-                        <div class="sch-info">
-                            <div class="sch-name">${it.name}</div>
-                            <div class="sch-detail">${it.lecturer || '-'} | Ruang ${it.room || '-'}</div>
+                        <div>
+                            <div style="font-weight:700;">${it.name}</div>
+                            <div style="font-size:0.7rem; opacity:0.6;">👤 ${it.lecturer} | 📍 ${it.room}</div>
                         </div>
-                        ${isAdmin ? `<button onclick="deleteData('schedule', '${it.id}')" class="del-btn-sch">Hapus</button>` : ''}
+                        ${isAdmin ? `<button onclick="deleteData('schedule', '${it.id}')" class="del-btn" style="position:absolute; right:10px; width:auto; padding:5px 10px;">X</button>` : ''}
                     </div>`).join('')}
             </div>`;
     }).join('');
 }
 
-// 2. RENDER DEADLINE
-function renderDeadlines() {
-    const tab = document.querySelector('.tab-btn.active').id.replace('tab-', '');
-    const container = document.getElementById('week-display');
-    const filtered = deadlines.filter(d => getCat(d.date) === tab);
-    
-    container.innerHTML = filtered.length ? filtered.map(d => `
-        <div class="item-card">
-            <b>${d.date} | ${d.time}</b>
-            <div class="task-detail">${d.name}</div>
-            <span class="countdown" data-target="${d.date}T${d.time}"></span>
-            ${isAdmin ? `
-                <div class="btn-group">
-                    <button onclick="editTask('${d.id}')" class="edit-btn">Edit</button>
-                    <button onclick="deleteData('deadlines', '${d.id}')" class="del-btn">Hapus</button>
-                </div>` : ''}
-        </div>`).join('') : "<p style='text-align:center; padding:20px; opacity:0.5;'>Kosong.</p>";
-}
-
-// 3. RENDER STRUKTUR
 function renderStructure() {
     document.getElementById('org-render-container').innerHTML = orgMembers.map(m => `
         <div class="org-box">
             <img src="${m.photo || 'https://via.placeholder.com/100'}" class="org-img">
-            <br><b style="font-size:0.75rem; color:var(--accent)">${m.role}</b>
-            <br><small>${m.name}</small>
-            ${isAdmin ? `<br><button onclick="deleteData('orgMembers', '${m.id}')" class="del-btn" style="position:static; margin-top:5px;">Hapus</button>` : ''}
+            <div style="font-size:0.7rem; font-weight:800; color:var(--accent); margin-top:5px;">${m.role}</div>
+            <div style="font-size:0.8rem; font-weight:600;">${m.name}</div>
+            ${isAdmin ? `<button onclick="deleteData('orgMembers', '${m.id}')" class="del-btn">Hapus</button>` : ''}
         </div>`).join('');
 }
 
-// 4. IMPORT HANDLER (WORD & EXCEL)
-async function handleImport(type) {
-    const file = document.getElementById(type === 'deadline' ? 'import-deadline' : type === 'schedule' ? 'import-sch-word' : 'import-org-excel').files[0];
-    if(!file) return alert("Pilih file!");
+// --- ADMIN ACTIONS ---
 
-    if(file.name.endsWith('.docx')) {
-        const reader = new FileReader();
-        reader.onload = async (e) => {
-            const res = await mammoth.extractRawText({arrayBuffer: e.target.result});
-            if(type === 'deadline') document.getElementById('task-name').value = res.value;
-            if(type === 'schedule') alert("Teks Word ditarik: " + res.value.substring(0, 50) + "...");
-        };
-        reader.readAsArrayBuffer(file);
-    } else if(file.name.endsWith('.xlsx')) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            const data = XLSX.utils.sheet_to_json(XLSX.read(e.target.result, {type: 'binary'}).Sheets[XLSX.read(e.target.result, {type: 'binary'}).SheetNames[0]]);
-            if(type === 'org') {
-                data.forEach(r => orgMembers.push({id: Date.now()+Math.random(), name: r.Nama, role: r.Jabatan, photo: r.Foto}));
-                saveAll(); renderStructure();
-            }
-            if(type === 'deadline') {
-                data.forEach(r => deadlines.push({id: Date.now()+Math.random(), date: r.Tanggal, time: r.Jam || "23:59", name: r.Tugas}));
-                saveAll(); renderDeadlines();
-            }
-            alert("Import Berhasil!");
-        };
-        reader.readAsBinaryString(file);
-    }
+function openManageDeadline() {
+    const select = document.getElementById('task-subject-select');
+    const subjects = [...new Set(schedule.map(s => s.name))];
+    select.innerHTML = '<option value="">-- Pilih Matkul --</option>' + 
+        subjects.map(s => `<option value="${s}">${s}</option>`).join('') +
+        '<option value="Tugas Umum">Tugas Umum</option>';
+    showSection('manage-deadline');
 }
 
-// 5. CORE LOGIC (SAVE, EDIT, UI)
+function autoFillTime() {
+    const sub = document.getElementById('task-subject-select').value;
+    const found = schedule.find(s => s.name === sub);
+    if(found) document.getElementById('task-time').value = found.time;
+}
+
 function saveTask() {
     const id = document.getElementById('edit-id').value;
-    const date = document.getElementById('task-date').value;
-    const name = document.getElementById('task-name').value;
-    if(!date || !name) return alert("Lengkapi!");
-
-    const tData = { id: id || Date.now(), date, time: document.getElementById('task-time').value || "23:59", name };
-    if(id) { const i = deadlines.findIndex(x => x.id == id); deadlines[i] = tData; } 
+    const tData = {
+        id: id || Date.now(),
+        subject: document.getElementById('task-subject-select').value,
+        date: document.getElementById('task-date').value,
+        time: document.getElementById('task-time').value || "23:59",
+        name: document.getElementById('task-name').value,
+        status: 'active'
+    };
+    if(!tData.date || !tData.name) return alert("Isi tanggal & rincian!");
+    
+    if(id) { const i = deadlines.findIndex(x => x.id == id); deadlines[i] = tData; }
     else { deadlines.push(tData); }
     
     saveAll(); resetTaskForm(); showSection('deadline-view');
 }
 
 function addSchedule() {
-    schedule.push({ id: Date.now(), day: document.getElementById('sch-day').value, time: document.getElementById('sch-time').value, name: document.getElementById('sch-name').value, lecturer: document.getElementById('sch-lecturer').value, room: document.getElementById('sch-room').value });
+    schedule.push({ 
+        id: Date.now(), 
+        day: document.getElementById('sch-day').value, 
+        time: document.getElementById('sch-time').value, 
+        name: document.getElementById('sch-name').value, 
+        lecturer: document.getElementById('sch-lecturer').value, 
+        room: document.getElementById('sch-room').value 
+    });
     saveAll(); showSection('schedule-view');
 }
 
@@ -118,8 +144,10 @@ function addMember() {
     saveAll(); showSection('structure-view');
 }
 
+// --- UTILS ---
+
 function deleteData(arr, id) {
-    if(confirm("Hapus?")) {
+    if(confirm("Hapus data ini?")) {
         if(arr === 'deadlines') deadlines = deadlines.filter(i => i.id != id);
         if(arr === 'schedule') schedule = schedule.filter(i => i.id != id);
         if(arr === 'orgMembers') orgMembers = orgMembers.filter(i => i.id != id);
@@ -129,14 +157,32 @@ function deleteData(arr, id) {
 
 function editTask(id) {
     const t = deadlines.find(i => i.id == id);
-    showSection('manage-deadline');
+    openManageDeadline();
     document.getElementById('form-title').innerText = "EDIT TUGAS";
     document.getElementById('edit-id').value = t.id;
+    document.getElementById('task-subject-select').value = t.subject;
     document.getElementById('task-date').value = t.date;
     document.getElementById('task-time').value = t.time;
     document.getElementById('task-name').value = t.name;
-    document.getElementById('btn-save-task').innerText = "Update";
+    document.getElementById('btn-save-task').innerText = "Update Tugas";
     document.getElementById('btn-cancel-edit').style.display = "block";
+}
+
+function resetTaskForm() {
+    document.getElementById('form-title').innerText = "INPUT TUGAS";
+    document.getElementById('edit-id').value = "";
+    document.getElementById('task-name').value = "";
+    document.getElementById('btn-save-task').innerText = "Simpan Tugas";
+    document.getElementById('btn-cancel-edit').style.display = "none";
+}
+
+function updateCountdowns() {
+    document.querySelectorAll('.countdown').forEach(el => {
+        const diff = new Date(el.dataset.target) - new Date();
+        if(diff <= 0) return el.innerText = "WAKTU HABIS";
+        const d = Math.floor(diff/86400000), h = Math.floor((diff/3600000)%24), m = Math.floor((diff/60000)%60), s = Math.floor((diff/1000)%60);
+        el.innerText = `⏳ ${d} Hari ${h} Jam ${m} Menit ${s} Detik`;
+    });
 }
 
 function saveAll() {
@@ -145,9 +191,18 @@ function saveAll() {
     localStorage.setItem('orgMembers', JSON.stringify(orgMembers));
 }
 
-function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    document.getElementById('theme-link').innerText = document.body.classList.contains('dark-theme') ? "☀️ Light Mode" : "🌙 Dark Mode: Off";
+function getCat(d) {
+    const target = new Date(d).setHours(0,0,0,0);
+    const now = new Date().setHours(0,0,0,0);
+    const week = now + (7 * 86400000);
+    if (target < now) return 'old';
+    return target < week ? 'now' : 'next';
+}
+
+function filterDeadline(t) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-'+t).classList.add('active');
+    renderDeadlines();
 }
 
 function toggleMenu() {
@@ -164,6 +219,11 @@ function showSection(id) {
     if(id === 'structure-view') renderStructure();
 }
 
+function toggleTheme() {
+    document.body.classList.toggle('dark-theme');
+    document.getElementById('theme-link').innerText = document.body.classList.contains('dark-theme') ? "☀️ Light Mode" : "🌙 Dark Mode: Off";
+}
+
 function login() {
     if(document.getElementById('username').value === "Comcast" && document.getElementById('password').value === "2025") {
         localStorage.setItem('isAdmin', 'true'); location.reload();
@@ -172,48 +232,7 @@ function login() {
 
 function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
 
-function updateCountdowns() {
-    document.querySelectorAll('.countdown').forEach(el => {
-        const diff = new Date(el.dataset.target) - new Date();
-        if(diff <= 0) return el.innerText = "WAKTU HABIS";
-        const d = Math.floor(diff/86400000), h = Math.floor((diff/3600000)%24), m = Math.floor((diff/60000)%60), s = Math.floor((diff/1000)%60);
-        el.innerText = `⏳ ${d} Hari ${h} Jam ${m} Menit ${s} Detik`;
-    });
-}
-
-function getCat(d) {
-    const now = new Date().setHours(0,0,0,0), target = new Date(d);
-    if(target < now) return 'old';
-    return (target - now < 7*86400000) ? 'now' : 'next';
-}
-
-function filterDeadline(type) {
-    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('tab-'+type).classList.add('active');
-    renderDeadlines();
-}
-
-function resetTaskForm() {
-    document.getElementById('form-title').innerText = "INPUT TUGAS";
-    document.getElementById('edit-id').value = "";
-    document.getElementById('task-name').value = "";
-    document.getElementById('btn-cancel-edit').style.display = "none";
-}
-
-function shareDataToWA() {
-    const p = btoa(encodeURIComponent(JSON.stringify({d: deadlines, s: schedule, o: orgMembers})));
-    window.open(`https://wa.me/?text=${encodeURIComponent(window.location.origin + window.location.pathname + "?upd=" + p)}`);
-}
-
 window.onload = () => {
-    const params = new URLSearchParams(window.location.search);
-    if(params.get('upd')) {
-        const data = JSON.parse(decodeURIComponent(atob(params.get('upd'))));
-        localStorage.setItem('deadlines', JSON.stringify(data.d));
-        localStorage.setItem('schedule', JSON.stringify(data.s));
-        localStorage.setItem('orgMembers', JSON.stringify(data.o));
-        window.location.href = window.location.origin + window.location.pathname;
-    }
     document.getElementById('admin-only-menu').style.display = isAdmin ? 'block' : 'none';
     document.getElementById('nav-login').style.display = isAdmin ? 'none' : 'block';
     renderDeadlines(); renderSchedule(); renderStructure();
