@@ -3,21 +3,17 @@ let schedule = JSON.parse(localStorage.getItem('schedule')) || [];
 let orgMembers = JSON.parse(localStorage.getItem('orgMembers')) || [];
 let isAdmin = localStorage.getItem('isAdmin') === 'true';
 
-// 1. FUNGSI SHARE WEB KE WA (MENU KHUSUS)
+// 1. SINKRONISASI (DI MENU SIDEBAR)
 function shareDataToWA() {
     const combinedData = { d: deadlines, s: schedule, o: orgMembers };
     const dataString = btoa(unescape(encodeURIComponent(JSON.stringify(combinedData))));
     const shareUrl = `${window.location.origin}${window.location.pathname}?update=${dataString}`;
     
-    let text = `*📌 UPDATE DATA COMCAST 2025*\n\n`;
-    text += `Klik link ini agar jadwal & tugas di HP kamu ter-update otomatis:\n\n`;
-    text += `${shareUrl}\n\n`;
-    text += `_Data otomatis sinkron ke web kamu._`;
-
+    let text = `*📌 UPDATE PORTAL COMCAST 2025*\n\nKlik link ini agar data tugas & struktur di HP kamu otomatis ter-update:\n\n${shareUrl}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
 }
 
-// 2. PENERIMA DATA OTOMATIS SAAT LINK DIKLIK
+// 2. RECEIVE DATA DARI LINK
 function receiveDataFromURL() {
     const urlParams = new URLSearchParams(window.location.search);
     const updateData = urlParams.get('update');
@@ -31,27 +27,38 @@ function receiveDataFromURL() {
             alert("✅ SINKRONISASI BERHASIL!");
             window.history.replaceState({}, document.title, window.location.pathname);
             location.reload();
-        } catch (e) { console.error("Error sync data."); }
+        } catch (e) { console.error("Error bongkar data."); }
     }
 }
 
-// 3. COOLDOWN FULL TEXT (TIDAK DISINGKAT)
+// 3. COUNTDOWN FULL TEXT (TIDAK DISINGKAT)
 function updateTimers() {
     document.querySelectorAll('.countdown').forEach(el => {
         const diff = new Date(el.dataset.target) - new Date();
-        if(diff <= 0) return el.innerText = "WAKTU PENGERJAAN TELAH SELESAI";
+        if(diff <= 0) return el.innerText = "WAKTU PENGERJAAN SUDAH HABIS";
         
         const hari = Math.floor(diff/86400000);
         const jam = Math.floor((diff/3600000)%24);
         const menit = Math.floor((diff/60000)%60);
         const detik = Math.floor((diff/1000)%60);
         
-        // Penulisan Full tanpa singkatan
-        el.innerText = `⏳ Sisa Waktu: ${hari} Hari, ${jam} Jam, ${menit} Menit, ${detik} Detik`;
+        el.innerText = `⏳ Sisa: ${hari} Hari, ${jam} Jam, ${menit} Menit, ${detik} Detik`;
     });
 }
 
-// 4. RENDER DATA & UI LOGIC
+// 4. UI & RENDER LOGIC
+function toggleMenu() {
+    document.getElementById('side-menu').classList.toggle('open');
+    document.getElementById('menu-overlay').classList.toggle('show');
+}
+
+function showSection(id) {
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    if(document.getElementById('side-menu').classList.contains('open')) toggleMenu();
+    if(id === 'deadline-view') renderDeadlines();
+}
+
 function renderDeadlines() {
     const container = document.getElementById('week-display');
     const activeTab = document.querySelector('.tab-btn.active').id.replace('tab-', '');
@@ -70,10 +77,10 @@ function renderDeadlines() {
                 <div class="task-subject">${d.subject}</div>
                 <div class="task-meta">Jam ${d.time}</div>
             </div>
-            <div style="font-size:0.8rem; margin:5px 0; opacity:0.8;">${d.name}</div>
+            <div style="font-size: 0.85rem; margin-top: 5px; opacity: 0.8;">${d.name}</div>
             <span class="countdown" data-target="${d.date}T${d.time}">⏳ Menghitung...</span>
         </div>
-    `).join('') || "<p style='text-align:center; padding:20px; opacity:0.5;'>Tidak ada tugas.</p>";
+    `).join('') || "<p style='text-align:center; padding:30px; opacity:0.5;'>Data Kosong.</p>";
 }
 
 window.onload = () => {
@@ -82,3 +89,9 @@ window.onload = () => {
     renderDeadlines();
     setInterval(updateTimers, 1000);
 };
+
+function login() {
+    if(document.getElementById('username').value === "Comcast" && document.getElementById('password').value === "2025") {
+        localStorage.setItem('isAdmin', 'true'); location.reload();
+    } else alert("Gagal!");
+}
