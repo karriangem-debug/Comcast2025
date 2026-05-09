@@ -250,7 +250,7 @@
                 const diff = new Date(el.dataset.time) - new Date();
                 if(diff < 0) { el.innerHTML = "WAKTU HABIS"; return; }
                 const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-                el.innerHTML = `${d} Hari, ${h} Jam, ${m} Menit, ${s} Detik`;
+                el.innerHTML = `SISA WAKTU: ${d} Hari, ${h} Jam, ${m} Menit, ${s} Detik`;
             });
         }, 1000);
 
@@ -305,4 +305,4 @@
         window.onload = () => { if(db.isAdmin) document.getElementById('admin-group').style.display = 'block'; render(); };
     </script>
 </body>
-</html>
+    </html>
