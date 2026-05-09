@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | Final Stable</title>
+    <title>COMCAST 2025 | Safety Version</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; }
+        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; --success: #22c55e; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: #1e293b; line-height: 1.6; }
 
@@ -27,8 +27,8 @@
         .day-header::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
 
         /* CARDS */
-        .card-item { background: white; border-radius: 18px; padding: 18px; margin-bottom: 12px; border: 1px solid #f1f5f9; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
-        .card-subject { font-weight: 800; color: #1e293b; font-size: 1rem; display: block; margin-bottom: 2px; }
+        .card-item { background: white; border-radius: 18px; padding: 18px; margin-bottom: 12px; border: 1px solid #f1f5f9; box-shadow: 0 4px 15px rgba(0,0,0,0.02); position: relative; }
+        .card-subject { font-weight: 800; color: #1e293b; font-size: 1rem; display: block; margin-bottom: 2px; padding-right: 30px; }
         .card-meta { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 8px; }
         .card-desc { font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 10px; border-radius: 10px; margin-top: 10px; white-space: pre-line; border-left: 3px solid #e2e8f0; }
         .countdown { margin-top: 15px; font-size: 0.7rem; font-weight: 800; color: var(--danger); background: #fff1f2; padding: 10px; border-radius: 10px; text-align: center; }
@@ -40,7 +40,7 @@
         .overlay.active { display: block; }
         .menu-link { display: block; padding: 15px; font-weight: 700; text-decoration: none; color: #1e293b; border-radius: 10px; margin-bottom: 5px; }
 
-        /* STRUKTUR NODE */
+        /* STRUKTUR */
         .node { background: white; padding: 15px; border-radius: 15px; text-align: center; min-width: 160px; border: 1px solid #e2e8f0; border-top: 5px solid var(--p); box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         .node b { display: block; font-size: 0.9rem; }
         .node span { font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
@@ -48,7 +48,11 @@
         /* FORM & BUTTONS */
         .input-modern { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; font-weight: 600; }
         .btn-primary { width: 100%; padding: 16px; background: var(--p); color: white; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; }
-        .btn-tool { flex: 1; padding: 8px; border: none; border-radius: 8px; font-weight: 700; font-size: 0.7rem; cursor: pointer; margin-top: 10px; }
+        
+        .admin-controls { display: flex; gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; }
+        .btn-edit { flex: 2; padding: 10px; background: #eff6ff; color: var(--p); border: none; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; }
+        .btn-del { flex: 1; padding: 10px; background: #fff1f2; color: var(--danger); border: none; border-radius: 10px; font-weight: 700; font-size: 0.75rem; cursor: pointer; }
+        
         .wa-share { background: #22c55e; color: white; text-decoration: none; padding: 12px; border-radius: 12px; display: block; text-align: center; font-weight: 800; font-size: 0.8rem; margin-top: 20px; }
     </style>
 </head>
@@ -83,24 +87,27 @@
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
     <main class="app-container">
+        <!-- DEADLINE VIEW -->
         <section id="deadline-view" class="main-view active">
             <div id="tab-done" class="tab-content"></div>
             <div id="tab-now" class="tab-content active"></div>
             <div id="tab-next" class="tab-content"></div>
         </section>
 
+        <!-- SCHEDULE VIEW -->
         <section id="schedule-view" class="main-view"></section>
 
+        <!-- STRUCTURE VIEW -->
         <section id="structure-view" class="main-view">
             <div id="org-content" style="display:flex; flex-direction:column; align-items:center; gap:20px"></div>
         </section>
 
+        <!-- ADMIN PAGES -->
         <section id="login-page" class="main-view">
             <input type="password" id="pass-val" class="input-modern" placeholder="Password Admin">
             <button class="btn-primary" onclick="login()">MASUK</button>
         </section>
 
-        <!-- FORM DEADLINE -->
         <section id="form-deadline" class="main-view">
             <h2 style="text-align:center; margin-bottom:20px">INPUT DEADLINE</h2>
             <select id="in-dead-matkul" class="input-modern" onchange="autoTime()"></select>
@@ -110,7 +117,6 @@
             <button class="btn-primary" onclick="saveDeadline()">SIMPAN DEADLINE</button>
         </section>
 
-        <!-- FORM MATKUL -->
         <section id="form-schedule" class="main-view">
             <h2 style="text-align:center; margin-bottom:20px">INPUT MATKUL</h2>
             <input type="text" id="in-sch-name" class="input-modern" placeholder="Nama Mata Kuliah">
@@ -124,16 +130,15 @@
             <button class="btn-primary" onclick="saveSchedule()">SIMPAN MATKUL</button>
         </section>
 
-        <!-- FORM STRUKTUR -->
         <section id="form-struct" class="main-view">
-            <h2 style="text-align:center; margin-bottom:20px">INPUT STRUKTUR</h2>
+            <h2 style="text-align:center; margin-bottom:20px">EDIT STRUKTUR</h2>
             <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan (Ketua, dll)">
-            <input type="text" id="in-str-name" class="input-modern" placeholder="Nama">
+            <input type="text" id="in-str-name" class="input-modern" placeholder="Nama Lengkap">
             <select id="in-str-lv" class="input-modern">
-                <option value="1">Level 1 (Atas)</option><option value="2">Level 2 (Tengah)</option><option value="3">Level 3 (Bawah)</option>
+                <option value="1">Level 1 (Top)</option><option value="2">Level 2 (Middle)</option><option value="3">Level 3 (Bottom)</option>
             </select>
-            <button class="btn-primary" onclick="saveStruct()">SIMPAN STRUKTUR</button>
-            <div id="struct-admin-list" style="margin-top:20px"></div>
+            <button class="btn-primary" onclick="saveStruct()">TAMBAH ANGGOTA</button>
+            <div id="struct-list-edit" style="margin-top:30px"></div>
         </section>
     </main>
 
@@ -170,7 +175,7 @@
             const now = new Date();
             const isAdmin = db.isAdmin;
 
-            // Render Schedules
+            // SCHEDULES
             const schView = document.getElementById('schedule-view');
             schView.innerHTML = "";
             [1,2,3,4,5,6].forEach(d => {
@@ -181,13 +186,16 @@
                         schView.innerHTML += `<div class="card-item">
                             <span class="card-subject">${s.name}</span>
                             <p class="card-meta">👨‍🏫 ${s.lecturer} | 📍 ${s.room} | ⏰ ${s.time}</p>
-                            ${isAdmin ? `<button class="btn-tool" style="background:#eff6ff; color:var(--p)" onclick="openForm('schedule', ${db.schedules.indexOf(s)})">EDIT</button>` : ''}
+                            ${isAdmin ? `<div class="admin-controls">
+                                <button class="btn-edit" onclick="openForm('schedule', ${db.schedules.indexOf(s)})">EDIT</button>
+                                <button class="btn-del" onclick="deleteItem('schedules', ${db.schedules.indexOf(s)})">HAPUS</button>
+                            </div>` : ''}
                         </div>`;
                     });
                 }
             });
 
-            // Render Deadlines
+            // DEADLINES
             const makeList = (list) => {
                 let html = "";
                 list.sort((a,b) => new Date(a.date) - new Date(b.date)).forEach(t => {
@@ -196,10 +204,13 @@
                         <p class="card-meta">📅 ${t.date} | ⏰ ${t.time} WIB</p>
                         <div class="card-desc">${t.desc || 'Tidak ada keterangan'}</div>
                         <div class="countdown" data-time="${t.date}T${t.time}">...</div>
-                        ${isAdmin ? `<button class="btn-tool" style="background:#eff6ff; color:var(--p)" onclick="openForm('deadline', ${db.deadlines.indexOf(t)})">EDIT</button>` : ''}
+                        ${isAdmin ? `<div class="admin-controls">
+                            <button class="btn-edit" onclick="openForm('deadline', ${db.deadlines.indexOf(t)})">EDIT</button>
+                            <button class="btn-del" onclick="deleteItem('deadlines', ${db.deadlines.indexOf(t)})">HAPUS</button>
+                        </div>` : ''}
                     </div>`;
                 });
-                return html || '<p style="text-align:center; opacity:0.3; padding:20px">Belum ada data</p>';
+                return html || '<p style="text-align:center; opacity:0.3; padding:20px">Data Kosong</p>';
             };
 
             const getWeek = (off) => {
@@ -216,16 +227,22 @@
                 const d = new Date(t.date); return d >= w1.s && d <= w1.e;
             }));
 
-            // Render Struktur
-            const drawLv = (l) => db.structs.filter(s => s.lv == l).map(s => `
-                <div class="node"><span>${s.pos}</span><b>${s.name}</b>
-                ${isAdmin ? `<br><button onclick="deleteItem('structs', ${db.structs.indexOf(s)})" style="color:red;border:none;background:none;font-size:0.6rem">Hapus</button>` : ''}
-                </div>`).join('');
+            // STRUKTUR
+            const drawLv = (l) => db.structs.filter(s => s.lv == l).map(s => `<div class="node"><span>${s.pos}</span><b>${s.name}</b></div>`).join('');
             document.getElementById('org-content').innerHTML = `
                 ${drawLv(1)} <div style="width:2px; height:20px; background:#e2e8f0"></div>
                 <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(2)}</div>
                 <div style="width:2px; height:20px; background:#e2e8f0"></div>
                 <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(3)}</div>`;
+            
+            // List Edit Struktur di Form
+            if(isAdmin) {
+                document.getElementById('struct-list-edit').innerHTML = db.structs.map((s, i) => `
+                    <div style="display:flex; justify-content:space-between; background:white; padding:10px; margin-bottom:5px; border-radius:8px; border:1px solid #e2e8f0">
+                        <span style="font-size:0.8rem"><b>${s.pos}</b>: ${s.name}</span>
+                        <button onclick="deleteItem('structs', ${i})" style="color:red; border:none; background:none; font-weight:800">X</button>
+                    </div>`).join('');
+            }
         }
 
         setInterval(() => {
@@ -245,26 +262,35 @@
                 if(idx !== null) { const d = db.deadlines[idx]; sel.value = d.subject; document.getElementById('in-dead-date').value = d.date; document.getElementById('in-dead-desc').value = d.desc; }
                 toggleView('form-deadline');
             } else if(type === 'schedule') {
-                if(idx !== null) { const s = db.schedules[idx]; document.getElementById('in-sch-name').value = s.name; document.getElementById('in-sch-lect').value = s.lecturer; document.getElementById('in-sch-day').value = s.day; document.getElementById('in-sch-time').value = s.time; }
+                if(idx !== null) { const s = db.schedules[idx]; document.getElementById('in-sch-name').value = s.name; document.getElementById('in-sch-lect').value = s.lecturer; document.getElementById('in-sch-room').value = s.room; document.getElementById('in-sch-day').value = s.day; document.getElementById('in-sch-time').value = s.time; }
                 toggleView('form-schedule');
             }
         }
 
         function saveDeadline() {
             const data = { subject: document.getElementById('in-dead-matkul').value, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value };
+            if(!data.subject || !data.date) return alert("Isi data dengan lengkap!");
             if(editIdx !== null) db.deadlines[editIdx] = data; else db.deadlines.push(data);
             save('deadlines'); toggleView('deadline-view');
         }
 
         function saveSchedule() {
             const data = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, room: document.getElementById('in-sch-room').value, day: document.getElementById('in-sch-day').value, time: document.getElementById('in-sch-time').value };
+            if(!data.name || !data.time) return alert("Isi minimal nama matkul dan jam!");
             if(editIdx !== null) db.schedules[editIdx] = data; else db.schedules.push(data);
             save('schedules'); toggleView('schedule-view');
         }
 
         function saveStruct() {
-            db.structs.push({ pos: document.getElementById('in-str-pos').value, name: document.getElementById('in-str-name').value, lv: document.getElementById('in-str-lv').value });
-            save('structs'); toggleView('structure-view');
+            const data = { pos: document.getElementById('in-str-pos').value, name: document.getElementById('in-str-name').value, lv: document.getElementById('in-str-lv').value };
+            if(data.pos && data.name) { db.structs.push(data); save('structs'); }
+        }
+
+        function deleteItem(key, idx) {
+            if(confirm("Serius mau hapus data ini? Data yang dihapus tidak bisa balik lagi lho.")) {
+                db[key].splice(idx, 1);
+                save(key);
+            }
         }
 
         function shareToWA() {
@@ -273,7 +299,6 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
         }
 
-        function deleteItem(key, idx) { if(confirm("Hapus?")) { db[key].splice(idx, 1); save(key); } }
         function login() { if(document.getElementById('pass-val').value === "2025") { localStorage.setItem('isAdmin', 'true'); location.reload(); } }
         function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
         function autoTime() { const m = db.schedules.find(s => s.name === document.getElementById('in-dead-matkul').value); if(m) document.getElementById('in-dead-time').value = m.time; }
