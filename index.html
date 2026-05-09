@@ -3,14 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | PRO MAX UPDATE</title>
+    <title>COMCAST 2025 | CLOUD FINAL</title>
+    
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; --success: #22c55e; }
+        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: #1e293b; line-height: 1.6; }
 
-        /* LOGO ANIMASI TERUNIK */
+        /* LOGO ANIMASI */
         .logo-anim { 
             font-weight: 800; font-size: 1.2rem; 
             background: linear-gradient(90deg, #2563eb, #9333ea, #2563eb);
@@ -25,44 +29,50 @@
         /* NAV & TASKBAR */
         .glass-nav { background: white; height: 65px; position: sticky; top:0; z-index: 1000; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
         .taskbar { display: flex; background: white; padding: 10px; gap: 8px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 65px; z-index: 999; overflow-x: auto; }
-        .task-btn { flex: 1; min-width: 100px; padding: 12px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.7rem; cursor: pointer; white-space: nowrap; }
+        .task-btn { flex: 1; min-width: 100px; padding: 12px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
         .task-btn.active { background: var(--p); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
 
-        /* CARDS & CONTENT */
+        /* APP CONTENT */
         .app-container { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 100px; }
         .main-view, .tab-content { display: none; }
         .active { display: block !important; }
         .day-header { font-size: 0.75rem; font-weight: 800; color: var(--p); text-transform: uppercase; margin: 25px 0 10px 5px; display: flex; align-items: center; gap: 10px; }
         .day-header::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
 
+        /* CARDS */
         .card-item { background: white; border-radius: 18px; padding: 18px; margin-bottom: 12px; border: 1px solid #f1f5f9; box-shadow: 0 4px 15px rgba(0,0,0,0.02); }
         .card-subject { font-weight: 800; color: #1e293b; font-size: 1rem; display: block; }
         .card-meta { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 8px; }
         .card-desc { font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 10px; border-radius: 10px; margin-top: 10px; white-space: pre-line; border-left: 3px solid #e2e8f0; }
         .countdown { margin-top: 15px; font-size: 0.75rem; font-weight: 800; color: var(--danger); background: #fff1f2; padding: 10px; border-radius: 10px; text-align: center; }
 
-        /* STRUKTUR PP TIKTOK STYLE */
-        .node { background: white; padding: 15px; border-radius: 20px; text-align: center; min-width: 140px; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+        /* STRUKTUR PP STYLE */
+        .node { background: white; padding: 15px; border-radius: 20px; text-align: center; min-width: 140px; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.02); position: relative; }
         .pp-circle { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; border: 3px solid var(--p); margin-bottom: 10px; background: #eee; }
         .node b { display: block; font-size: 0.85rem; }
         .node span { font-size: 0.65rem; color: #94a3b8; font-weight: 700; text-transform: uppercase; }
 
         /* GALLERY DRIVE */
         .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
+        .gallery-img-container { position: relative; }
         .gallery-img { width: 100%; aspect-ratio: 1; border-radius: 15px; object-fit: cover; border: 1px solid #e2e8f0; }
 
-        /* SIDEBAR & FORMS */
+        /* SIDEBAR */
         .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: white; z-index: 2000; transition: 0.4s; padding: 30px; box-shadow: 20px 0 40px rgba(0,0,0,0.1); overflow-y: auto; }
         .sidebar.active { left: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; backdrop-filter: blur(4px); }
         .overlay.active { display: block; }
         .menu-link { display: block; padding: 15px; font-weight: 700; text-decoration: none; color: #1e293b; border-radius: 10px; }
-        .wa-share { background: #22c55e; color: white; text-decoration: none; padding: 14px; border-radius: 12px; display: block; text-align: center; font-weight: 800; margin-top: 20px; }
         
+        /* ADMIN CONTROLS */
+        .admin-btns { display: flex; gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; }
+        .btn-edit { flex: 1; padding: 8px; background: #eff6ff; color: var(--p); border: none; border-radius: 8px; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
+        .btn-del { flex: 1; padding: 8px; background: #fff1f2; color: var(--danger); border: none; border-radius: 8px; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
+        .mini-admin { display: flex; gap: 5px; justify-content: center; margin-top: 10px; border-top: 1px solid #f1f5f9; padding-top: 5px; }
+
         .input-modern { width: 100%; padding: 14px; margin-bottom: 12px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; font-weight: 600; }
         .btn-primary { width: 100%; padding: 16px; background: var(--p); color: white; border: none; border-radius: 15px; font-weight: 800; cursor: pointer; }
-        .admin-controls { display: flex; gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; }
-        .btn-del { flex: 1; padding: 10px; background: #fff1f2; color: var(--danger); border: none; border-radius: 10px; font-weight: 700; font-size: 0.7rem; cursor: pointer; }
+        .wa-share { background: #22c55e; color: white; text-decoration: none; padding: 14px; border-radius: 12px; display: block; text-align: center; font-weight: 800; margin-top: 20px; }
     </style>
 </head>
 <body>
@@ -83,13 +93,13 @@
         <a href="#" class="menu-link" onclick="toggleView('deadline-view')">📅 Deadline Tugas</a>
         <a href="#" class="menu-link" onclick="toggleView('schedule-view')">📚 Jadwal Kuliah</a>
         <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
-        <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Drive</a>
+        <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
         <a href="#" class="wa-share" onclick="shareToWA()">📤 Share Link ke WA</a>
         
         <div id="admin-group" style="display:none; margin-top:20px; border-top:2px solid #f1f5f9; padding-top:20px">
             <a href="#" class="menu-link" onclick="openForm('deadline')">➕ Tambah Deadline</a>
             <a href="#" class="menu-link" onclick="openForm('schedule')">➕ Tambah Matkul</a>
-            <a href="#" class="menu-link" onclick="toggleView('form-struct')">👤 Edit Struktur</a>
+            <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah Anggota</a>
             <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Foto</a>
             <a href="#" class="menu-link" style="color:var(--danger)" onclick="logout()">🚪 Logout Admin</a>
         </div>
@@ -99,7 +109,6 @@
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
 
     <main class="app-container">
-        <!-- VIEWS -->
         <section id="deadline-view" class="main-view active">
             <div id="tab-done" class="tab-content"></div>
             <div id="tab-now" class="tab-content active"></div>
@@ -116,160 +125,147 @@
             <div class="gallery-grid" id="gallery-content"></div>
         </section>
 
-        <!-- ADMIN FORMS -->
         <section id="login-page" class="main-view">
             <input type="password" id="pass-val" class="input-modern" placeholder="Password Admin">
             <button class="btn-primary" onclick="login()">MASUK</button>
         </section>
 
         <section id="form-deadline" class="main-view">
-            <h2 style="text-align:center; margin-bottom:20px">INPUT DEADLINE</h2>
-            <select id="in-dead-matkul" class="input-modern" onchange="autoTime()"></select>
+            <h2 style="text-align:center; margin-bottom:20px">FORM DEADLINE</h2>
+            <input type="hidden" id="edit-dead-id">
+            <select id="in-dead-matkul" class="input-modern"></select>
             <input type="date" id="in-dead-date" class="input-modern">
-            <input type="time" id="in-dead-time" class="input-modern" readonly>
             <textarea id="in-dead-desc" class="input-modern" placeholder="Deskripsi Tugas..." rows="4"></textarea>
             <button class="btn-primary" onclick="saveDeadline()">SIMPAN</button>
         </section>
 
         <section id="form-schedule" class="main-view">
-            <h2 style="text-align:center; margin-bottom:20px">INPUT MATKUL</h2>
-            <input type="text" id="in-sch-name" class="input-modern" placeholder="Nama Mata Kuliah">
-            <input type="text" id="in-sch-lect" class="input-modern" placeholder="Nama Dosen">
-            <input type="text" id="in-sch-room" class="input-modern" placeholder="Ruangan">
-            <select id="in-sch-day" class="input-modern">
-                <option value="1">Senin</option><option value="2">Selasa</option><option value="3">Rabu</option>
-                <option value="4">Kamis</option><option value="5">Jumat</option><option value="6">Sabtu</option>
-            </select>
+            <h2 style="text-align:center; margin-bottom:20px">FORM JADWAL</h2>
+            <input type="hidden" id="edit-sch-id">
+            <input type="text" id="in-sch-name" class="input-modern" placeholder="Nama Matkul">
+            <input type="text" id="in-sch-lect" class="input-modern" placeholder="Dosen">
             <input type="time" id="in-sch-time" class="input-modern">
+            <select id="in-sch-day" class="input-modern">
+                <option value="1">Senin</option><option value="2">Selasa</option><option value="3">Rabu</option><option value="4">Kamis</option><option value="5">Jumat</option><option value="6">Sabtu</option>
+            </select>
             <button class="btn-primary" onclick="saveSchedule()">SIMPAN</button>
         </section>
 
         <section id="form-struct" class="main-view">
-            <h2 style="text-align:center; margin-bottom:20px">EDIT STRUKTUR</h2>
-            <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan (Contoh: Ketua Kelas)">
+            <h2 style="text-align:center; margin-bottom:20px">FORM STRUKTUR</h2>
+            <input type="hidden" id="edit-str-id">
+            <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan">
             <input type="text" id="in-str-name" class="input-modern" placeholder="Nama Lengkap">
-            <input type="text" id="in-str-img" class="input-modern" placeholder="Link Foto Google Drive">
+            <input type="text" id="in-str-img" class="input-modern" placeholder="Link Foto Drive">
             <select id="in-str-lv" class="input-modern">
-                <option value="1">Level 1 (Top)</option><option value="2">Level 2 (Middle)</option><option value="3">Level 3 (Bottom)</option>
+                <option value="1">Level 1 (Ketua/Inti)</option><option value="2">Level 2 (Sekben)</option><option value="3">Level 3 (Divisi)</option>
             </select>
-            <button class="btn-primary" onclick="saveStruct()">TAMBAH ANGGOTA</button>
-            <div id="struct-list-edit" style="margin-top:20px"></div>
+            <button class="btn-primary" onclick="saveStruct()">SIMPAN DATA ANGGOTA</button>
         </section>
 
         <section id="form-gallery" class="main-view">
-            <h2 style="text-align:center; margin-bottom:20px">TAMBAH FOTO GALERI</h2>
-            <input type="text" id="in-gal-img" class="input-modern" placeholder="Link Foto Google Drive">
-            <button class="btn-primary" onclick="saveGallery()">SIMPAN FOTO</button>
-            <div id="gallery-list-edit" style="margin-top:20px"></div>
+            <h2 style="text-align:center; margin-bottom:20px">UPLOAD FOTO</h2>
+            <input type="text" id="in-gal-img" class="input-modern" placeholder="Link Foto Drive">
+            <button class="btn-primary" onclick="saveGallery()">SIMPAN KE GALERI</button>
         </section>
     </main>
 
     <script>
-        let db = {
-            deadlines: JSON.parse(localStorage.getItem('deadlines')) || [],
-            schedules: JSON.parse(localStorage.getItem('schedules')) || [],
-            structs: JSON.parse(localStorage.getItem('structs')) || [],
-            gallery: JSON.parse(localStorage.getItem('gallery')) || [],
-            isAdmin: localStorage.getItem('isAdmin') === 'true'
+        // FIREBASE CONFIG MILIK ABANG
+        const firebaseConfig = {
+            apiKey: "AIzaSyB_xftvLFo_uxkZMooDcz6O6WwX6BRlPzw",
+            authDomain: "comcast-2025.firebaseapp.com",
+            databaseURL: "https://comcast-2025-default-rtdb.asia-southeast1.firebasedatabase.app",
+            projectId: "comcast-2025",
+            storageBucket: "comcast-2025.firebasestorage.app",
+            messagingSenderId: "730871377717",
+            appId: "1:730871377717:web:1d42c64362e6ae035be67c"
         };
+
+        firebase.initializeApp(firebaseConfig);
+        const dbRef = firebase.database().ref();
+        let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], isAdmin: localStorage.getItem('isAdmin') === 'true' };
         const DAYS = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
 
-        // DRIVE LINK CONVERTER (Mesin Utama Database Drive)
-        function cleanDriveLink(link) {
-            if(!link) return "https://via.placeholder.com/150";
-            if(link.includes('drive.google.com')) {
-                let id = "";
-                if(link.includes('id=')) id = link.split('id=')[1].split('&')[0];
-                else id = link.split('/d/')[1].split('/')[0];
-                return `https://lh3.googleusercontent.com/d/${id}`;
-            }
-            return link;
-        }
-
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
-        function toggleView(id) {
-            document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('main-taskbar').style.display = (id === 'deadline-view') ? 'flex' : 'none';
-            if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
+        dbRef.on('value', (snap) => {
+            const data = snap.val() || {};
+            localDB.deadlines = data.deadlines ? Object.keys(data.deadlines).map(k => ({...data.deadlines[k], fid: k})) : [];
+            localDB.schedules = data.schedules ? Object.keys(data.schedules).map(k => ({...data.schedules[k], fid: k})) : [];
+            localDB.structs = data.structs ? Object.keys(data.structs).map(k => ({...data.structs[k], fid: k})) : [];
+            localDB.gallery = data.gallery ? Object.keys(data.gallery).map(k => ({...data.gallery[k], fid: k})) : [];
             render();
-        }
-        function showTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
-        }
+        });
 
-        function save(key) { localStorage.setItem(key, JSON.stringify(db[key])); render(); }
+        function cleanDriveLink(link) {
+            if(!link || !link.includes('drive.google.com')) return link || "https://via.placeholder.com/150";
+            const id = link.includes('id=') ? link.split('id=')[1].split('&')[0] : link.split('/d/')[1].split('/')[0];
+            return `https://lh3.googleusercontent.com/d/${id}`;
+        }
 
         function render() {
-            const now = new Date();
-            const isAdmin = db.isAdmin;
+            const isAdmin = localDB.isAdmin;
+            const now = new Date().setHours(0,0,0,0);
 
-            // Render Schedules
+            // 1. Render Jadwal
             const schV = document.getElementById('schedule-view'); schV.innerHTML = "";
             [1,2,3,4,5,6].forEach(d => {
-                const items = db.schedules.filter(s => s.day == d);
+                const items = localDB.schedules.filter(s => s.day == d);
                 if(items.length > 0) {
                     schV.innerHTML += `<div class="day-header">${DAYS[d]}</div>`;
                     items.forEach(s => {
                         schV.innerHTML += `<div class="card-item">
                             <span class="card-subject">${s.name}</span>
-                            <p class="card-meta">👨‍🏫 ${s.lecturer} | 📍 ${s.room} | ⏰ ${s.time}</p>
-                            ${isAdmin ? `<button class="btn-del" onclick="deleteItem('schedules', ${db.schedules.indexOf(s)})">HAPUS</button>` : ''}
+                            <p class="card-meta">👨‍🏫 ${s.lecturer} | ⏰ ${s.time}</p>
+                            ${isAdmin ? `<div class="admin-btns">
+                                <button class="btn-edit" onclick="editSchedule('${s.fid}')">EDIT</button>
+                                <button class="btn-del" onclick="deleteData('schedules', '${s.fid}')">HAPUS</button>
+                            </div>` : ''}
                         </div>`;
                     });
                 }
             });
 
-            // Render Deadlines
-            const makeList = (list) => {
-                return list.sort((a,b) => new Date(a.date) - new Date(b.date)).map(t => `
-                    <div class="card-item">
-                        <span class="card-subject">${t.subject}</span>
-                        <p class="card-meta">📅 ${t.date} | ⏰ ${t.time} WIB</p>
-                        <div class="card-desc">${t.desc || 'No description'}</div>
-                        <div class="countdown" data-time="${t.date}T${t.time}">...</div>
-                        ${isAdmin ? `<button class="btn-del" style="margin-top:10px" onclick="deleteItem('deadlines', ${db.deadlines.indexOf(t)})">HAPUS</button>` : ''}
-                    </div>`).join('') || '<p style="text-align:center; opacity:0.3; padding:20px">Kosong</p>';
-            };
+            // 2. Render Deadline (Tab Otomatis)
+            const makeList = (list) => list.sort((a,b) => new Date(a.date) - new Date(b.date)).map(t => `
+                <div class="card-item">
+                    <span class="card-subject">${t.subject}</span>
+                    <p class="card-meta">📅 ${t.date}</p>
+                    <div class="card-desc">${t.desc || 'Tidak ada deskripsi'}</div>
+                    <div class="countdown" data-time="${t.date}T23:59">...</div>
+                    ${isAdmin ? `<div class="admin-btns">
+                        <button class="btn-edit" onclick="editDeadline('${t.fid}')">EDIT</button>
+                        <button class="btn-del" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button>
+                    </div>` : ''}
+                </div>`).join('') || '<p style="text-align:center; opacity:0.3; padding:20px">Kosong</p>';
 
             const getWeek = (off) => {
-                const d = new Date(); const start = d.getDate() - d.getDay() + 1 + (off * 7);
+                const d = new Date();
+                const start = d.getDate() - (d.getDay() === 0 ? 6 : d.getDay() - 1) + (off * 7);
                 return { s: new Date(new Date().setDate(start)).setHours(0,0,0,0), e: new Date(new Date().setDate(start + 6)).setHours(23,59,59,999) };
             };
             const w0 = getWeek(0), w1 = getWeek(1);
-            document.getElementById('tab-done').innerHTML = makeList(db.deadlines.filter(t => (new Date(`${t.date}T${t.time}`) - now) <= 0));
-            document.getElementById('tab-now').innerHTML = makeList(db.deadlines.filter(t => {
-                const d = new Date(t.date); return (new Date(`${t.date}T${t.time}`) - now) > 0 && d >= w0.s && d <= w0.e;
-            }));
-            document.getElementById('tab-next').innerHTML = makeList(db.deadlines.filter(t => {
-                const d = new Date(t.date); return d >= w1.s && d <= w1.e;
-            }));
+            document.getElementById('tab-now').innerHTML = makeList(localDB.deadlines.filter(t => { const d = new Date(t.date).getTime(); return d >= w0.s && d <= w0.e && d >= now; }));
+            document.getElementById('tab-next').innerHTML = makeList(localDB.deadlines.filter(t => { const d = new Date(t.date).getTime(); return d >= w1.s && d <= w1.e; }));
+            document.getElementById('tab-done').innerHTML = makeList(localDB.deadlines.filter(t => { const d = new Date(t.date).getTime(); return d < now; }));
 
-            // Render Struktur (With Photo)
-            const drawLv = (l) => db.structs.filter(s => s.lv == l).map(s => `
+            // 3. Render Struktur (EDIT & HAPUS ADA DISINI SEKARANG)
+            const drawLv = (l) => localDB.structs.filter(s => s.lv == l).map(s => `
                 <div class="node">
                     <img src="${cleanDriveLink(s.img)}" class="pp-circle">
                     <span>${s.pos}</span><b>${s.name}</b>
+                    ${isAdmin ? `<div class="mini-admin">
+                        <button onclick="editStruct('${s.fid}')" style="background:none;border:none;color:blue;font-size:0.6rem;font-weight:bold;cursor:pointer">EDIT</button>
+                        <button onclick="deleteData('structs', '${s.fid}')" style="background:none;border:none;color:red;font-size:0.6rem;font-weight:bold;cursor:pointer">HAPUS</button>
+                    </div>` : ''}
                 </div>`).join('');
-            document.getElementById('org-content').innerHTML = `
-                ${drawLv(1)} <div style="width:2px; height:20px; background:#e2e8f0"></div>
-                <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(2)}</div>
-                <div style="width:2px; height:20px; background:#e2e8f0"></div>
-                <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(3)}</div>`;
+            document.getElementById('org-content').innerHTML = `${drawLv(1)} <div style="width:2px; height:20px; background:#e2e8f0"></div> <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(2)}</div> <div style="width:2px; height:20px; background:#e2e8f0"></div> <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(3)}</div>`;
 
-            // Render Gallery
-            document.getElementById('gallery-content').innerHTML = db.gallery.map(img => `
-                <img src="${cleanDriveLink(img)}" class="gallery-img" onclick="window.open(this.src)">
-            `).join('') || '<p style="grid-column: span 2; text-align:center; opacity:0.3">Belum ada foto di Drive.</p>';
-
-            // Admin Lists
-            if(isAdmin) {
-                document.getElementById('struct-list-edit').innerHTML = db.structs.map((s, i) => `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between"><span>${s.name}</span><button onclick="deleteItem('structs', ${i})" style="color:red; border:none; background:none">HAPUS</button></div>`).join('');
-                document.getElementById('gallery-list-edit').innerHTML = db.gallery.map((g, i) => `<div style="padding:10px; border-bottom:1px solid #eee; display:flex; justify-content:space-between"><span>Foto ${i+1}</span><button onclick="deleteItem('gallery', ${i})" style="color:red; border:none; background:none">HAPUS</button></div>`).join('');
-            }
+            // 4. Render Galeri
+            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `
+                <div class="gallery-img-container">
+                    <img src="${cleanDriveLink(g.img)}" class="gallery-img">
+                    ${isAdmin ? `<button onclick="deleteData('gallery', '${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:24px; height:24px; font-weight:bold; cursor:pointer">×</button>` : ''}
+                </div>`).join('') || '<p style="grid-column: span 2; text-align:center; opacity:0.3">Belum ada foto.</p>';
         }
 
         setInterval(() => {
@@ -281,40 +277,83 @@
             });
         }, 1000);
 
-        function shareToWA() {
-            const text = `*🚨 UPDATE COMCAST 2025 🚨*\n\nCek update tugas & jadwal terbaru di sini:\n👉 ${window.location.href}`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(text)}`);
-        }
-
-        // SAVE FUNCTIONS
+        // SAVE & UPDATE OPS
         function saveDeadline() {
-            db.deadlines.push({ subject: document.getElementById('in-dead-matkul').value, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value });
-            save('deadlines'); toggleView('deadline-view');
+            const id = document.getElementById('edit-dead-id').value;
+            const data = { subject: document.getElementById('in-dead-matkul').value, date: document.getElementById('in-dead-date').value, desc: document.getElementById('in-dead-desc').value };
+            if(id) dbRef.child('deadlines').child(id).update(data); else dbRef.child('deadlines').push(data);
+            toggleView('deadline-view');
         }
         function saveSchedule() {
-            db.schedules.push({ name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, room: document.getElementById('in-sch-room').value, day: document.getElementById('in-sch-day').value, time: document.getElementById('in-sch-time').value });
-            save('schedules'); toggleView('schedule-view');
+            const id = document.getElementById('edit-sch-id').value;
+            const data = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: document.getElementById('in-sch-day').value };
+            if(id) dbRef.child('schedules').child(id).update(data); else dbRef.child('schedules').push(data);
+            toggleView('schedule-view');
         }
         function saveStruct() {
-            db.structs.push({ pos: document.getElementById('in-str-pos').value, name: document.getElementById('in-str-name').value, img: document.getElementById('in-str-img').value, lv: document.getElementById('in-str-lv').value });
-            save('structs');
+            const id = document.getElementById('edit-str-id').value;
+            const data = { pos: document.getElementById('in-str-pos').value, name: document.getElementById('in-str-name').value, img: document.getElementById('in-str-img').value, lv: document.getElementById('in-str-lv').value };
+            if(id) dbRef.child('structs').child(id).update(data); else dbRef.child('structs').push(data);
+            toggleView('structure-view');
         }
         function saveGallery() {
-            db.gallery.push(document.getElementById('in-gal-img').value);
-            save('gallery');
+            const img = document.getElementById('in-gal-img').value;
+            if(img) dbRef.child('gallery').push({img: img});
+            alert("Foto Tersimpan!");
+        }
+        function deleteData(path, id) { if(confirm("Hapus data ini?")) dbRef.child(path).child(id).remove(); }
+
+        // EDIT OPENERS
+        function editDeadline(id) {
+            const t = localDB.deadlines.find(x => x.fid === id);
+            document.getElementById('edit-dead-id').value = id;
+            document.getElementById('in-dead-matkul').innerHTML = localDB.schedules.map(s => `<option value="${s.name}" ${s.name === t.subject ? 'selected' : ''}>${s.name}</option>`).join('');
+            document.getElementById('in-dead-date').value = t.date;
+            document.getElementById('in-dead-desc').value = t.desc;
+            toggleView('form-deadline');
+        }
+        function editSchedule(id) {
+            const s = localDB.schedules.find(x => x.fid === id);
+            document.getElementById('edit-sch-id').value = id;
+            document.getElementById('in-sch-name').value = s.name;
+            document.getElementById('in-sch-lect').value = s.lecturer;
+            document.getElementById('in-sch-time').value = s.time;
+            document.getElementById('in-sch-day').value = s.day;
+            toggleView('form-schedule');
+        }
+        function editStruct(id) {
+            const s = localDB.structs.find(x => x.fid === id);
+            document.getElementById('edit-str-id').value = id;
+            document.getElementById('in-str-pos').value = s.pos;
+            document.getElementById('in-str-name').value = s.name;
+            document.getElementById('in-str-img').value = s.img;
+            document.getElementById('in-str-lv').value = s.lv;
+            toggleView('form-struct');
         }
 
-        function openForm(type) {
-            if(type === 'deadline') {
-                document.getElementById('in-dead-matkul').innerHTML = '<option value="">Pilih Matkul...</option>' + db.schedules.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
-                toggleView('form-deadline');
-            } else toggleView('form-schedule');
+        // NAV & AUTH
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+        function toggleView(id) {
+            document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+            document.getElementById('main-taskbar').style.display = (id === 'deadline-view') ? 'flex' : 'none';
+            if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
         }
-        function deleteItem(key, idx) { if(confirm("Hapus permanen?")) { db[key].splice(idx, 1); save(key); } }
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            btn.classList.add('active');
+        }
+        function openForm(type) {
+            if(type === 'deadline') { document.getElementById('edit-dead-id').value = ""; document.getElementById('in-dead-matkul').innerHTML = localDB.schedules.map(s => `<option value="${s.name}">${s.name}</option>`).join(''); toggleView('form-deadline'); }
+            else if(type === 'schedule') { document.getElementById('edit-sch-id').value = ""; toggleView('form-schedule'); }
+            else { document.getElementById('edit-str-id').value = ""; toggleView('form-struct'); }
+        }
         function login() { if(document.getElementById('pass-val').value === "2025") { localStorage.setItem('isAdmin', 'true'); location.reload(); } }
         function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
-        function autoTime() { const m = db.schedules.find(s => s.name === document.getElementById('in-dead-matkul').value); if(m) document.getElementById('in-dead-time').value = m.time; }
-        window.onload = () => { if(db.isAdmin) document.getElementById('admin-group').style.display = 'block'; render(); };
+        function shareToWA() { window.open(`https://wa.me/?text=${encodeURIComponent("*🚨 UPDATE COMCAST 2025 🚨*\nCek update terbaru di sini:\n👉 "+window.location.href)}`); }
+        window.onload = () => { if(localDB.isAdmin) document.getElementById('admin-group').style.display = 'block'; };
     </script>
 </body>
-</html>
+    </html>
