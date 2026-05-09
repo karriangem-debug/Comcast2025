@@ -2,60 +2,52 @@
 .dark-theme { --bg: #0f172a; --card: #1e293b; --text: #f9fafb; --accent: #60a5fa; --border: #374151; }
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body { background: var(--bg); color: var(--text); transition: 0.3s; }
+body { background: var(--bg); color: var(--text); transition: 0.3s; padding-bottom: 50px; }
 
 nav { background: var(--card); height: 60px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
 .nav-container { width: 100%; max-width: 600px; margin: auto; display: flex; justify-content: space-between; align-items: center; padding: 0 20px; }
 .logo-comcast { font-weight: 800; color: var(--accent); font-size: 1.1rem; }
+.hamburger span { display: block; width: 22px; height: 3px; background: var(--text); margin: 4px 0; border-radius: 2px; }
 
-.hamburger { cursor: pointer; display: flex; flex-direction: column; gap: 4px; }
-.hamburger span { width: 22px; height: 3px; background: var(--text); border-radius: 2px; }
-
-/* Sidebar */
-.side-nav { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: var(--card); z-index: 2001; padding: 50px 15px; transition: 0.3s; box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+.side-nav { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: var(--card); z-index: 2001; padding: 50px 15px; transition: 0.3s; }
 .side-nav.open { left: 0; }
 .side-header { font-size: 0.7rem; font-weight: 800; color: #888; margin: 15px 10px 5px; text-transform: uppercase; }
 .side-nav a { display: block; padding: 12px 15px; color: var(--text); text-decoration: none; font-weight: 600; border-radius: 10px; font-size: 0.9rem; }
-
-#menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; backdrop-filter: blur(2px); }
+#menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 2000; }
 #menu-overlay.show { display: block; }
 
-section { display: none; padding: 20px; max-width: 600px; margin: auto; animation: slideUp 0.3s; }
+section { display: none; padding: 20px; max-width: 600px; margin: auto; }
 section.active { display: block; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-/* Cards & Components */
-.admin-card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 15px; }
-input, textarea, select, button { width: 100%; padding: 12px; margin-top: 10px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.9rem; }
-button { background: var(--accent); color: white; border: none; font-weight: 700; cursor: pointer; }
-.btn-wa { background: #25D366; }
+.admin-card { background: var(--card); padding: 20px; border-radius: 15px; border: 1px solid var(--border); }
+input, textarea, select, button { width: 100%; padding: 12px; margin-top: 5px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg); color: var(--text); font-size: 0.9rem; }
+button { background: var(--accent); color: white; border: none; font-weight: 700; margin-top: 15px; }
 
-.divider { text-align: center; border-bottom: 1px solid var(--border); line-height: 0.1em; margin: 25px 0; font-size: 0.7rem; font-weight: 800; color: #888; }
-.divider span { background: var(--card); padding: 0 10px; }
+/* Deadline Styling (Revisi) */
+.day-group { margin-bottom: 30px; }
+.day-label { background: #64748b; color: white; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; width: fit-content; margin-bottom: 12px; }
+.item-card { background: var(--card); padding: 18px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 12px; position: relative; border-left: 6px solid var(--accent); }
+.task-subject { font-weight: 800; color: var(--accent); font-size: 1.1rem; line-height: 1.2; }
+.task-meta { font-size: 0.75rem; font-weight: 600; opacity: 0.7; margin: 5px 0 10px; }
+.task-detail { white-space: pre-wrap; font-size: 0.9rem; line-height: 1.5; color: var(--text); }
+.countdown { display: inline-block; font-weight: 800; color: var(--red); font-size: 0.7rem; margin-top: 12px; background: rgba(239, 68, 68, 0.1); padding: 6px 12px; border-radius: 6px; }
 
-/* Deadline Styling */
-.item-card { background: var(--card); padding: 15px; border-radius: 15px; border: 1px solid var(--border); margin-bottom: 12px; position: relative; border-left: 5px solid var(--accent); }
-.task-detail { white-space: pre-wrap; font-size: 0.9rem; margin-top: 8px; line-height: 1.5; }
-.countdown { display: block; font-weight: 800; color: var(--red); font-size: 0.7rem; margin-top: 10px; background: rgba(239, 68, 68, 0.1); padding: 5px 10px; border-radius: 5px; width: fit-content; }
-
-.btn-group { display: flex; gap: 5px; position: absolute; right: 10px; top: 10px; }
-.del-btn { background: var(--red); padding: 4px 8px; font-size: 0.6rem; width: auto; margin: 0; }
-.edit-btn { background: #f59e0b; padding: 4px 8px; font-size: 0.6rem; width: auto; margin: 0; }
-
-/* Jadwal Rapi Styling */
-.day-group { margin-bottom: 25px; }
-.day-label { background: var(--accent); color: white; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 800; width: fit-content; margin-bottom: 10px; box-shadow: 0 4px 10px rgba(37, 99, 235, 0.2); }
+/* Jadwal Styling */
 .schedule-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 15px; display: flex; align-items: center; gap: 15px; margin-bottom: 8px; position: relative; }
-.sch-time { font-weight: 800; color: var(--accent); font-size: 0.85rem; min-width: 60px; text-align: center; border-right: 2px solid var(--border); padding-right: 10px; }
-.sch-name { font-weight: 700; font-size: 0.95rem; }
-.sch-detail { font-size: 0.75rem; color: #888; }
-.del-btn-sch { background: var(--red); color: white; padding: 4px 8px; font-size: 0.6rem; border-radius: 5px; position: absolute; right: 10px; top: 15px; width: auto !important; margin: 0 !important; }
+.sch-time { font-weight: 800; color: var(--accent); font-size: 0.85rem; min-width: 65px; border-right: 2px solid var(--border); }
 
-/* Struktur Kelas */
+/* Tabs */
+.tab-header { display: flex; gap: 5px; margin-bottom: 20px; }
+.tab-btn { flex: 1; font-size: 0.65rem; background: #e5e7eb; color: #4b5563; padding: 10px; margin: 0; }
+.tab-btn.active { background: var(--accent); color: white; }
+
+/* Admin Buttons */
+.btn-group { display: flex; gap: 5px; margin-top: 15px; border-top: 1px solid var(--border); padding-top: 10px; }
+.del-btn, .edit-btn { padding: 6px 12px; font-size: 0.7rem; margin: 0; }
+.del-btn { background: var(--red); }
+.edit-btn { background: #f59e0b; }
+
+/* Struktur */
 .org-container { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
 .org-box { background: var(--card); padding: 15px; border-radius: 15px; text-align: center; border: 1px solid var(--border); }
-.org-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); margin-bottom: 5px; }
-
-.tab-header { display: flex; gap: 5px; margin-bottom: 15px; }
-.tab-btn { flex: 1; font-size: 0.65rem; background: #e5e7eb; color: #4b5563; padding: 10px; }
-.tab-btn.active { background: var(--accent); color: white; }
+.org-img { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent); }
