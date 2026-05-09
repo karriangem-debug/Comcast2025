@@ -1,37 +1,52 @@
-:root { --p: #2563eb; --bg: #f8fafc; --card: #ffffff; --txt: #1e293b; --red: #ef4444; }
-.dark-theme { --bg: #0f172a; --card: #1e293b; --txt: #f1f5f9; }
+:root {
+    --primary: #2563eb;
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --text: #0f172a;
+    --border: rgba(0,0,0,0.06);
+    --red: #ef4444;
+}
+
+.dark-theme {
+    --bg: #0b0f1a;
+    --card: #161e2e;
+    --text: #f1f5f9;
+    --border: rgba(255,255,255,0.06);
+}
 
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-body { background: var(--bg); color: var(--txt); transition: 0.3s; }
+body { background: var(--bg); color: var(--text); transition: background 0.3s; overflow-x: hidden; }
 
 /* NAVBAR */
-.navbar { background: var(--card); height: 70px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); }
-.nav-wrapper { width: 100%; max-width: 800px; margin: auto; display: flex; justify-content: space-between; padding: 0 20px; align-items: center; }
+.main-nav { background: var(--card); height: 70px; display: flex; align-items: center; position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid var(--border); box-shadow: 0 4px 12px rgba(0,0,0,0.03); }
+.nav-container { width: 100%; max-width: 800px; margin: auto; display: flex; justify-content: space-between; padding: 0 20px; align-items: center; }
 
 /* LOGO */
-.logo-text { font-weight: 800; font-size: 1.2rem; color: var(--p); }
-.animate-glow { animation: logo-fade 10s infinite; }
-@keyframes logo-fade { 0%, 10% { opacity: 0; } 20%, 80% { opacity: 1; } 90%, 100% { opacity: 0; } }
+.logo-text { font-weight: 800; font-size: 1.2rem; color: var(--primary); letter-spacing: -0.5px; }
+.animate-glow { animation: glow-fade 10s infinite; }
+@keyframes glow-fade { 0%, 10% { opacity: 0; } 20%, 80% { opacity: 1; } 90%, 100% { opacity: 0; } }
 
-/* SIDEBAR STABLE */
-.sidebar-container { position: fixed; left: -280px; top: 0; width: 280px; height: 100%; background: var(--card); z-index: 200; transition: 0.3s ease-in-out; box-shadow: 10px 0 30px rgba(0,0,0,0.1); padding: 30px 20px; }
-.sidebar-container.active { left: 0; }
-.sidebar-label { font-size: 0.65rem; font-weight: 800; opacity: 0.5; margin: 20px 0 10px 5px; letter-spacing: 1px; }
-.sidebar-link { display: block; padding: 12px 15px; color: var(--txt); text-decoration: none; font-weight: 600; border-radius: 10px; margin-bottom: 5px; font-size: 0.9rem; }
-.sidebar-link:hover { background: rgba(37,99,235,0.1); color: var(--p); }
-.wa-special { background: #22c55e !important; color: white !important; margin-top: 10px; text-align: center; }
+/* SIDEBAR */
+.sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: var(--card); z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px 20px; box-shadow: 10px 0 40px rgba(0,0,0,0.1); }
+.sidebar.active { left: 0; }
+.sidebar-group label { font-size: 0.65rem; font-weight: 800; opacity: 0.4; display: block; margin: 20px 0 10px 10px; letter-spacing: 1px; }
+.side-link { display: block; padding: 12px 15px; color: var(--text); text-decoration: none; font-weight: 600; border-radius: 12px; margin-bottom: 5px; font-size: 0.9rem; transition: 0.2s; }
+.side-link:hover { background: rgba(37,99,235,0.08); color: var(--primary); }
+.wa-btn { background: #22c55e !important; color: white !important; margin-top: 10px; text-align: center; box-shadow: 0 4px 10px rgba(34, 197, 94, 0.3); }
 
-/* CARD TUGAS PRO */
-.page { display: none; padding: 20px; max-width: 800px; margin: auto; }
-.page.active { display: block; animation: fadeInUp 0.4s ease; }
-@keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+/* CARDS */
+.view { display: none; padding: 25px 20px; max-width: 800px; margin: auto; }
+.view.active { display: block; animation: slideUp 0.5s ease; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
-.task-card { background: var(--card); border-radius: 18px; padding: 20px; margin-bottom: 15px; border-left: 6px solid var(--p); box-shadow: 0 4px 6px rgba(0,0,0,0.02); border: 1px solid rgba(0,0,0,0.05); }
-.task-title { font-weight: 800; color: var(--p); font-size: 1.1rem; margin-bottom: 5px; }
-.timer-full { margin-top: 15px; background: rgba(239, 68, 68, 0.05); padding: 10px; border-radius: 10px; border: 1px dashed var(--red); color: var(--red); font-weight: 800; font-size: 0.75rem; text-align: center; }
+.card { background: var(--card); border-radius: 20px; padding: 20px; margin-bottom: 16px; border: 1px solid var(--border); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.04); border-left: 6px solid var(--primary); }
+.card-title { font-weight: 800; color: var(--primary); font-size: 1.1rem; margin-bottom: 5px; }
 
-/* HAMBURGER */
-.menu-btn { background: none; border: none; display: flex; flex-direction: column; gap: 5px; cursor: pointer; }
-.menu-btn span { width: 25px; height: 3px; background: var(--txt); border-radius: 2px; }
-.menu-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 150; backdrop-filter: blur(3px); }
-.menu-overlay.active { display: block; }
+/* COUNTDOWN FULL */
+.timer-box { margin-top: 15px; padding: 12px; border-radius: 12px; background: rgba(239, 68, 68, 0.06); border: 1px dashed var(--red); color: var(--red); font-weight: 800; font-size: 0.75rem; text-align: center; }
+
+/* INTERFACE */
+.hamburger-btn { background: none; border: none; display: flex; flex-direction: column; gap: 5px; cursor: pointer; padding: 10px; }
+.hamburger-btn span { width: 24px; height: 3px; background: var(--text); border-radius: 5px; }
+.overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1500; backdrop-filter: blur(4px); }
+.overlay.active { display: block; }
