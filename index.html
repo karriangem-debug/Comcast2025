@@ -3,100 +3,77 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | Premium Portal</title>
+    <title>COMCAST 2025 | Portal Premium</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
 </head>
 <body class="light-theme">
 
-    <!-- NAVBAR UTAMA -->
-    <nav class="glass-nav">
-        <div class="nav-content">
-            <button class="menu-trigger" onclick="toggleMenu()" aria-label="Menu">
-                <div class="bar"></div>
-                <div class="bar"></div>
-                <div class="bar"></div>
+    <nav class="navbar">
+        <div class="nav-wrapper">
+            <button class="menu-btn" onclick="toggleMenu()" id="btn-hamburger">
+                <span></span><span></span><span></span>
             </button>
-            <div class="logo-area">
-                <h1 class="logo-comcast animate-glow-fade">COMCAST<span>2025</span></h1>
+            <div class="logo-box">
+                <h1 class="logo-text animate-glow">COMCAST<span>2025</span></h1>
             </div>
-            <div class="nav-spacer"></div>
+            <div style="width: 40px;"></div>
         </div>
     </nav>
 
-    <!-- SIDEBAR MODERN -->
-    <aside id="side-menu" class="modern-sidebar">
-        <div class="sidebar-top">
-            <span class="badge-admin">USER MODE</span>
-        </div>
-        
-        <div class="menu-group">
-            <p class="menu-label">NAVIGASI UTAMA</p>
-            <a href="javascript:void(0)" class="menu-item" onclick="showSection('deadline-view')">
-                <span class="icon">📅</span> Deadline Tugas
-            </a>
-            <a href="javascript:void(0)" class="menu-item" onclick="showSection('schedule-view')">
-                <span class="icon">📚</span> Jadwal Kuliah
-            </a>
-            <a href="javascript:void(0)" class="menu-item" onclick="showSection('structure-view')">
-                <span class="icon">👥</span> Struktur Kelas
-            </a>
-        </div>
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar-container">
+        <div class="sidebar-content">
+            <p class="sidebar-label">PENGATURAN</p>
+            <a href="javascript:void(0)" onclick="toggleTheme()" class="sidebar-link">🌓 Ganti Tema</a>
+            
+            <p class="sidebar-label">MENU UTAMA</p>
+            <a href="javascript:void(0)" onclick="switchPage('deadline-view')" class="sidebar-link">📅 Deadline Tugas</a>
+            <a href="javascript:void(0)" onclick="switchPage('schedule-view')" class="sidebar-link">📚 Jadwal Kuliah</a>
+            <a href="javascript:void(0)" onclick="switchPage('structure-view')" class="sidebar-link">👥 Struktur Kelas</a>
+            
+            <p class="sidebar-label">SINKRONISASI</p>
+            <a href="javascript:void(0)" onclick="shareToWhatsApp()" class="sidebar-link wa-special">📲 Share Web ke WA</a>
 
-        <div class="menu-group">
-            <p class="menu-label">SINKRONISASI</p>
-            <a href="javascript:void(0)" class="menu-item whatsapp-btn" onclick="shareDataToWA()">
-                <span class="icon">📲</span> Share Web ke WA
-            </a>
-        </div>
-
-        <div class="menu-group admin-only" id="admin-menu-area" style="display:none;">
-            <p class="menu-label">KONTROL ADMIN</p>
-            <a href="javascript:void(0)" class="menu-item" onclick="openAdminPanel()">
-                <span class="icon">⚙️</span> Input Data Pro
-            </a>
-            <a href="javascript:void(0)" class="menu-item logout-link" onclick="logout()">
-                <span class="icon">🚪</span> Logout
-            </a>
-        </div>
-
-        <div class="sidebar-footer">
-            <button class="theme-toggle" onclick="toggleTheme()">🌙 Ganti Tema</button>
+            <!-- MENU ADMIN KHUSUS -->
+            <div id="admin-section" style="display: none;">
+                <p class="sidebar-label admin-txt">KONTROL ADMIN</p>
+                <a href="javascript:void(0)" onclick="switchPage('admin-panel')" class="sidebar-link">📝 Input Data</a>
+                <a href="javascript:void(0)" onclick="logoutAdmin()" class="sidebar-link logout-btn">🚪 Keluar Admin</a>
+            </div>
+            <a href="javascript:void(0)" id="login-nav" onclick="switchPage('login-page')" class="sidebar-link">🔐 Login Admin</a>
         </div>
     </aside>
 
-    <div id="menu-overlay" class="overlay" onclick="toggleMenu()"></div>
+    <div id="overlay" class="menu-overlay" onclick="toggleMenu()"></div>
 
-    <!-- KONTEN UTAMA -->
-    <main class="content-wrapper">
-        <!-- DEADLINE SECTION -->
-        <section id="deadline-view" class="view-section active">
-            <div class="header-section">
-                <h2 class="title-grad">DEADLINE TUGAS</h2>
-                <div class="tabs-modern">
-                    <button class="tab-pill active" onclick="filterTab('now', this)">Minggu Ini</button>
-                    <button class="tab-pill" onclick="filterTab('next', this)">Mendatang</button>
-                    <button class="tab-pill" onclick="filterTab('old', this)">Selesai</button>
+    <main class="main-content">
+        <!-- DEADLINE PAGE -->
+        <section id="deadline-view" class="page active">
+            <div class="page-header">
+                <h2 class="grad-title">DEADLINE TUGAS</h2>
+                <div class="tab-container">
+                    <button class="tab-item active" onclick="changeTab('now', this)">Minggu Ini</button>
+                    <button class="tab-item" onclick="changeTab('next', this)">Mendatang</button>
+                    <button class="tab-item" onclick="changeTab('old', this)">Selesai</button>
                 </div>
             </div>
-            <div id="deadline-list" class="cards-grid"></div>
+            <div id="list-deadline" class="grid-container"></div>
         </section>
 
-        <!-- STRUCTURE SECTION -->
-        <section id="structure-view" class="view-section">
-            <h2 class="title-grad">STRUKTUR KELAS</h2>
-            <div id="structure-list" class="cards-grid"></div>
+        <!-- STRUCTURE PAGE -->
+        <section id="structure-view" class="page">
+            <h2 class="grad-title">STRUKTUR KELAS</h2>
+            <div id="list-structure" class="grid-container"></div>
         </section>
 
-        <!-- LOGIN SECTION -->
-        <section id="login-section" class="view-section">
-            <div class="glass-card login-box">
-                <h3>Admin Access</h3>
-                <div class="input-group">
-                    <input type="text" id="username" placeholder="Username">
-                    <input type="password" id="password" placeholder="Password">
-                </div>
-                <button class="btn-primary" onclick="login()">Masuk ke Sistem</button>
+        <!-- LOGIN PAGE -->
+        <section id="login-page" class="page">
+            <div class="auth-card">
+                <h3>Admin Login</h3>
+                <input type="text" id="user-admin" placeholder="Username">
+                <input type="password" id="pass-admin" placeholder="Password">
+                <button onclick="handleLogin()" class="btn-main">Masuk</button>
             </div>
         </section>
     </main>
