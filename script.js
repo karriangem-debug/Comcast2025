@@ -1,106 +1,102 @@
-// Database State
-let state = {
+// State Management
+let db = {
     deadlines: JSON.parse(localStorage.getItem('deadlines')) || [],
     org: JSON.parse(localStorage.getItem('orgMembers')) || [],
     isAdmin: localStorage.getItem('isAdmin') === 'true'
 };
 
-// 1. FUNGSI TOGGLE MENU (ANTY-MACET)
+// 1. MENU TOGGLE (STABLE)
 function toggleMenu() {
-    const sidebar = document.getElementById('side-menu');
-    const overlay = document.getElementById('menu-overlay');
-    sidebar.classList.toggle('open');
-    overlay.classList.toggle('show');
+    document.getElementById('sidebar').classList.toggle('active');
+    document.getElementById('overlay').classList.toggle('active');
 }
 
-// 2. NAVIGASI SECTION
-function showSection(id) {
-    document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
-    const target = document.getElementById(id);
+// 2. SWITCH PAGE
+function switchPage(pageId) {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    const target = document.getElementById(pageId);
     if(target) target.classList.add('active');
     
-    // Auto close sidebar
-    if(document.getElementById('side-menu').classList.contains('open')) toggleMenu();
-    if(id === 'deadline-view') renderDeadlines();
+    if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
+    if(pageId === 'deadline-view') renderTasks();
 }
 
-// 3. SINKRONISASI WA (FULL DATA)
-function shareDataToWA() {
-    const dataPackage = { d: state.deadlines, o: state.org };
-    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(dataPackage))));
-    const url = `${window.location.origin}${window.location.pathname}?update=${encoded}`;
+// 3. SHARE WHATSAPP
+function shareToWhatsApp() {
+    const data = { d: db.deadlines, o: db.org };
+    const encoded = btoa(unescape(encodeURIComponent(JSON.stringify(data))));
+    const link = `${window.location.origin}${window.location.pathname}?sync=${encoded}`;
     
-    const text = `*📌 UPDATE PORTAL COMCAST*\n\nData tugas & struktur kelas telah diperbarui. Klik link ini untuk sinkronisasi otomatis:\n\n${url}`;
-    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+    const msg = `*📌 UPDATE COMCAST 2025*\n\nData tugas & struktur sudah di-update. Sinkronkan ke web kamu sekarang:\n\n${link}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 
-// 4. COUNTDOWN MASTER (FULL TEXT)
-function startTimers() {
+// 4. COUNTDOWN FULL TEXT
+function initTimers() {
     setInterval(() => {
-        document.querySelectorAll('.timer-text').forEach(el => {
-            const target = new Date(el.dataset.time) - new Date();
-            if(target <= 0) {
+        document.querySelectorAll('.timer-data').forEach(el => {
+            const diff = new Date(el.dataset.time) - new Date();
+            if(diff <= 0) {
                 el.innerText = "WAKTU PENGERJAAN TELAH BERAKHIR";
                 return;
             }
-            const d = Math.floor(target/86400000);
-            const h = Math.floor((target/3600000)%24);
-            const m = Math.floor((target/60000)%60);
-            const s = Math.floor((target/1000)%60);
-            
+            const d = Math.floor(diff/86400000);
+            const h = Math.floor((diff/3600000)%24);
+            const m = Math.floor((diff/60000)%60);
+            const s = Math.floor((diff/1000)%60);
             el.innerText = `⏳ SISA: ${d} Hari, ${h} Jam, ${m} Menit, ${s} Detik`;
         });
     }, 1000);
 }
 
 // 5. RENDER LOGIC
-function renderDeadlines() {
-    const container = document.getElementById('deadline-list');
-    container.innerHTML = state.deadlines.length ? state.deadlines.map(d => `
-        <div class="item-card">
-            <span class="task-subject">${d.subject}</span>
-            <p style="font-size:0.85rem; opacity:0.8;">${d.name}</p>
-            <div class="countdown-box">
-                <span class="timer-text" data-time="${d.date}T${d.time}">MENGHITUNG...</span>
+function renderTasks() {
+    const container = document.getElementById('list-deadline');
+    container.innerHTML = db.deadlines.map(t => `
+        <div class="task-card">
+            <div class="task-title">${t.subject}</div>
+            <p style="font-size:0.9rem; opacity:0.8;">${t.name}</p>
+            <div class="timer-full">
+                <span class="timer-data" data-time="${t.date}T${t.time}">MENGHITUNG...</span>
             </div>
         </div>
-    `).join('') : `<div style="text-align:center; padding:50px; opacity:0.5;">Belum Ada Tugas.</div>`;
+    `).join('') || `<p style="text-align:center; padding:50px; opacity:0.5;">Belum Ada Tugas.</p>`;
 }
 
-// 6. INITIALIZER & SYNC
-window.onload = () => {
-    // Cek update dari link
-    const params = new URLSearchParams(window.location.search);
-    if(params.has('update')) {
-        try {
-            const decoded = JSON.parse(decodeURIComponent(escape(atob(params.get('update')))));
-            localStorage.setItem('deadlines', JSON.stringify(decoded.d));
-            localStorage.setItem('orgMembers', JSON.stringify(decoded.o));
-            alert("✅ Data Berhasil Disinkronkan!");
-            window.location.href = window.location.pathname; // Clean URL
-        } catch(e) { console.error("Sync Error"); }
-    }
-
-    if(state.isAdmin) document.getElementById('admin-menu-area').style.display = 'block';
-    renderDeadlines();
-    startTimers();
-};
-
-// Fungsi Tambahan
-function toggleTheme() {
-    document.body.classList.toggle('dark-theme');
-    const isDark = document.body.classList.contains('dark-theme');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-}
-
-function login() {
-    const u = document.getElementById('username').value;
-    const p = document.getElementById('password').value;
+// 6. LOGIN & SYNC
+function handleLogin() {
+    const u = document.getElementById('user-admin').value;
+    const p = document.getElementById('pass-admin').value;
     if(u === "Comcast" && p === "2025") {
         localStorage.setItem('isAdmin', 'true');
         location.reload();
-    } else {
-        alert("Akses Admin Ditolak!");
-    }
+    } else alert("Akses Ditolak!");
 }
-function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
+
+function logoutAdmin() {
+    localStorage.removeItem('isAdmin');
+    location.reload();
+}
+
+window.onload = () => {
+    // Sync URL
+    const urlParams = new URLSearchParams(window.location.search);
+    if(urlParams.has('sync')) {
+        try {
+            const decoded = JSON.parse(decodeURIComponent(escape(atob(urlParams.get('sync')))));
+            localStorage.setItem('deadlines', JSON.stringify(decoded.d));
+            localStorage.setItem('orgMembers', JSON.stringify(decoded.o));
+            alert("✅ Sinkronisasi Berhasil!");
+            window.location.href = window.location.pathname;
+        } catch(e) { console.error("Sync Error"); }
+    }
+
+    // Check Admin Status
+    if(db.isAdmin) {
+        document.getElementById('admin-section').style.display = 'block';
+        document.getElementById('login-nav').style.display = 'none';
+    }
+    
+    renderTasks();
+    initTimers();
+};
