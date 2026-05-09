@@ -6,7 +6,6 @@
     <title>COMCAST 2025 | Portal Kelas</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 </head>
 <body class="light-theme">
 
@@ -15,8 +14,8 @@
             <div class="hamburger" onclick="toggleMenu()">
                 <span></span><span></span><span></span>
             </div>
-            <!-- Logo dengan Animasi Glowing & Fade -->
             <div class="logo-wrapper">
+                <!-- Efek Glowing & Animasi Masuk/Keluar 10 Detik -->
                 <div class="logo-comcast animate-glow-fade">COMCAST<span>2025</span></div>
             </div>
             <div style="width: 22px;"></div>
@@ -27,27 +26,29 @@
     <div id="side-menu" class="side-nav">
         <div class="side-header">TAMPILAN</div>
         <a href="#" onclick="toggleTheme()" id="theme-link">🌙 Dark Mode: Off</a>
-        
         <div class="side-header">MENU UTAMA</div>
         <a href="#" onclick="showSection('deadline-view')">📅 Deadline Tugas</a>
         <a href="#" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
-        <a href="#" onclick="showSection('structure-view')">👥 Struktur Kelas</a>
-        
         <div id="admin-only-menu" style="display:none;">
             <div class="side-header admin-tag">ADMIN CONTROL</div>
-            <a href="#" onclick="openManageDeadline()">📝 Kelola Tugas (Dropdown)</a>
-            <a href="#" onclick="showSection('manage-schedule')">🗓️ Kelola Jadwal</a>
-            <a href="#" onclick="showSection('manage-org')">👨‍👩‍👧‍👦 Kelola Struktur</a>
-            <a href="#" onclick="logout()" style="color: var(--red);">🚪 Logout Admin</a>
+            <a href="#" onclick="openManageDeadline()">📝 Input Tugas</a>
+            <a href="#" onclick="showSection('manage-schedule')">🗓️ Input Jadwal</a>
+            <a href="#" onclick="logout()" style="color: #ef4444;">🚪 Logout Admin</a>
         </div>
         <a href="#" id="nav-login" onclick="showSection('login-section')">🔐 Login Admin</a>
     </div>
 
     <div id="menu-overlay" onclick="toggleMenu()"></div>
 
-    <!-- SECTIONS -->
+    <!-- Main Content -->
     <section id="deadline-view" class="active">
-        <h3 class="section-title">DEADLINE TUGAS</h3>
+        <div class="header-with-action">
+            <h3 class="section-title">DEADLINE TUGAS</h3>
+            <!-- Tombol Sinkronisasi Data ke Teman -->
+            <button onclick="shareDataToWA()" class="share-group-btn">
+                <span>📲</span> Share Ke WA
+            </button>
+        </div>
         <div class="tab-header">
             <button class="tab-btn active" id="tab-now" onclick="filterDeadline('now')">MINGGU INI</button>
             <button class="tab-btn" id="tab-next" onclick="filterDeadline('next')">MENDATANG</button>
@@ -56,17 +57,7 @@
         <div id="week-display"></div>
     </section>
 
-    <section id="schedule-view">
-        <h3 class="section-title">JADWAL KULIAH</h3>
-        <div id="class-schedule"></div>
-    </section>
-
-    <section id="structure-view">
-        <h3 class="section-title">STRUKTUR KELAS</h3>
-        <div id="org-render-container" class="org-container"></div>
-    </section>
-
-    <!-- ADMIN SECTIONS -->
+    <!-- Section Input Admin -->
     <section id="manage-deadline">
         <div class="admin-card">
             <h3 id="form-title">INPUT TUGAS</h3>
@@ -78,41 +69,11 @@
             <label class="label-admin">JAM</label>
             <input type="time" id="task-time">
             <textarea id="task-name" placeholder="Rincian Tugas..." rows="4"></textarea>
-            <button onclick="saveTask()" id="btn-save-task">Simpan Tugas</button>
-            <button onclick="resetTaskForm()" id="btn-cancel-edit" style="display:none; background:#6b7280;">Batal Edit</button>
+            <button onclick="saveTask()">Simpan & Update Data</button>
         </div>
     </section>
 
-    <section id="manage-schedule">
-        <div class="admin-card">
-            <h3>INPUT JADWAL</h3>
-            <select id="sch-day">
-                <option value="Senin">Senin</option><option value="Selasa">Selasa</option>
-                <option value="Rabu">Rabu</option><option value="Kamis">Kamis</option>
-                <option value="Jumat">Jumat</option><option value="Sabtu">Sabtu</option>
-            </select>
-            <input type="time" id="sch-time">
-            <input type="text" id="sch-name" placeholder="Mata Kuliah">
-            <input type="text" id="sch-lecturer" placeholder="Dosen">
-            <input type="text" id="sch-room" placeholder="Ruang">
-            <button onclick="addSchedule()">Tambah Jadwal</button>
-        </div>
-    </section>
-
-    <section id="manage-org">
-        <div class="admin-card">
-            <h3>INPUT STRUKTUR</h3>
-            <input type="text" id="org-name" placeholder="Nama Lengkap">
-            <select id="org-role">
-                <option value="Ketua">Ketua</option><option value="Wakil">Wakil</option>
-                <option value="Sekretaris">Sekretaris</option><option value="Bendahara">Bendahara</option>
-                <option value="Anggota">Anggota</option>
-            </select>
-            <input type="text" id="org-photo" placeholder="Link Foto (URL)">
-            <button onclick="addMember()">Tambah Anggota</button>
-        </div>
-    </section>
-
+    <!-- Login Section -->
     <section id="login-section">
         <div class="admin-card">
             <h3>LOGIN ADMIN</h3>
