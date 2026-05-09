@@ -1,27 +1,83 @@
-<!-- SIDEBAR / MENU GARIS 3 -->
-<div id="side-menu" class="side-nav">
-    <div class="side-header">TAMPILAN</div>
-    <a href="#" onclick="toggleTheme()" id="theme-link">🌙 Mode Gelap: Mati</a>
-    
-    <div class="side-header">MENU UTAMA</div>
-    <a href="#" onclick="showSection('deadline-view')">📅 Deadline Tugas</a>
-    <a href="#" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
-    <a href="#" onclick="showSection('structure-view')">👥 Struktur Kelas</a>
-    <!-- MENU SHARE WEB KE WA SEJAJAR DENGAN MENU LAIN -->
-    <a href="#" onclick="shareDataToWA()" style="background: #25d366; color: white; font-weight: 800; margin-top: 10px;">📲 Share Web ke WA</a>
-    
-    <div id="admin-only-menu" style="display:none;">
-        <div class="side-header admin-tag">KONTROL ADMIN</div>
-        <a href="#" onclick="openManageDeadline()">📝 Input Tugas</a>
-        <a href="#" onclick="showSection('manage-schedule')">🗓️ Input Jadwal</a>
-        <a href="#" onclick="showSection('manage-org')">👨‍👩‍👧‍👦 Input Struktur</a>
-        <a href="#" onclick="logout()" style="color: #ef4444;">🚪 Keluar Admin</a>
-    </div>
-    <a href="#" id="nav-login" onclick="showSection('login-section')">🔐 Login Admin</a>
-</div>
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>COMCAST 2025 | Portal Kelas Pro Max</title>
+    <!-- Link CSS harus benar agar tata letak muncul -->
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
 
-<!-- SECTION STRUKTUR KELAS (DITAMBAHKAN KEMBALI) -->
-<section id="structure-view">
-    <h3 class="section-title">STRUKTUR KELAS</h3>
-    <div id="org-render-container" class="org-container"></div>
-</section>
+    <nav>
+        <div class="nav-container">
+            <div class="hamburger" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="logo-wrapper">
+                <!-- Efek Glow & Fade 10 Detik -->
+                <div class="logo-comcast animate-glow-fade">COMCAST<span>2025</span></div>
+            </div>
+            <div style="width: 22px;"></div>
+        </div>
+    </nav>
+
+    <!-- SIDEBAR (MENU GARIS 3) -->
+    <div id="side-menu" class="side-nav">
+        <div class="side-header">PENGATURAN</div>
+        <a href="#" onclick="toggleTheme()" id="theme-link">🌙 Mode Gelap: Mati</a>
+        
+        <div class="side-header">MENU UTAMA</div>
+        <a href="#" onclick="showSection('deadline-view')">📅 Deadline Tugas</a>
+        <a href="#" onclick="showSection('schedule-view')">📚 Jadwal Kuliah</a>
+        <a href="#" onclick="showSection('structure-view')">👥 Struktur Kelas</a>
+        
+        <!-- MENU SHARE WA (SEJAJAR DENGAN MENU LAIN) -->
+        <a href="#" onclick="shareDataToWA()" style="background: #25d366; color: white; font-weight: 800; margin-top: 10px;">📲 Share Web ke WA</a>
+        
+        <div id="admin-only-menu" style="display:none;">
+            <div class="side-header admin-tag">ADMIN CONTROL</div>
+            <a href="#" onclick="openManageDeadline()">📝 Input Tugas</a>
+            <a href="#" onclick="logout()" style="color: #ef4444;">🚪 Logout Admin</a>
+        </div>
+        <a href="#" id="nav-login" onclick="showSection('login-section')">🔐 Login Admin</a>
+    </div>
+
+    <div id="menu-overlay" onclick="toggleMenu()"></div>
+
+    <!-- MAIN CONTENT AREA -->
+    <main>
+        <!-- Deadline View -->
+        <section id="deadline-view" class="active">
+            <h3 class="section-title">DEADLINE TUGAS</h3>
+            <div class="tab-header">
+                <button class="tab-btn active" id="tab-now" onclick="filterDeadline('now')">MINGGU INI</button>
+                <button class="tab-btn" id="tab-next" onclick="filterDeadline('next')">MENDATANG</button>
+                <button class="tab-btn" id="tab-old" onclick="filterDeadline('old')">SELESAI</button>
+            </div>
+            <div id="week-display"></div>
+        </section>
+
+        <!-- Structure View -->
+        <section id="structure-view">
+            <h3 class="section-title">STRUKTUR KELAS</h3>
+            <div id="org-render-container" class="org-container">
+                <!-- Data Struktur Muncul di Sini -->
+            </div>
+        </section>
+
+        <!-- Login Section -->
+        <section id="login-section">
+            <div class="admin-card">
+                <h3>LOGIN ADMIN</h3>
+                <input type="text" id="username" placeholder="Username">
+                <input type="password" id="password" placeholder="Password">
+                <button onclick="login()">Masuk</button>
+            </div>
+        </section>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
