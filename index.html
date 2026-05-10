@@ -108,15 +108,15 @@
             <a href="#" class="menu-link" onclick="toggleView('schedule-view')">📚 Jadwal Kuliah</a>
             <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
             <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
-            <a href="#" class="menu-link" onclick="toggleView('group-list-view')">📁 Daftar Kelompok</a>
+            <a href="#" class="menu-link" onclick="toggleView('group-list-view')">📁 Kelompok Tugas</a>
 
             <div id="admin-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:gray; margin-bottom:10px">ADMIN PANEL</p>
                 <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline</a>
                 <a href="#" class="menu-link" onclick="openForm('schedule')">➕ Tambah Matkul</a>
-                <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah/Import Mhs</a>
-                <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Galeri</a>
-                <a href="#" class="menu-link" onclick="openForm('group')">👥 Kelola Kelompok</a>
+                <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah Mahasiswa</a>
+                <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Foto</a>
+                <a href="#" class="menu-link" onclick="openForm('group')">👥 Tambah Kelompok</a>
                 <a href="#" class="menu-link" style="color:var(--warning)" onclick="toggleView('form-pj-auth')">🔑 Kelola Password PJ</a>
             </div>
 
@@ -160,7 +160,7 @@
         </section>
 
         <section id="login-page" class="main-view">
-            <h2 style="margin-bottom:15px">🔐 Login Sistem</h2>
+            <h2 style="margin-bottom:15px">🔐 Login</h2>
             <div class="form-grid">
                 <select id="login-role" class="input-modern form-grid-full" onchange="checkRoleUI()">
                     <option value="admin">Akses Admin</option>
@@ -189,7 +189,7 @@
                 <div id="group-selects-container"></div>
                 <button onclick="addMoreGroupSelect()" class="btn-mini" style="background:white; border:1px dashed var(--p); color:var(--p); width:100%; padding:10px">+ Tambah Kelompok Lain</button>
             </div>
-            <button class="btn-primary" onclick="saveDeadline()">SIMPAN & CLEAR</button>
+            <button class="btn-primary" onclick="saveDeadline()">SIMPAN</button>
         </section>
 
         <section id="form-group" class="main-view">
@@ -265,7 +265,7 @@
                 <select id="in-pj-matkul" class="input-modern form-grid-full"></select>
                 <input type="text" id="in-pj-pass" class="input-modern form-grid-full" placeholder="Set Password PJ Baru">
             </div>
-            <button class="btn-primary" onclick="savePJAuth()">SIMPAN & CLEAR</button>
+            <button class="btn-primary" onclick="savePJAuth()">SIMPAN</button>
             <div id="pj-list-content" style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:15px"></div>
         </section>
     </main>
