@@ -3,75 +3,91 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | PREMIUM SYSTEM V3.1</title>
+    <title>COMCAST 2025 | PREMIUM SYSTEM V4.5</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics-compat.js"></script>
     
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; --success: #22c55e; }
+        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; --success: #22c55e; --dark: #1e293b; --warning: #d97706; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-        body { background: var(--bg); color: #1e293b; line-height: 1.6; }
+        body { background: var(--bg); color: var(--dark); line-height: 1.6; overflow-x: hidden; }
 
-        /* LOGO PREMIUM DENGAN EFEK SHIMMER */
+        /* LOGO PREMIUM SHIMMER */
         .logo-anim { 
-            font-weight: 800; font-size: 1.3rem; letter-spacing: -0.5px;
-            background: linear-gradient(90deg, #2563eb, #9333ea, #3b82f6, #2563eb);
+            font-weight: 800; font-size: 1.4rem; letter-spacing: -1px;
+            background: linear-gradient(90deg, #1e293b, #2563eb, #9333ea, #1e293b);
             background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            animation: shine 3s linear infinite;
+            animation: shimmer 3s linear infinite;
         }
-        @keyframes shine { to { background-position: 200% center; } }
+        @keyframes shimmer { to { background-position: 200% center; } }
 
-        /* NAVIGATION & TASKBAR */
-        .glass-nav { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); height: 65px; position: sticky; top:0; z-index: 1000; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
-        .taskbar { display: flex; background: white; padding: 10px; gap: 8px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 65px; z-index: 999; overflow-x: auto; scrollbar-width: none; }
-        .task-btn { flex: 1; min-width: 100px; padding: 12px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.7rem; cursor: pointer; transition: 0.3s; }
+        .glass-nav { background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); height: 65px; position: sticky; top:0; z-index: 1000; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
+        
+        .taskbar { display: flex; background: white; padding: 10px; gap: 8px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 65px; z-index: 999; }
+        .task-btn { flex: 1; padding: 12px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.7rem; cursor: pointer; transition: 0.3s; }
         .task-btn.active { background: var(--p); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
 
-        /* LAYOUT UTAMA */
-        .app-container { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 100px; }
-        .main-view, .tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .app-container { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 120px; }
+        .main-view, .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .active { display: block !important; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
         /* CARD STYLE */
-        .card-item { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
-        .card-subject { font-weight: 800; color: #1e293b; font-size: 1.05rem; display: block; margin-bottom: 4px; }
+        .card-item { background: white; border-radius: 24px; padding: 20px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); transition: 0.3s; }
+        .card-subject { font-weight: 800; font-size: 1.1rem; color: var(--dark); display: block; margin-bottom: 5px; }
         .card-meta { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
-        .card-desc { font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 12px; border-radius: 12px; margin-top: 10px; border-left: 4px solid var(--p); white-space: pre-line; }
-        .day-header { font-size: 0.8rem; font-weight: 800; color: var(--p); text-transform: uppercase; margin: 30px 0 12px 5px; display: flex; align-items: center; gap: 10px; }
-        .day-header::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
-        .countdown { margin-top: 15px; font-size: 0.75rem; font-weight: 800; color: var(--danger); background: #fff1f2; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid #fee2e2; }
+        .card-desc { font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 15px; border-radius: 16px; margin-top: 10px; border-left: 4px solid var(--p); white-space: pre-line; }
 
-        /* SIDEBAR MENU */
-        .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: white; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px; box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
+        /* GROUP INFO DISPLAY */
+        .group-display { margin-top: 15px; padding-top: 15px; border-top: 1px dashed #e2e8f0; }
+        .group-pill { background: #eff6ff; border: 1px solid #dbeafe; padding: 12px; border-radius: 14px; margin-bottom: 8px; }
+        .group-pill b { color: var(--p); font-size: 0.85rem; display: block; }
+        .group-pill p { font-size: 0.75rem; color: #64748b; margin-top: 4px; }
+
+        /* SIDEBAR */
+        .sidebar { position: fixed; left: -300px; top: 0; width: 290px; height: 100%; background: white; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 25px; box-shadow: 20px 0 50px rgba(0,0,0,0.1); display: flex; flex-direction: column; }
         .sidebar.active { left: 0; }
+        .sidebar-content { flex: 1; overflow-y: auto; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1500; }
         .overlay.active { display: block; }
-        .menu-link { display: block; padding: 16px; font-weight: 700; text-decoration: none; color: #1e293b; border-radius: 12px; margin-bottom: 5px; }
+        .menu-link { display: block; padding: 14px; font-weight: 700; text-decoration: none; color: var(--dark); border-radius: 12px; margin-bottom: 4px; font-size: 0.85rem; transition: 0.2s; }
+        .menu-link:hover { background: #f1f5f9; color: var(--p); }
 
-        /* INPUT STYLE */
-        .input-modern { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 14px; border: 1px solid #e2e8f0; outline: none; font-weight: 600; font-size: 0.9rem; }
-        .btn-primary { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-        
-        .toast-success { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 12px 25px; border-radius: 50px; font-weight: 800; font-size: 0.8rem; z-index: 3000; display: none; box-shadow: 0 10px 20px rgba(34,197,94,0.3); }
+        /* STRUKTUR ORGANISASI SOSMED STYLE */
+        .org-container { display: flex; flex-direction: column; align-items: center; gap: 30px; margin-top: 20px; }
+        .org-row { display: flex; justify-content: center; gap: 15px; width: 100%; flex-wrap: wrap; }
+        .mhs-card { background: white; border-radius: 20px; padding: 15px; width: 160px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 15px rgba(0,0,0,0.02); position: relative; }
+        .pp-wrapper { width: 85px; height: 85px; margin: 0 auto 12px; position: relative; }
+        .pp-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; border: 3px solid var(--p); padding: 3px; background: white; }
+        .mhs-name { font-size: 0.85rem; font-weight: 800; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .mhs-pos { font-size: 0.65rem; font-weight: 700; color: var(--p); text-transform: uppercase; letter-spacing: 0.5px; }
+        .social-btns { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
+        .soc-icon { width: 32px; height: 32px; border-radius: 10px; display: grid; place-items: center; text-decoration: none; font-size: 1rem; transition: 0.2s; }
+        .soc-ig { background: linear-gradient(45deg, #f09433, #dc2743, #bc1888); color: white; }
+        .soc-wa { background: #22c55e; color: white; }
 
-        .admin-btns { display: flex; gap: 8px; margin-top: 15px; padding-top: 15px; border-top: 1px solid #f1f5f9; }
-        .btn-edit { flex: 1; padding: 10px; background: #eff6ff; color: var(--p); border: none; border-radius: 10px; font-weight: 700; font-size: 0.75rem; }
-        .btn-del { flex: 1; padding: 10px; background: #fff1f2; color: var(--danger); border: none; border-radius: 10px; font-weight: 700; font-size: 0.75rem; }
+        /* FORMS */
+        .input-modern { width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 14px; border: 1px solid #e2e8f0; outline: none; font-weight: 600; font-size: 0.9rem; transition: 0.3s; }
+        .input-modern:focus { border-color: var(--p); box-shadow: 0 0 0 4px rgba(37,99,235,0.1); }
+        .btn-primary { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 16px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+        .btn-primary:active { transform: scale(0.97); }
+
+        /* RESET ZONE */
+        .reset-zone { border-top: 2px solid #f1f5f9; padding-top: 15px; margin-top: auto; }
+        .reset-btn { width: 100%; padding: 12px; margin-bottom: 8px; border: 1px solid #fee2e2; background: #fff1f2; color: var(--danger); border-radius: 12px; font-size: 0.75rem; font-weight: 800; cursor: pointer; text-align: left; }
         
-        .gallery-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
-        .gallery-img { width: 100%; aspect-ratio: 1; border-radius: 20px; object-fit: cover; border: 1px solid #e2e8f0; }
-        .node { background: white; padding: 20px; border-radius: 24px; text-align: center; min-width: 150px; border: 1px solid #e2e8f0; margin-bottom: 15px; }
-        .pp-circle { width: 75px; height: 75px; border-radius: 50%; object-fit: cover; border: 3px solid var(--p); margin-bottom: 12px; }
+        .admin-controls { display: flex; gap: 5px; margin-top: 10px; }
+        .btn-mini { flex: 1; padding: 8px; font-size: 0.65rem; font-weight: 800; border-radius: 8px; border: none; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <nav class="glass-nav">
         <div style="cursor:pointer; font-size:1.5rem" onclick="toggleMenu()">☰</div>
-        <div class="logo-anim">COMCAST 2025</div>
+        <div class="logo-anim">Comcast2025</div>
         <div style="width:30px"></div>
     </nav>
 
@@ -82,24 +98,39 @@
     </div>
 
     <aside id="sidebar" class="sidebar">
-        <div style="font-weight: 800; font-size: 1.2rem; margin-bottom: 30px; color: var(--p)">DASHBOARD</div>
-        <a href="#" class="menu-link" onclick="toggleView('deadline-view')">📅 Deadline Tugas</a>
-        <a href="#" class="menu-link" onclick="toggleView('schedule-view')">📚 Jadwal Kuliah</a>
-        <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
-        <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
-        
-        <div id="admin-group" style="display:none; margin-top:25px; border-top:2px solid #f1f5f9; padding-top:25px">
-            <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline</a>
-            <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('schedule')">➕ Tambah Matkul</a>
-            <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('struct')">👤 Tambah Anggota</a>
-            <a href="#" class="menu-link" style="color:var(--p)" onclick="toggleView('form-gallery')">📷 Upload Foto</a>
-            <a href="#" class="menu-link" style="color:var(--danger)" onclick="logout()">🚪 Logout Admin</a>
+        <div class="sidebar-content">
+            <div style="font-weight: 800; color: var(--p); margin-bottom: 20px; font-size: 1.1rem">DASHBOARD MENU</div>
+            <a href="#" class="menu-link" onclick="toggleView('deadline-view')">📅 Deadline & Tugas</a>
+            <a href="#" class="menu-link" onclick="toggleView('schedule-view')">📚 Jadwal Kuliah</a>
+            <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
+            <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
+            <a href="#" class="menu-link" onclick="toggleView('group-list-view')">📁 Daftar Kelompok</a>
+
+            <div id="admin-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
+                <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline</a>
+                <a href="#" class="menu-link" onclick="openForm('schedule')">➕ Tambah Matkul</a>
+                <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah Mahasiswa</a>
+                <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Galeri</a>
+                <a href="#" class="menu-link" style="color:var(--warning)" onclick="toggleView('form-pj-auth')">🔑 Password PJ</a>
+            </div>
+
+            <div id="pj-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
+                <a href="#" class="menu-link" style="color:#059669" onclick="openForm('group')">👥 Bagi Kelompok Matkul</a>
+                <a href="#" class="menu-link" style="color:#059669" onclick="openForm('deadline')">📝 Tambah Deadline PJ</a>
+            </div>
         </div>
-        <a href="#" id="login-trigger" class="menu-link" style="opacity:0.2; font-size:0.7rem" onclick="toggleView('login-page')">🔐 LOGIN ADMIN</a>
+
+        <div class="reset-zone">
+            <div id="reset-btns-wrap" style="display:none">
+                <button class="reset-btn" onclick="resetData('deadlines', 'Deadline')">🧹 Reset Semua Deadline</button>
+                <button class="reset-btn" onclick="resetData('schedules', 'Jadwal')">🧹 Reset Semua Jadwal</button>
+                <button class="reset-btn" onclick="resetData('groups', 'Kelompok')">🧹 Reset Semua Kelompok</button>
+            </div>
+            <a href="#" class="menu-link" style="opacity:0.3; text-align:center" onclick="toggleView('login-page')">🔐 LOGIN / LOGOUT</a>
+        </div>
     </aside>
 
     <div id="overlay" class="overlay" onclick="toggleMenu()"></div>
-    <div id="toast" class="toast-success">DATA BERHASIL DISIMPAN! ✅</div>
 
     <main class="app-container">
         
@@ -110,69 +141,105 @@
         </section>
 
         <section id="schedule-view" class="main-view"></section>
-        
+
         <section id="structure-view" class="main-view">
-            <div id="org-content" style="display:flex; flex-direction:column; align-items:center; gap:20px"></div>
+            <input type="text" id="mhs-search" class="input-modern" placeholder="Cari Nama Mahasiswa..." onkeyup="filterMhs()">
+            <div class="org-container" id="org-content"></div>
         </section>
-        
-        <section id="gallery-view" class="main-view">
-            <div class="gallery-grid" id="gallery-content"></div>
+
+        <section id="group-list-view" class="main-view">
+            <h2 style="margin-bottom:20px">📁 Data Kelompok & Tugas</h2>
+            <div id="all-groups-content"></div>
         </section>
 
         <section id="login-page" class="main-view">
-            <h2 style="margin-bottom:20px">🔐 Admin Access</h2>
+            <h2>🔐 Login Sistem</h2>
+            <select id="login-role" class="input-modern" onchange="checkRoleUI()">
+                <option value="admin">Akses Dewa (Sekre)</option>
+                <option value="pj">Akses PJ Matkul</option>
+            </select>
+            <div id="pj-matkul-select" style="display:none">
+                <select id="login-pj-matkul" class="input-modern"></select>
+            </div>
             <input type="password" id="pass-val" class="input-modern" placeholder="Masukkan Password">
             <button class="btn-primary" onclick="login()">MASUK</button>
+            <button class="btn-primary" style="background:gray; margin-top:10px" onclick="logout()">LOGOUT</button>
         </section>
 
         <section id="form-deadline" class="main-view">
-            <h2 style="margin-bottom:20px">📝 Input Deadline</h2>
+            <h2 id="dead-form-title">Input Deadline</h2>
             <input type="hidden" id="edit-dead-id">
-            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">PILIH MATA KULIAH</label>
-            <select id="in-dead-matkul" class="input-modern" onchange="autoFillTime()"></select>
-            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">TANGGAL DEADLINE</label>
+            <div id="matkul-select-wrap">
+                <select id="in-dead-matkul" class="input-modern" onchange="loadGroupsForInput()"></select>
+            </div>
+            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">PILIH KELOMPOK PRESENTASI (OPSIONAL)</label>
+            <select id="in-dead-group" class="input-modern">
+                <option value="">-- Tidak Ada Kelompok --</option>
+            </select>
             <input type="date" id="in-dead-date" class="input-modern">
-            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">JAM DEADLINE</label>
             <input type="time" id="in-dead-time" class="input-modern">
-            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">DETAIL TUGAS</label>
-            <textarea id="in-dead-desc" class="input-modern" placeholder="Tulis instruksi tugas di sini..." rows="4"></textarea>
+            <textarea id="in-dead-desc" class="input-modern" placeholder="Detail tugas..." rows="4"></textarea>
             <button class="btn-primary" onclick="saveDeadline()">SIMPAN DATA</button>
-            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('deadline-view')">← Batal & Kembali</p>
+        </section>
+
+        <section id="form-group" class="main-view">
+            <h2>👥 Bagi Kelompok Matkul</h2>
+            <select id="in-grp-matkul" class="input-modern"></select>
+            <input type="text" id="in-grp-name" class="input-modern" placeholder="Cth: Kelompok 1">
+            <input type="text" id="in-grp-title" class="input-modern" placeholder="Judul Materi Presentasi">
+            <textarea id="in-grp-members" class="input-modern" placeholder="Nama Anggota (Pisah dengan koma)" rows="3"></textarea>
+            <button class="btn-primary" onclick="saveGroup()">SIMPAN KELOMPOK</button>
         </section>
 
         <section id="form-schedule" class="main-view">
-            <h2 style="margin-bottom:20px">📚 Input Jadwal Kuliah</h2>
-            <input type="hidden" id="edit-sch-id">
-            <input type="text" id="in-sch-name" class="input-modern" placeholder="Nama Mata Kuliah">
-            <input type="text" id="in-sch-lect" class="input-modern" placeholder="Nama Dosen Pengampu">
+            <h2>📚 Tambah Matkul</h2>
+            <input type="text" id="in-sch-name" class="input-modern" placeholder="Nama Matkul">
+            <input type="text" id="in-sch-lect" class="input-modern" placeholder="Dosen">
             <input type="time" id="in-sch-time" class="input-modern">
             <select id="in-sch-day" class="input-modern">
-                <option value="1">Senin</option><option value="2">Selasa</option><option value="3">Rabu</option><option value="4">Kamis</option><option value="5">Jumat</option><option value="6">Sabtu</option>
+                <option value="1">Senin</option><option value="2">Selasa</option><option value="3">Rabu</option><option value="4">Kamis</option><option value="5">Jumat</option>
             </select>
-            <button class="btn-primary" onclick="saveSchedule()">SIMPAN JADWAL</button>
-            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('schedule-view')">← Kembali</p>
+            <button class="btn-primary" onclick="saveSchedule()">SIMPAN</button>
         </section>
 
         <section id="form-struct" class="main-view">
-            <h2 style="margin-bottom:20px">👤 Tambah Anggota</h2>
-            <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan">
+            <h2>👤 Tambah/Edit Mahasiswa</h2>
+            <input type="hidden" id="edit-str-id">
             <input type="text" id="in-str-name" class="input-modern" placeholder="Nama Lengkap">
-            <input type="text" id="in-str-img" class="input-modern" placeholder="Link Foto (Google Drive)">
+            <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan">
+            <input type="text" id="in-str-ig" class="input-modern" placeholder="Username IG (Tanpa @)">
+            <input type="text" id="in-str-wa" class="input-modern" placeholder="Nomor WA (Cth: 62812...)">
+            <input type="text" id="in-str-img" class="input-modern" placeholder="Link Foto Drive (Kosongkan = Avatar)">
             <select id="in-str-lv" class="input-modern">
-                <option value="1">Level 1 (Inti Utama)</option><option value="2">Level 2 (Sekretaris/Bendahara)</option><option value="3">Level 3 (Ketua Divisi)</option>
+                <option value="1">Ketua (Kanan)</option>
+                <option value="2">Wakil (Kiri)</option>
+                <option value="3">Sekretaris/Bendahara</option>
+                <option value="4">Anggota Kelas</option>
             </select>
-            <button class="btn-primary" onclick="saveStruct()">TAMBAHKAN</button>
+            <button class="btn-primary" onclick="saveStruct()">SIMPAN</button>
+        </section>
+
+        <section id="gallery-view" class="main-view">
+            <div id="gallery-content" style="display:grid; grid-template-columns:1fr 1fr; gap:10px"></div>
         </section>
 
         <section id="form-gallery" class="main-view">
-            <h2 style="margin-bottom:20px">📷 Upload Foto</h2>
-            <input type="text" id="in-gal-img" class="input-modern" placeholder="Link Foto Google Drive">
-            <button class="btn-primary" onclick="saveGallery()">SIMPAN FOTO</button>
+            <h2>📷 Upload Galeri</h2>
+            <textarea id="in-gal-links" class="input-modern" placeholder="Paste link foto drive (pisah baris)" rows="5"></textarea>
+            <button class="btn-primary" onclick="saveGallery()">UPLOAD</button>
         </section>
+
+        <section id="form-pj-auth" class="main-view">
+            <h2>🔑 Set Password PJ</h2>
+            <select id="in-pj-matkul" class="input-modern"></select>
+            <input type="text" id="in-pj-pass" class="input-modern" placeholder="Password PJ">
+            <button class="btn-primary" onclick="savePJAuth()">SET PASSWORD</button>
+        </section>
+
     </main>
 
     <script>
-        // FIREBASE CONFIGURATION
+        // CONFIGURASI FIREBASE SESUAI PERMINTAAN
         const firebaseConfig = {
             apiKey: "AIzaSyB_xftvLFo_uxkZMooDcz6O6WwX6BRlPzw",
             authDomain: "comcast-2025.firebaseapp.com",
@@ -186,167 +253,232 @@
 
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database().ref();
-        let localDB = { 
-            deadlines: [], 
-            schedules: [], 
-            structs: [], 
-            gallery: [], 
-            isAdmin: localStorage.getItem('isAdmin') === 'true' 
-        };
-        const DAYS = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+        
+        let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], pjs: {}, groups: [] };
+        let userRole = localStorage.getItem('userRole') || 'guest';
+        let userMatkul = localStorage.getItem('userMatkul') || '';
 
-        // DATABASE LISTENER
         dbRef.on('value', (snap) => {
             const data = snap.val() || {};
             localDB.deadlines = data.deadlines ? Object.keys(data.deadlines).map(k => ({...data.deadlines[k], fid: k})) : [];
             localDB.schedules = data.schedules ? Object.keys(data.schedules).map(k => ({...data.schedules[k], fid: k})) : [];
             localDB.structs = data.structs ? Object.keys(data.structs).map(k => ({...data.structs[k], fid: k})) : [];
             localDB.gallery = data.gallery ? Object.keys(data.gallery).map(k => ({...data.gallery[k], fid: k})) : [];
+            localDB.groups = data.groups ? Object.keys(data.groups).map(k => ({...data.groups[k], fid: k})) : [];
+            localDB.pjs = data.pjs || {};
             render();
+            updateDropdowns();
         });
 
-        function showToast() {
-            const t = document.getElementById('toast');
-            t.style.display = 'block';
-            setTimeout(() => { t.style.display = 'none'; }, 2000);
-        }
-
-        // FUNGSI RENDER UTAMA
         function render() {
-            const isAdmin = localDB.isAdmin;
+            const isAdmin = userRole === 'admin';
+            const isPJ = userRole === 'pj';
             const now = new Date();
-            const tolerance = 30 * 60 * 1000; 
 
-            // 1. RENDER JADWAL KULIAH
-            const schV = document.getElementById('schedule-view');
-            schV.innerHTML = "";
-            [1,2,3,4,5,6].forEach(d => {
-                const items = localDB.schedules.filter(s => s.day == d).sort((a,b) => a.time.localeCompare(b.time));
-                if(items.length > 0) {
-                    schV.innerHTML += `<div class="day-header">${DAYS[d]}</div>`;
-                    items.forEach(s => {
-                        schV.innerHTML += `
-                        <div class="card-item">
-                            <span class="card-subject">${s.name}</span>
-                            <p class="card-meta">👤 ${s.lecturer} | ⏰ ${s.time}</p>
-                            ${isAdmin ? `<div class="admin-btns"><button class="btn-edit" onclick="editSchedule('${s.fid}')">EDIT</button><button class="btn-del" onclick="deleteData('schedules', '${s.fid}')">HAPUS</button></div>` : ''}
-                        </div>`;
-                    });
-                }
-            });
-
-            // 2. RENDER DEADLINE
+            // 1. DEADLINE RENDER
             const makeList = (list) => {
-                return list.sort((a,b) => new Date(a.date+'T'+(a.time||'00:00')) - new Date(b.date+'T'+(b.time||'00:00'))).map(t => `
+                return list.sort((a,b) => new Date(a.date+'T'+(a.time||'00:00')) - new Date(b.date+'T'+(b.time||'00:00'))).map(t => {
+                    const group = localDB.groups.find(g => g.fid === t.groupId);
+                    const canEdit = isAdmin || (isPJ && t.subject === userMatkul);
+                    return `
                     <div class="card-item">
                         <span class="card-subject">${t.subject}</span>
                         <p class="card-meta">📅 ${t.date} | ⏰ ${t.time || '23:59'}</p>
-                        <div class="card-desc">${t.desc || 'Tugas Baru'}</div>
-                        <div class="countdown" data-time="${t.date}T${t.time || '23:59'}">...</div>
-                        ${isAdmin ? `<div class="admin-btns"><button class="btn-edit" onclick="editDeadline('${t.fid}')">EDIT</button><button class="btn-del" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button></div>` : ''}
-                    </div>`).join('') || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada tugas</p>';
+                        <div class="card-desc">${t.desc}</div>
+                        ${group ? `
+                        <div class="group-display">
+                            <div class="group-pill">
+                                <b>🚀 Presentasi: ${group.groupName} - ${group.title}</b>
+                                <p>👥 Anggota: ${group.members}</p>
+                            </div>
+                        </div>` : ''}
+                        ${canEdit ? `<div class="admin-controls"><button class="btn-mini" style="background:#eff6ff; color:var(--p)" onclick="editDeadline('${t.fid}')">EDIT</button><button class="btn-mini" style="background:#fff1f2; color:red" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button></div>` : ''}
+                    </div>`;
+                }).join('') || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada data</p>';
             };
 
-            const activeTasks = localDB.deadlines.filter(t => (new Date(t.date+'T'+(t.time||'23:59')).getTime() + tolerance) >= now.getTime());
-            const doneTasks = localDB.deadlines.filter(t => (new Date(t.date+'T'+(t.time||'23:59')).getTime() + tolerance) < now.getTime());
+            document.getElementById('tab-now').innerHTML = makeList(localDB.deadlines.filter(t => new Date(t.date).getTime() >= now.setHours(0,0,0,0)));
+            document.getElementById('tab-done').innerHTML = makeList(localDB.deadlines.filter(t => new Date(t.date).getTime() < now.setHours(0,0,0,0)));
 
-            // --- LOGIKA SAKTI SABTU & MINGGU ---
-            const getW = (off) => { 
-                const d = new Date();
-                const currentDay = d.getDay(); 
-                let startOffset = (currentDay === 0 ? 6 : currentDay - 1);
+            // 2. STRUKTUR RENDER (KETUA KANAN, WAKIL KIRI)
+            const getAvatar = (s) => (s.img && s.img.includes('drive')) ? `https://lh3.googleusercontent.com/d/$${s.img.includes('id=') ? s.img.split('id=')[1].split('&')[0] : s.img.split('/d/')[1].split('/')[0]}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=2563eb&color=fff&rounded=true&bold=true`;
+            
+            const createMhsCard = (s) => `
+                <div class="mhs-card" data-name="${s.name.toLowerCase()}">
+                    <div class="pp-wrapper"><img src="${getAvatar(s)}" class="pp-img"></div>
+                    <span class="mhs-name">${s.name}</span>
+                    <span class="mhs-pos">${s.pos}</span>
+                    <div class="social-btns">
+                        <a href="https://instagram.com/${s.ig}" target="_blank" class="soc-icon soc-ig">IG</a>
+                        <a href="https://wa.me/${s.wa}?text=Assalamualaikum%20Wr.%20Wb" target="_blank" class="soc-icon soc-wa">WA</a>
+                    </div>
+                    ${isAdmin ? `<div class="admin-controls"><button onclick="editStruct('${s.fid}')" class="btn-mini" style="background:#f1f5f9">EDIT</button><button onclick="deleteData('structs', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">X</button></div>` : ''}
+                </div>`;
 
-                // Jika sudah Sabtu atau Minggu, pindahkan "Minggu Depan" ke "Minggu Ini"
-                if (currentDay === 6 || currentDay === 0) startOffset -= 7;
+            let orgHtml = `<div class="org-row">`;
+            localDB.structs.filter(s => s.lv == 2).forEach(s => orgHtml += createMhsCard(s)); // Wakil Kiri
+            localDB.structs.filter(s => s.lv == 1).forEach(s => orgHtml += createMhsCard(s)); // Ketua Kanan
+            orgHtml += `</div><div class="org-row">`;
+            localDB.structs.filter(s => s.lv == 3).forEach(s => orgHtml += createMhsCard(s)); // Sekre/Bend
+            orgHtml += `</div><div class="org-row">`;
+            localDB.structs.filter(s => s.lv == 4).forEach(s => orgHtml += createMhsCard(s)); // Anggota
+            orgHtml += `</div>`;
+            document.getElementById('org-content').innerHTML = orgHtml;
 
-                const start = d.getDate() - startOffset + (off * 7); 
-                const targetDateS = new Date(new Date().setDate(start));
-                const targetDateE = new Date(new Date().setDate(start + 6));
-                return { s: targetDateS.setHours(0,0,0,0), e: targetDateE.setHours(23,59,59,999) }; 
-            };
-            const w0 = getW(0);
+            // 3. GROUP LIST VIEW
+            document.getElementById('all-groups-content').innerHTML = localDB.groups.map(g => `
+                <div class="card-item">
+                    <b style="color:var(--p)">${g.matkul}</b>
+                    <h3>${g.groupName} - ${g.title}</h3>
+                    <p style="font-size:0.8rem; color:gray">👥 ${g.members}</p>
+                    ${isAdmin || (isPJ && g.matkul === userMatkul) ? `<button onclick="deleteData('groups', '${g.fid}')" class="btn-mini" style="background:#fff1f2; color:red; margin-top:10px">HAPUS KELOMPOK</button>` : ''}
+                </div>
+            `).join('');
 
-            document.getElementById('tab-now').innerHTML = makeList(activeTasks.filter(t => new Date(t.date).getTime() <= w0.e));
-            document.getElementById('tab-next').innerHTML = makeList(activeTasks.filter(t => new Date(t.date).getTime() > w0.e));
-            document.getElementById('tab-done').innerHTML = makeList(doneTasks);
-
-            // 3. LAINNYA (STRUKTUR & GALLERY)
-            const cleanLink = (link) => {
-                if(!link || !link.includes('drive.google.com')) return link || "https://via.placeholder.com/150";
-                const id = link.includes('id=') ? link.split('id=')[1].split('&')[0] : link.split('/d/')[1].split('/')[0];
-                return `https://lh3.googleusercontent.com/d/${id}`;
-            };
-
-            document.getElementById('org-content').innerHTML = [1,2,3].map(l => 
-                `<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${
-                    localDB.structs.filter(s => s.lv == l).map(s => `
-                    <div class="node">
-                        <img src="${cleanLink(s.img)}" class="pp-circle">
-                        <span style="font-size:0.7rem; font-weight:700; color:var(--p)">${s.pos}</span>
-                        <b style="display:block; font-size:0.9rem">${s.name}</b>
-                        ${isAdmin ? `<button onclick="deleteData('structs', '${s.fid}')" style="color:red; border:none; background:none; font-size:0.6rem; cursor:pointer">HAPUS</button>` : ''}
-                    </div>`).join('')
-                }</div>`).join('');
-
-            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `
-                <div style="position:relative"><img src="${cleanLink(g.img)}" class="gallery-img">
-                ${isAdmin ? `<button onclick="deleteData('gallery', '${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:24px; height:24px;">×</button>` : ''}</div>`).join('');
+            // 4. SCHEDULE & GALLERY
+            const DAYS = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat"];
+            document.getElementById('schedule-view').innerHTML = localDB.schedules.map(s => `<div class="card-item"><span class="card-subject">${s.name}</span><p class="card-meta">${s.lecturer} | ${s.time} | ${DAYS[s.day]}</p>${isAdmin ? `<button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button>` : ''}</div>`).join('');
+            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `<div style="position:relative"><img src="${g.img}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:20px">${isAdmin ? `<button onclick="deleteData('gallery', '${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:20px; height:20px">X</button>` : ''}</div>`).join('');
         }
 
-        // FUNGSI SAVE (SAT-SET MODE)
+        // --- CORE FUNCTIONS ---
+        function checkRoleUI() {
+            document.getElementById('pj-matkul-select').style.display = document.getElementById('login-role').value === 'pj' ? 'block' : 'none';
+        }
+
+        function login() {
+            const role = document.getElementById('login-role').value;
+            const pass = document.getElementById('pass-val').value;
+            if(role === 'admin' && pass === "2025") {
+                localStorage.setItem('userRole', 'admin');
+                location.reload();
+            } else if(role === 'pj') {
+                const matkul = document.getElementById('login-pj-matkul').value;
+                if(localDB.pjs[matkul] === pass) {
+                    localStorage.setItem('userRole', 'pj');
+                    localStorage.setItem('userMatkul', matkul);
+                    location.reload();
+                } else alert("Password Salah!");
+            }
+        }
+
+        function logout() { localStorage.clear(); location.reload(); }
+
         function saveDeadline() {
             const id = document.getElementById('edit-dead-id').value;
-            const data = { subject: document.getElementById('in-dead-matkul').value, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value };
-            if(!data.subject || !data.date) return alert("Pilih Matkul & Tanggal!");
-            if(id) { dbRef.child('deadlines').child(id).update(data); toggleView('deadline-view'); } 
-            else { dbRef.child('deadlines').push(data); document.getElementById('in-dead-date').value = ""; document.getElementById('in-dead-time').value = ""; document.getElementById('in-dead-desc').value = ""; showToast(); }
+            const data = {
+                subject: document.getElementById('in-dead-matkul').value,
+                groupId: document.getElementById('in-dead-group').value,
+                date: document.getElementById('in-dead-date').value,
+                time: document.getElementById('in-dead-time').value,
+                desc: document.getElementById('in-dead-desc').value
+            };
+            if(id) dbRef.child('deadlines').child(id).update(data); else dbRef.child('deadlines').push(data);
+            toggleView('deadline-view');
         }
 
-        function saveSchedule() {
-            const id = document.getElementById('edit-sch-id').value;
-            const data = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: document.getElementById('in-sch-day').value };
-            if(id) { dbRef.child('schedules').child(id).update(data); toggleView('schedule-view'); }
-            else { dbRef.child('schedules').push(data); document.getElementById('in-sch-name').value = ""; document.getElementById('in-sch-lect').value = ""; document.getElementById('in-sch-time').value = ""; showToast(); }
+        function saveGroup() {
+            const data = {
+                matkul: document.getElementById('in-grp-matkul').value,
+                groupName: document.getElementById('in-grp-name').value,
+                title: document.getElementById('in-grp-title').value,
+                members: document.getElementById('in-grp-members').value
+            };
+            dbRef.child('groups').push(data);
+            alert("Kelompok Berhasil Disimpan!");
         }
 
-        function saveStruct() { dbRef.child('structs').push({ pos: document.getElementById('in-str-pos').value, name: document.getElementById('in-str-name').value, img: document.getElementById('in-str-img').value, lv: document.getElementById('in-str-lv').value }); showToast(); }
-        function saveGallery() { const img = document.getElementById('in-gal-img').value; if(img) { dbRef.child('gallery').push({img: img}); document.getElementById('in-gal-img').value = ""; showToast(); } }
+        function loadGroupsForInput() {
+            const selectedMatkul = document.getElementById('in-dead-matkul').value;
+            const filteredGroups = localDB.groups.filter(g => g.matkul === selectedMatkul);
+            let html = '<option value="">-- Tidak Ada Kelompok --</option>';
+            filteredGroups.forEach(g => html += `<option value="${g.fid}">${g.groupName} - ${g.title}</option>`);
+            document.getElementById('in-dead-group').innerHTML = html;
+        }
 
-        // UTILS & NAVIGATION
-        function deleteData(p, id) { if(confirm("Hapus data?")) dbRef.child(p).child(id).remove(); }
+        function resetData(path, label) {
+            if(confirm(`⚠ Hapus SEMUA Data ${label}?`)) dbRef.child(path).remove();
+        }
+
+        // --- UTILS ---
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
-        function toggleView(id) {
-            document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active'));
-            document.getElementById(id).classList.add('active');
-            document.getElementById('main-taskbar').style.display = (id === 'deadline-view') ? 'flex' : 'none';
-            if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
-        }
+        function toggleView(id) { document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); if(document.getElementById('sidebar').classList.contains('active')) toggleMenu(); }
         function showTab(t, b) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.task-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(t).classList.add('active'); b.classList.add('active'); }
-        function openForm(t) {
-            if(t==='deadline') { document.getElementById('edit-dead-id').value = ""; document.getElementById('in-dead-matkul').innerHTML = '<option value="">Pilih Matkul...</option>' + localDB.schedules.map(s => `<option value="${s.name}">${s.name}</option>`).join(''); toggleView('form-deadline'); }
-            else if(t==='schedule') { document.getElementById('edit-sch-id').value = ""; toggleView('form-schedule'); }
-            else toggleView('form-struct');
+        function filterMhs() { const val = document.getElementById('mhs-search').value.toLowerCase(); document.querySelectorAll('.mhs-card').forEach(c => c.style.display = c.dataset.name.includes(val) ? 'block' : 'none'); }
+        function deleteData(p, id) { if(confirm("Hapus data ini?")) dbRef.child(p).child(id).remove(); }
+        
+        function updateDropdowns() {
+            const matkulOpts = localDB.schedules.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
+            document.getElementById('in-dead-matkul').innerHTML = matkulOpts;
+            document.getElementById('in-grp-matkul').innerHTML = matkulOpts;
+            document.getElementById('in-pj-matkul').innerHTML = matkulOpts;
+            document.getElementById('login-pj-matkul').innerHTML = matkulOpts;
         }
-        function autoFillTime() { const s = localDB.schedules.find(x => x.name === document.getElementById('in-dead-matkul').value); if(s) document.getElementById('in-dead-time').value = s.time; }
-        function editDeadline(id) { const t = localDB.deadlines.find(x => x.fid === id); document.getElementById('edit-dead-id').value = id; document.getElementById('in-dead-matkul').innerHTML = `<option value="${t.subject}">${t.subject}</option>`; document.getElementById('in-dead-date').value = t.date; document.getElementById('in-dead-time').value = t.time || ""; document.getElementById('in-dead-desc').value = t.desc; toggleView('form-deadline'); }
-        function editSchedule(id) { const s = localDB.schedules.find(x => x.fid === id); document.getElementById('edit-sch-id').value = id; document.getElementById('in-sch-name').value = s.name; document.getElementById('in-sch-lect').value = s.lecturer; document.getElementById('in-sch-time').value = s.time; document.getElementById('in-sch-day').value = s.day; toggleView('form-schedule'); }
-        function login() { if(document.getElementById('pass-val').value === "2025") { localStorage.setItem('isAdmin', 'true'); location.reload(); } else alert("Salah Password!"); }
-        function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
 
-        // TIMER SYNC
-        setInterval(() => {
-            const now = new Date().getTime();
-            document.querySelectorAll('.countdown').forEach(el => {
-                const diff = new Date(el.dataset.time).getTime() - now;
-                if(diff < 0) el.innerHTML = diff < -1800000 ? "SELESAI" : "WAKTU HABIS!";
-                else {
-                    const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-                    el.innerHTML = `${d} Hari ${h}j ${m}m ${s}s`;
+        function openForm(t) {
+            if(t === 'deadline') {
+                document.getElementById('edit-dead-id').value = "";
+                if(userRole === 'pj') {
+                    document.getElementById('matkul-select-wrap').innerHTML = `<input type="text" id="in-dead-matkul" class="input-modern" value="${userMatkul}" readonly>`;
+                    loadGroupsForInput();
+                } else {
+                    document.getElementById('matkul-select-wrap').innerHTML = `<select id="in-dead-matkul" class="input-modern" onchange="loadGroupsForInput()"></select>`;
+                    updateDropdowns();
                 }
-            });
-        }, 1000);
+                toggleView('form-deadline');
+            } else if(t === 'group') {
+                if(userRole === 'pj') {
+                    document.getElementById('in-grp-matkul').innerHTML = `<option value="${userMatkul}">${userMatkul}</option>`;
+                } else {
+                    updateDropdowns();
+                }
+                toggleView('form-group');
+            } else toggleView('form-'+t);
+        }
 
-        window.onload = () => { if(localDB.isAdmin) document.getElementById('admin-group').style.display = 'block'; };
+        function editDeadline(id) {
+            const t = localDB.deadlines.find(x => x.fid === id);
+            document.getElementById('edit-dead-id').value = id;
+            openForm('deadline');
+            document.getElementById('in-dead-matkul').value = t.subject;
+            document.getElementById('in-dead-date').value = t.date;
+            document.getElementById('in-dead-time').value = t.time;
+            document.getElementById('in-dead-desc').value = t.desc;
+            setTimeout(() => {
+                loadGroupsForInput();
+                document.getElementById('in-dead-group').value = t.groupId || "";
+            }, 500);
+        }
+
+        function editStruct(id) {
+            const s = localDB.structs.find(x => x.fid === id);
+            document.getElementById('edit-str-id').value = id;
+            document.getElementById('in-str-name').value = s.name;
+            document.getElementById('in-str-pos').value = s.pos;
+            document.getElementById('in-str-ig').value = s.ig;
+            document.getElementById('in-str-wa').value = s.wa;
+            document.getElementById('in-str-img').value = s.img || "";
+            document.getElementById('in-str-lv').value = s.lv;
+            toggleView('form-struct');
+        }
+
+        function saveSchedule() { dbRef.child('schedules').push({ name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: document.getElementById('in-sch-day').value }); alert("Tersimpan!"); }
+        function saveStruct() { 
+            const id = document.getElementById('edit-str-id').value;
+            const data = { name: document.getElementById('in-str-name').value, pos: document.getElementById('in-str-pos').value, ig: document.getElementById('in-str-ig').value, wa: document.getElementById('in-str-wa').value, img: document.getElementById('in-str-img').value, lv: document.getElementById('in-str-lv').value };
+            if(id) dbRef.child('structs').child(id).update(data); else dbRef.child('structs').push(data);
+            alert("Tersimpan!");
+        }
+        function saveGallery() { document.getElementById('in-gal-links').value.split('\n').forEach(l => { if(l.trim()) dbRef.child('gallery').push({img: l.trim()}) }); alert("Selesai!"); }
+        function savePJAuth() { dbRef.child('pjs').child(document.getElementById('in-pj-matkul').value).set(document.getElementById('in-pj-pass').value); alert("Ok!"); }
+
+        window.onload = () => {
+            if(userRole === 'admin') {
+                document.getElementById('admin-group').style.display = 'block';
+                document.getElementById('reset-btns-wrap').style.display = 'block';
+            }
+            if(userRole === 'pj') document.getElementById('pj-group').style.display = 'block';
+        };
     </script>
 </body>
 </html>
