@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | PREMIUM SYSTEM V3</title>
+    <title>COMCAST 2025 | PREMIUM SYSTEM V3.1</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -14,7 +14,7 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: #1e293b; line-height: 1.6; }
 
-        /* LOGO PREMIUM */
+        /* LOGO PREMIUM DENGAN EFEK SHIMMER */
         .logo-anim { 
             font-weight: 800; font-size: 1.3rem; letter-spacing: -0.5px;
             background: linear-gradient(90deg, #2563eb, #9333ea, #3b82f6, #2563eb);
@@ -23,19 +23,19 @@
         }
         @keyframes shine { to { background-position: 200% center; } }
 
-        /* NAVIGATION */
+        /* NAVIGATION & TASKBAR */
         .glass-nav { background: rgba(255,255,255,0.85); backdrop-filter: blur(12px); height: 65px; position: sticky; top:0; z-index: 1000; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
         .taskbar { display: flex; background: white; padding: 10px; gap: 8px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 65px; z-index: 999; overflow-x: auto; scrollbar-width: none; }
         .task-btn { flex: 1; min-width: 100px; padding: 12px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.7rem; cursor: pointer; transition: 0.3s; }
         .task-btn.active { background: var(--p); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
 
-        /* MAIN LAYOUT */
+        /* LAYOUT UTAMA */
         .app-container { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 100px; }
         .main-view, .tab-content { display: none; animation: fadeIn 0.3s ease; }
         .active { display: block !important; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* CARDS */
+        /* CARD STYLE */
         .card-item { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); }
         .card-subject { font-weight: 800; color: #1e293b; font-size: 1.05rem; display: block; margin-bottom: 4px; }
         .card-meta { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
@@ -44,17 +44,16 @@
         .day-header::after { content: ""; flex: 1; height: 1px; background: #e2e8f0; }
         .countdown { margin-top: 15px; font-size: 0.75rem; font-weight: 800; color: var(--danger); background: #fff1f2; padding: 12px; border-radius: 12px; text-align: center; border: 1px solid #fee2e2; }
 
-        /* SIDEBAR */
+        /* SIDEBAR MENU */
         .sidebar { position: fixed; left: -300px; top: 0; width: 280px; height: 100%; background: white; z-index: 2000; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); padding: 30px; box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
         .sidebar.active { left: 0; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 1500; }
         .overlay.active { display: block; }
         .menu-link { display: block; padding: 16px; font-weight: 700; text-decoration: none; color: #1e293b; border-radius: 12px; margin-bottom: 5px; }
 
-        /* INPUTS */
+        /* INPUT STYLE */
         .input-modern { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 14px; border: 1px solid #e2e8f0; outline: none; font-weight: 600; font-size: 0.9rem; }
         .btn-primary { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 16px; font-weight: 800; font-size: 1rem; cursor: pointer; transition: 0.2s; }
-        .btn-primary:active { transform: scale(0.98); background: #1d4ed8; }
         
         .toast-success { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--success); color: white; padding: 12px 25px; border-radius: 50px; font-weight: 800; font-size: 0.8rem; z-index: 3000; display: none; box-shadow: 0 10px 20px rgba(34,197,94,0.3); }
 
@@ -103,6 +102,7 @@
     <div id="toast" class="toast-success">DATA BERHASIL DISIMPAN! ✅</div>
 
     <main class="app-container">
+        
         <section id="deadline-view" class="main-view active">
             <div id="tab-done" class="tab-content"></div>
             <div id="tab-now" class="tab-content active"></div>
@@ -120,7 +120,7 @@
         </section>
 
         <section id="login-page" class="main-view">
-            <h2 style="margin-bottom:20px">🔐 Admin Login</h2>
+            <h2 style="margin-bottom:20px">🔐 Admin Access</h2>
             <input type="password" id="pass-val" class="input-modern" placeholder="Masukkan Password">
             <button class="btn-primary" onclick="login()">MASUK</button>
         </section>
@@ -130,58 +130,49 @@
             <input type="hidden" id="edit-dead-id">
             <label style="font-size:0.7rem; font-weight:800; color:var(--p)">PILIH MATA KULIAH</label>
             <select id="in-dead-matkul" class="input-modern" onchange="autoFillTime()"></select>
-            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">TANGGAL PENGUMPULAN</label>
+            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">TANGGAL DEADLINE</label>
             <input type="date" id="in-dead-date" class="input-modern">
-            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">JAM PENGUMPULAN</label>
+            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">JAM DEADLINE</label>
             <input type="time" id="in-dead-time" class="input-modern">
-            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">DESKRIPSI TUGAS</label>
-            <textarea id="in-dead-desc" class="input-modern" placeholder="Detail tugas..." rows="4"></textarea>
-            <button class="btn-primary" onclick="saveDeadline()">SIMPAN & LANJUT</button>
-            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('deadline-view')">← Kembali ke List</p>
+            <label style="font-size:0.7rem; font-weight:800; color:var(--p)">DETAIL TUGAS</label>
+            <textarea id="in-dead-desc" class="input-modern" placeholder="Tulis instruksi tugas di sini..." rows="4"></textarea>
+            <button class="btn-primary" onclick="saveDeadline()">SIMPAN DATA</button>
+            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('deadline-view')">← Batal & Kembali</p>
         </section>
 
         <section id="form-schedule" class="main-view">
-            <h2 style="margin-bottom:20px">📚 Input Jadwal</h2>
+            <h2 style="margin-bottom:20px">📚 Input Jadwal Kuliah</h2>
             <input type="hidden" id="edit-sch-id">
             <input type="text" id="in-sch-name" class="input-modern" placeholder="Nama Mata Kuliah">
-            <input type="text" id="in-sch-lect" class="input-modern" placeholder="Nama Dosen">
+            <input type="text" id="in-sch-lect" class="input-modern" placeholder="Nama Dosen Pengampu">
             <input type="time" id="in-sch-time" class="input-modern">
             <select id="in-sch-day" class="input-modern">
-                <option value="1">Senin</option>
-                <option value="2">Selasa</option>
-                <option value="3">Rabu</option>
-                <option value="4">Kamis</option>
-                <option value="5">Jumat</option>
-                <option value="6">Sabtu</option>
+                <option value="1">Senin</option><option value="2">Selasa</option><option value="3">Rabu</option><option value="4">Kamis</option><option value="5">Jumat</option><option value="6">Sabtu</option>
             </select>
-            <button class="btn-primary" onclick="saveSchedule()">SIMPAN & LANJUT</button>
-            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('schedule-view')">← Kembali ke List</p>
+            <button class="btn-primary" onclick="saveSchedule()">SIMPAN JADWAL</button>
+            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('schedule-view')">← Kembali</p>
         </section>
 
         <section id="form-struct" class="main-view">
-            <h2 style="margin-bottom:20px">👤 Struktur Organisasi</h2>
-            <input type="hidden" id="edit-str-id">
-            <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan (Contoh: Ketua Kelas)">
+            <h2 style="margin-bottom:20px">👤 Tambah Anggota</h2>
+            <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan">
             <input type="text" id="in-str-name" class="input-modern" placeholder="Nama Lengkap">
-            <input type="text" id="in-str-img" class="input-modern" placeholder="Link Foto Drive">
+            <input type="text" id="in-str-img" class="input-modern" placeholder="Link Foto (Google Drive)">
             <select id="in-str-lv" class="input-modern">
-                <option value="1">Level 1 (Inti Utama)</option>
-                <option value="2">Level 2 (Sekre / Bend)</option>
-                <option value="3">Level 3 (Ketua Divisi)</option>
+                <option value="1">Level 1 (Inti Utama)</option><option value="2">Level 2 (Sekretaris/Bendahara)</option><option value="3">Level 3 (Ketua Divisi)</option>
             </select>
-            <button class="btn-primary" onclick="saveStruct()">SIMPAN ANGGOTA</button>
-            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('structure-view')">← Kembali ke List</p>
+            <button class="btn-primary" onclick="saveStruct()">TAMBAHKAN</button>
         </section>
 
         <section id="form-gallery" class="main-view">
-            <h2 style="margin-bottom:20px">📷 Upload Foto Kelas</h2>
-            <input type="text" id="in-gal-img" class="input-modern" placeholder="Link Foto Drive">
-            <button class="btn-primary" onclick="saveGallery()">UPLOAD FOTO</button>
-            <p style="text-align:center; margin-top:15px; font-size:0.7rem; color:gray; cursor:pointer" onclick="toggleView('gallery-view')">← Kembali ke List</p>
+            <h2 style="margin-bottom:20px">📷 Upload Foto</h2>
+            <input type="text" id="in-gal-img" class="input-modern" placeholder="Link Foto Google Drive">
+            <button class="btn-primary" onclick="saveGallery()">SIMPAN FOTO</button>
         </section>
     </main>
 
     <script>
+        // FIREBASE CONFIGURATION
         const firebaseConfig = {
             apiKey: "AIzaSyB_xftvLFo_uxkZMooDcz6O6WwX6BRlPzw",
             authDomain: "comcast-2025.firebaseapp.com",
@@ -224,7 +215,7 @@
         function render() {
             const isAdmin = localDB.isAdmin;
             const now = new Date();
-            const tolerance = 30 * 60 * 1000; // 30 Menit Toleransi
+            const tolerance = 30 * 60 * 1000; 
 
             // 1. RENDER JADWAL KULIAH
             const schV = document.getElementById('schedule-view');
@@ -238,17 +229,13 @@
                         <div class="card-item">
                             <span class="card-subject">${s.name}</span>
                             <p class="card-meta">👤 ${s.lecturer} | ⏰ ${s.time}</p>
-                            ${isAdmin ? `
-                            <div class="admin-btns">
-                                <button class="btn-edit" onclick="editSchedule('${s.fid}')">EDIT</button>
-                                <button class="btn-del" onclick="deleteData('schedules', '${s.fid}')">HAPUS</button>
-                            </div>` : ''}
+                            ${isAdmin ? `<div class="admin-btns"><button class="btn-edit" onclick="editSchedule('${s.fid}')">EDIT</button><button class="btn-del" onclick="deleteData('schedules', '${s.fid}')">HAPUS</button></div>` : ''}
                         </div>`;
                     });
                 }
             });
 
-            // 2. RENDER DEADLINE TUGAS (DENGAN LOGIKA SABTU)
+            // 2. RENDER DEADLINE
             const makeList = (list) => {
                 return list.sort((a,b) => new Date(a.date+'T'+(a.time||'00:00')) - new Date(b.date+'T'+(b.time||'00:00'))).map(t => `
                     <div class="card-item">
@@ -256,30 +243,26 @@
                         <p class="card-meta">📅 ${t.date} | ⏰ ${t.time || '23:59'}</p>
                         <div class="card-desc">${t.desc || 'Tugas Baru'}</div>
                         <div class="countdown" data-time="${t.date}T${t.time || '23:59'}">...</div>
-                        ${isAdmin ? `
-                        <div class="admin-btns">
-                            <button class="btn-edit" onclick="editDeadline('${t.fid}')">EDIT</button>
-                            <button class="btn-del" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button>
-                        </div>` : ''}
+                        ${isAdmin ? `<div class="admin-btns"><button class="btn-edit" onclick="editDeadline('${t.fid}')">EDIT</button><button class="btn-del" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button></div>` : ''}
                     </div>`).join('') || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada tugas</p>';
             };
 
             const activeTasks = localDB.deadlines.filter(t => (new Date(t.date+'T'+(t.time||'23:59')).getTime() + tolerance) >= now.getTime());
             const doneTasks = localDB.deadlines.filter(t => (new Date(t.date+'T'+(t.time||'23:59')).getTime() + tolerance) < now.getTime());
 
+            // --- LOGIKA SAKTI SABTU & MINGGU ---
             const getW = (off) => { 
                 const d = new Date();
-                const currentDay = d.getDay();
+                const currentDay = d.getDay(); 
                 let startOffset = (currentDay === 0 ? 6 : currentDay - 1);
-                
-                // LOGIKA SABTU: Jika Sabtu (6), geser referensi agar minggu depan jadi minggu ini
-                if (currentDay === 6) startOffset -= 7;
+
+                // Jika sudah Sabtu atau Minggu, pindahkan "Minggu Depan" ke "Minggu Ini"
+                if (currentDay === 6 || currentDay === 0) startOffset -= 7;
 
                 const start = d.getDate() - startOffset + (off * 7); 
-                return { 
-                    s: new Date(new Date().setDate(start)).setHours(0,0,0,0), 
-                    e: new Date(new Date().setDate(start + 6)).setHours(23,59,59,999) 
-                }; 
+                const targetDateS = new Date(new Date().setDate(start));
+                const targetDateE = new Date(new Date().setDate(start + 6));
+                return { s: targetDateS.setHours(0,0,0,0), e: targetDateE.setHours(23,59,59,999) }; 
             };
             const w0 = getW(0);
 
@@ -287,192 +270,78 @@
             document.getElementById('tab-next').innerHTML = makeList(activeTasks.filter(t => new Date(t.date).getTime() > w0.e));
             document.getElementById('tab-done').innerHTML = makeList(doneTasks);
 
-            // 3. RENDER STRUKTUR & GALLERY
-            const cleanDriveLink = (link) => {
+            // 3. LAINNYA (STRUKTUR & GALLERY)
+            const cleanLink = (link) => {
                 if(!link || !link.includes('drive.google.com')) return link || "https://via.placeholder.com/150";
                 const id = link.includes('id=') ? link.split('id=')[1].split('&')[0] : link.split('/d/')[1].split('/')[0];
                 return `https://lh3.googleusercontent.com/d/${id}`;
             };
 
-            const drawLv = (l) => localDB.structs.filter(s => s.lv == l).map(s => `
-                <div class="node">
-                    <img src="${cleanDriveLink(s.img)}" class="pp-circle">
-                    <span style="font-size:0.7rem; font-weight:700; color:var(--p)">${s.pos}</span>
-                    <b style="display:block; font-size:0.9rem">${s.name}</b>
-                    ${isAdmin ? `<button onclick="deleteData('structs', '${s.fid}')" style="color:red; border:none; background:none; font-size:0.6rem; cursor:pointer">HAPUS</button>` : ''}
-                </div>`).join('');
-
-            document.getElementById('org-content').innerHTML = `
-                ${drawLv(1)} 
-                <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(2)}</div> 
-                <div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${drawLv(3)}</div>`;
+            document.getElementById('org-content').innerHTML = [1,2,3].map(l => 
+                `<div style="display:flex; gap:10px; flex-wrap:wrap; justify-content:center">${
+                    localDB.structs.filter(s => s.lv == l).map(s => `
+                    <div class="node">
+                        <img src="${cleanLink(s.img)}" class="pp-circle">
+                        <span style="font-size:0.7rem; font-weight:700; color:var(--p)">${s.pos}</span>
+                        <b style="display:block; font-size:0.9rem">${s.name}</b>
+                        ${isAdmin ? `<button onclick="deleteData('structs', '${s.fid}')" style="color:red; border:none; background:none; font-size:0.6rem; cursor:pointer">HAPUS</button>` : ''}
+                    </div>`).join('')
+                }</div>`).join('');
 
             document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `
-                <div style="position:relative">
-                    <img src="${cleanDriveLink(g.img)}" class="gallery-img">
-                    ${isAdmin ? `<button onclick="deleteData('gallery', '${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:24px; height:24px; cursor:pointer">×</button>` : ''}
-                </div>`).join('');
+                <div style="position:relative"><img src="${cleanLink(g.img)}" class="gallery-img">
+                ${isAdmin ? `<button onclick="deleteData('gallery', '${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:24px; height:24px;">×</button>` : ''}</div>`).join('');
         }
 
-        // --- FUNGSI SAVE (SAT-SET MODE) ---
+        // FUNGSI SAVE (SAT-SET MODE)
         function saveDeadline() {
             const id = document.getElementById('edit-dead-id').value;
-            const data = {
-                subject: document.getElementById('in-dead-matkul').value,
-                date: document.getElementById('in-dead-date').value,
-                time: document.getElementById('in-dead-time').value,
-                desc: document.getElementById('in-dead-desc').value
-            };
-            if(!data.subject || !data.date) return alert("Lengkapi data!");
-
-            if(id) {
-                dbRef.child('deadlines').child(id).update(data);
-                toggleView('deadline-view');
-            } else {
-                dbRef.child('deadlines').push(data);
-                // RESET TAPI TETAP DI HALAMAN
-                document.getElementById('in-dead-date').value = "";
-                document.getElementById('in-dead-time').value = "";
-                document.getElementById('in-dead-desc').value = "";
-                showToast();
-            }
+            const data = { subject: document.getElementById('in-dead-matkul').value, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value };
+            if(!data.subject || !data.date) return alert("Pilih Matkul & Tanggal!");
+            if(id) { dbRef.child('deadlines').child(id).update(data); toggleView('deadline-view'); } 
+            else { dbRef.child('deadlines').push(data); document.getElementById('in-dead-date').value = ""; document.getElementById('in-dead-time').value = ""; document.getElementById('in-dead-desc').value = ""; showToast(); }
         }
 
         function saveSchedule() {
             const id = document.getElementById('edit-sch-id').value;
-            const data = {
-                name: document.getElementById('in-sch-name').value,
-                lecturer: document.getElementById('in-sch-lect').value,
-                time: document.getElementById('in-sch-time').value,
-                day: document.getElementById('in-sch-day').value
-            };
-            if(!data.name) return alert("Nama matkul wajib isi!");
-
-            if(id) {
-                dbRef.child('schedules').child(id).update(data);
-                toggleView('schedule-view');
-            } else {
-                dbRef.child('schedules').push(data);
-                document.getElementById('in-sch-name').value = "";
-                document.getElementById('in-sch-lect').value = "";
-                document.getElementById('in-sch-time').value = "";
-                showToast();
-            }
+            const data = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: document.getElementById('in-sch-day').value };
+            if(id) { dbRef.child('schedules').child(id).update(data); toggleView('schedule-view'); }
+            else { dbRef.child('schedules').push(data); document.getElementById('in-sch-name').value = ""; document.getElementById('in-sch-lect').value = ""; document.getElementById('in-sch-time').value = ""; showToast(); }
         }
 
-        function saveStruct() {
-            const data = {
-                pos: document.getElementById('in-str-pos').value,
-                name: document.getElementById('in-str-name').value,
-                img: document.getElementById('in-str-img').value,
-                lv: document.getElementById('in-str-lv').value
-            };
-            dbRef.child('structs').push(data);
-            document.getElementById('in-str-pos').value = "";
-            document.getElementById('in-str-name').value = "";
-            document.getElementById('in-str-img').value = "";
-            showToast();
-        }
+        function saveStruct() { dbRef.child('structs').push({ pos: document.getElementById('in-str-pos').value, name: document.getElementById('in-str-name').value, img: document.getElementById('in-str-img').value, lv: document.getElementById('in-str-lv').value }); showToast(); }
+        function saveGallery() { const img = document.getElementById('in-gal-img').value; if(img) { dbRef.child('gallery').push({img: img}); document.getElementById('in-gal-img').value = ""; showToast(); } }
 
-        function saveGallery() {
-            const img = document.getElementById('in-gal-img').value;
-            if(img) {
-                dbRef.child('gallery').push({img: img});
-                document.getElementById('in-gal-img').value = "";
-                showToast();
-            }
-        }
-
-        function deleteData(path, id) {
-            if(confirm("Yakin hapus data ini?")) dbRef.child(path).child(id).remove();
-        }
-
-        // --- NAVIGATION & UTILS ---
-        function toggleMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
-
+        // UTILS & NAVIGATION
+        function deleteData(p, id) { if(confirm("Hapus data?")) dbRef.child(p).child(id).remove(); }
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
         function toggleView(id) {
             document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active'));
             document.getElementById(id).classList.add('active');
             document.getElementById('main-taskbar').style.display = (id === 'deadline-view') ? 'flex' : 'none';
             if(document.getElementById('sidebar').classList.contains('active')) toggleMenu();
         }
-
-        function showTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.task-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
+        function showTab(t, b) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.task-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(t).classList.add('active'); b.classList.add('active'); }
+        function openForm(t) {
+            if(t==='deadline') { document.getElementById('edit-dead-id').value = ""; document.getElementById('in-dead-matkul').innerHTML = '<option value="">Pilih Matkul...</option>' + localDB.schedules.map(s => `<option value="${s.name}">${s.name}</option>`).join(''); toggleView('form-deadline'); }
+            else if(t==='schedule') { document.getElementById('edit-sch-id').value = ""; toggleView('form-schedule'); }
+            else toggleView('form-struct');
         }
+        function autoFillTime() { const s = localDB.schedules.find(x => x.name === document.getElementById('in-dead-matkul').value); if(s) document.getElementById('in-dead-time').value = s.time; }
+        function editDeadline(id) { const t = localDB.deadlines.find(x => x.fid === id); document.getElementById('edit-dead-id').value = id; document.getElementById('in-dead-matkul').innerHTML = `<option value="${t.subject}">${t.subject}</option>`; document.getElementById('in-dead-date').value = t.date; document.getElementById('in-dead-time').value = t.time || ""; document.getElementById('in-dead-desc').value = t.desc; toggleView('form-deadline'); }
+        function editSchedule(id) { const s = localDB.schedules.find(x => x.fid === id); document.getElementById('edit-sch-id').value = id; document.getElementById('in-sch-name').value = s.name; document.getElementById('in-sch-lect').value = s.lecturer; document.getElementById('in-sch-time').value = s.time; document.getElementById('in-sch-day').value = s.day; toggleView('form-schedule'); }
+        function login() { if(document.getElementById('pass-val').value === "2025") { localStorage.setItem('isAdmin', 'true'); location.reload(); } else alert("Salah Password!"); }
+        function logout() { localStorage.removeItem('isAdmin'); location.reload(); }
 
-        function openForm(type) {
-            if(type === 'deadline') {
-                document.getElementById('edit-dead-id').value = "";
-                document.getElementById('in-dead-matkul').innerHTML = '<option value="">Pilih Matkul...</option>' + 
-                    localDB.schedules.map(s => `<option value="${s.name}">${s.name}</option>`).join('');
-                toggleView('form-deadline');
-            } else if(type === 'schedule') {
-                document.getElementById('edit-sch-id').value = "";
-                toggleView('form-schedule');
-            } else if(type === 'struct') {
-                toggleView('form-struct');
-            }
-        }
-
-        function autoFillTime() {
-            const selected = document.getElementById('in-dead-matkul').value;
-            const match = localDB.schedules.find(s => s.name === selected);
-            if(match) document.getElementById('in-dead-time').value = match.time;
-        }
-
-        function editDeadline(id) {
-            const t = localDB.deadlines.find(x => x.fid === id);
-            document.getElementById('edit-dead-id').value = id;
-            document.getElementById('in-dead-matkul').innerHTML = `<option value="${t.subject}">${t.subject}</option>`;
-            document.getElementById('in-dead-date').value = t.date;
-            document.getElementById('in-dead-time').value = t.time || "";
-            document.getElementById('in-dead-desc').value = t.desc;
-            toggleView('form-deadline');
-        }
-
-        function editSchedule(id) {
-            const s = localDB.schedules.find(x => x.fid === id);
-            document.getElementById('edit-sch-id').value = id;
-            document.getElementById('in-sch-name').value = s.name;
-            document.getElementById('in-sch-lect').value = s.lecturer;
-            document.getElementById('in-sch-time').value = s.time;
-            document.getElementById('in-sch-day').value = s.day;
-            toggleView('form-schedule');
-        }
-
-        function login() {
-            if(document.getElementById('pass-val').value === "2025") {
-                localStorage.setItem('isAdmin', 'true');
-                location.reload();
-            } else {
-                alert("Password Salah!");
-            }
-        }
-
-        function logout() {
-            localStorage.removeItem('isAdmin');
-            location.reload();
-        }
-
-        // COUNTDOWN TIMER
+        // TIMER SYNC
         setInterval(() => {
             const now = new Date().getTime();
             document.querySelectorAll('.countdown').forEach(el => {
-                const target = new Date(el.dataset.time).getTime();
-                const diff = target - now;
-                if(diff < 0) {
-                    if(diff < -1800000) render(); // Refresh setelah 30 menit lewat
-                    el.innerHTML = "WAKTU HABIS!";
-                } else {
+                const diff = new Date(el.dataset.time).getTime() - now;
+                if(diff < 0) el.innerHTML = diff < -1800000 ? "SELESAI" : "WAKTU HABIS!";
+                else {
                     const d = Math.floor(diff/86400000), h = Math.floor((diff%86400000)/3600000), m = Math.floor((diff%3600000)/60000), s = Math.floor((diff%60000)/1000);
-                    el.innerHTML = `${d} Hari ${h} Jam ${m} Menit ${s} Detik`;
+                    el.innerHTML = `${d} Hari ${h}j ${m}m ${s}s`;
                 }
             });
         }, 1000);
