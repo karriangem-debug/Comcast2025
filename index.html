@@ -42,6 +42,15 @@
         .menu-link { display: block; padding: 14px; font-weight: 700; text-decoration: none; color: var(--dark); border-radius: 12px; margin-bottom: 4px; font-size: 0.85rem; transition: 0.2s; }
         .menu-link:hover { background: #f1f5f9; color: var(--p); }
 
+        /* HEADER PEMISAH HARI */
+        .day-divider { background: linear-gradient(135deg, var(--p), #9333ea); color: white; padding: 12px 20px; border-radius: 14px; font-weight: 800; font-size: 0.9rem; margin: 25px 0 15px 0; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 15px rgba(37,99,235,0.2); text-transform: uppercase; }
+        
+        /* COUNTDOWN BADGE */
+        .cd-badge { display: inline-block; font-size: 0.75rem; font-weight: 800; padding: 6px 12px; border-radius: 8px; margin-bottom: 10px; width: 100%; text-align: center; }
+        .cd-safe { background: #eff6ff; color: var(--p); border: 1px solid #bfdbfe; }
+        .cd-danger { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; animation: pulse 2s infinite; }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
+
         /* CARDS */
         .card-item { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); position: relative; }
         .card-subject { font-weight: 800; font-size: 1.1rem; color: var(--dark); display: block; margin-bottom: 5px; }
@@ -53,16 +62,13 @@
         .mhs-card { background: white; border-radius: 20px; padding: 15px; width: 160px; text-align: center; border: 1px solid #e2e8f0; }
         .pp-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--p); margin-bottom: 10px; }
         .soc-btns { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
-        
         .soc-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; color: white; font-size: 1.1rem; text-decoration: none; transition: 0.3s; }
         .soc-icon:hover { opacity: 0.8; transform: scale(1.1); }
         .ig-icon { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .wa-icon { background: #25D366; }
         
-        /* Grid Form Responsif */
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 10px; margin-bottom: 12px; }
         .form-grid-full { grid-column: 1 / -1; }
-        
         .input-modern { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid #e2e8f0; font-weight: 600; outline: none; margin-bottom: 0; }
         .btn-primary { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 16px; font-weight: 800; cursor: pointer; }
         .btn-mini { padding: 8px 12px; font-size: 0.65rem; font-weight: 800; border-radius: 8px; border: none; cursor: pointer; margin-right: 5px; margin-top: 10px; }
@@ -73,11 +79,11 @@
         .search-item { padding: 10px; font-size: 0.8rem; font-weight: 600; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
         .search-item:hover { background: #f8fafc; }
 
-        /* TOAST POPUP BERHASIL */
+        .badge-sch { background: #fef3c7; color: #d97706; border: 1px solid #fde68a; font-size:0.7rem; font-weight:800; padding:4px 12px; border-radius:12px; display:inline-block; margin-bottom:8px; }
+
         #toast { visibility: hidden; min-width: 250px; background-color: var(--success); color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; font-size: 1rem; font-weight: 800; box-shadow: 0 10px 30px rgba(34,197,94,0.3); transform: translateX(-50%); transition: visibility 0s, bottom 0.5s, opacity 0.5s; opacity: 0; }
         #toast.show { visibility: visible; bottom: 50px; opacity: 1; }
 
-        /* Media Query untuk Desktop/Laptop */
         @media (min-width: 768px) {
             .app-container { max-width: 800px; padding: 40px; padding-bottom: 120px; }
             .form-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
@@ -106,17 +112,17 @@
             <div style="font-weight: 800; color: var(--p); margin-bottom: 20px; font-size: 1.1rem">DASHBOARD</div>
             <a href="#" class="menu-link" onclick="toggleView('deadline-view')">📅 Deadline & Tugas</a>
             <a href="#" class="menu-link" onclick="toggleView('schedule-view')">📚 Jadwal Kuliah</a>
-            <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Mahasiswa</a>
-            <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri</a>
-            <a href="#" class="menu-link" onclick="toggleView('group-list-view')">📁 Kelompok</a>
+            <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
+            <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
+            <a href="#" class="menu-link" onclick="toggleView('group-list-view')">📁 Daftar Kelompok</a>
 
             <div id="admin-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:gray; margin-bottom:10px">ADMIN PANEL</p>
                 <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline</a>
                 <a href="#" class="menu-link" onclick="openForm('schedule')">➕ Tambah Matkul</a>
-                <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah Mahasiswa</a>
-                <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Foto</a>
-                <a href="#" class="menu-link" onclick="openForm('group')">👥 Tambah Kelompok</a>
+                <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah/Import Mhs</a>
+                <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Galeri</a>
+                <a href="#" class="menu-link" onclick="openForm('group')">👥 Kelola Kelompok</a>
                 <a href="#" class="menu-link" style="color:var(--warning)" onclick="toggleView('form-pj-auth')">🔑 Kelola Password PJ</a>
             </div>
 
@@ -160,7 +166,7 @@
         </section>
 
         <section id="login-page" class="main-view">
-            <h2 style="margin-bottom:15px">🔐 Login</h2>
+            <h2 style="margin-bottom:15px">🔐 Login Sistem</h2>
             <div class="form-grid">
                 <select id="login-role" class="input-modern form-grid-full" onchange="checkRoleUI()">
                     <option value="admin">Akses Admin</option>
@@ -179,7 +185,7 @@
                 <input type="hidden" id="edit-dead-id">
                 <input list="dl-matkuls" id="in-dead-matkul" class="input-modern form-grid-full" placeholder="🔍 Ketik / Cari Mata Kuliah..." onchange="autoFillTime()">
                 <datalist id="dl-matkuls"></datalist>
-                <input type="date" id="in-dead-date" class="input-modern">
+                <input type="date" id="in-dead-date" class="input-modern" required>
                 <input type="time" id="in-dead-time" class="input-modern">
                 <textarea id="in-dead-desc" class="input-modern form-grid-full" placeholder="Detail tugas..." rows="4"></textarea>
             </div>
@@ -189,7 +195,7 @@
                 <div id="group-selects-container"></div>
                 <button onclick="addMoreGroupSelect()" class="btn-mini" style="background:white; border:1px dashed var(--p); color:var(--p); width:100%; padding:10px">+ Tambah Kelompok Lain</button>
             </div>
-            <button class="btn-primary" onclick="saveDeadline()">SIMPAN</button>
+            <button class="btn-primary" onclick="saveDeadline()">SIMPAN & CLEAR</button>
         </section>
 
         <section id="form-group" class="main-view">
@@ -239,9 +245,8 @@
                 <i class="fa-solid fa-file-excel" style="font-size:2.5rem; color:#10b981; margin-bottom:10px"></i>
                 <p style="font-size:1rem; font-weight:800; margin-bottom:5px; color:var(--dark)">Import Banyak Data (Excel)</p>
                 <p style="font-size:0.75rem; color:#64748b; margin-bottom:15px; line-height:1.5">
-                    Buat file Excel (.xlsx) dengan nama header (baris pertama):<br>
-                    <b style="color:var(--dark)">Nama | Jabatan | IG | WA | Foto | Level</b><br>
-                    <i>*Level isi angka: 1(Ketua), 2(Wakil), 3(BPH), 4(Mahasiswa)</i>
+                    Buat file Excel (.xlsx) dengan nama header:<br>
+                    <b style="color:var(--dark)">Nama | Jabatan | IG | WA | Foto | Level</b>
                 </p>
                 <input type="file" id="excel-file" accept=".xlsx, .xls" style="display:none" onchange="processExcel(event)">
                 <button class="btn-primary" style="background:#10b981; padding:12px; font-size:0.85rem" onclick="document.getElementById('excel-file').click()">PILIH FILE EXCEL (.xlsx)</button>
@@ -250,7 +255,7 @@
 
         <section id="form-gallery" class="main-view">
             <h2 style="margin-bottom:15px">Upload Galeri</h2>
-            <p style="font-size:0.75rem; color:gray; margin-bottom:10px">Tumpuk aja 10-50 link foto! Pisahkan dengan menekan "Enter".</p>
+            <p style="font-size:0.75rem; color:gray; margin-bottom:10px">Tumpuk link Google Drive di sini. Otomatis terkonversi jadi gambar!</p>
             <textarea id="in-gal-links" class="input-modern" placeholder="Paste link foto drive di sini..." rows="8"></textarea>
             <button class="btn-primary" onclick="saveGallery()">UPLOAD SEMUA</button>
         </section>
@@ -265,7 +270,7 @@
                 <select id="in-pj-matkul" class="input-modern form-grid-full"></select>
                 <input type="text" id="in-pj-pass" class="input-modern form-grid-full" placeholder="Set Password PJ Baru">
             </div>
-            <button class="btn-primary" onclick="savePJAuth()">SIMPAN</button>
+            <button class="btn-primary" onclick="savePJAuth()">SIMPAN & CLEAR</button>
             <div id="pj-list-content" style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:15px"></div>
         </section>
     </main>
@@ -291,39 +296,107 @@
             render(); updateDropdowns(); filterGroups(); renderPJList();
         });
 
-        // TOAST NOTIFICATION
         function showToast(msg) {
             const x = document.getElementById("toast");
-            x.innerText = msg;
-            x.className = "show";
+            x.innerText = msg; x.className = "show";
             setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+        }
+
+        // FUNGSI KONVERSI GOOGLE DRIVE KE GAMBAR
+        function formatDriveLink(url) {
+            if(!url) return "";
+            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
+            if (match && match[1]) {
+                return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
+            }
+            return url;
         }
 
         function render() {
             const isAdmin = userRole === 'admin', isPJ = userRole === 'pj', now = new Date();
+            const nowMs = now.getTime();
             const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
-            const nextWeek = startToday + (7 * 24 * 60 * 60 * 1000);
+            const nextWeekLimit = startToday + (7 * 24 * 60 * 60 * 1000);
 
-            const renderDL = (items) => items.sort((a,b) => new Date(a.date) - new Date(b.date)).map(t => {
-                let groupHtml = "";
-                if(t.groupIds && t.groupIds.length > 0) {
-                    t.groupIds.forEach(gid => {
-                        const g = localDB.groups.find(x => x.fid === gid);
-                        if(g) groupHtml += `<div style="background:#eff6ff; padding:12px; border-radius:12px; margin-top:8px; border-left:3px solid var(--p)"><b style="font-size:0.85rem; color:var(--p)">🚀 ${g.groupName}</b><div style="font-size:0.8rem; font-weight:800">${g.title}</div><div style="font-size:0.75rem; color:#64748b; margin-top:4px">👥 ${g.members}</div></div>`;
+            const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const MONTHS_NAME = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+            // CEK DEADLINE (LEWAT 30 MENIT)
+            const isDeadlineDone = (t) => {
+                if(!t.date) return false;
+                const dt = new Date(`${t.date}T${t.time || '23:59'}:00`).getTime();
+                return nowMs > (dt + (30 * 60 * 1000)); 
+            };
+
+            const renderGroupedDL = (items, isDoneTab = false) => {
+                if(items.length === 0) return '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada tugas</p>';
+
+                items.sort((a,b) => new Date(a.date) - new Date(b.date));
+                const grouped = {};
+                items.forEach(t => {
+                    if(!t.date) return;
+                    if(!grouped[t.date]) grouped[t.date] = [];
+                    grouped[t.date].push(t);
+                });
+
+                let htmlContent = "";
+                
+                Object.keys(grouped).forEach(dateStr => {
+                    const dObj = new Date(dateStr);
+                    const dayName = DAYS_NAME[dObj.getDay()];
+                    const formattedDate = `${dayName}, ${dObj.getDate()} ${MONTHS_NAME[dObj.getMonth()]} ${dObj.getFullYear()}`;
+                    
+                    htmlContent += `<div class="day-divider"><i class="fa-regular fa-calendar-check"></i> ${formattedDate}</div>`;
+                    
+                    grouped[dateStr].forEach(t => {
+                        let groupHtml = "";
+                        if(t.groupIds && t.groupIds.length > 0) {
+                            t.groupIds.forEach(gid => {
+                                const g = localDB.groups.find(x => x.fid === gid);
+                                if(g) groupHtml += `<div style="background:#eff6ff; padding:12px; border-radius:12px; margin-top:8px; border-left:3px solid var(--p)"><b style="font-size:0.85rem; color:var(--p)">🚀 ${g.groupName}</b><div style="font-size:0.8rem; font-weight:800">${g.title}</div><div style="font-size:0.75rem; color:#64748b; margin-top:4px">👥 ${g.members}</div></div>`;
+                            });
+                        }
+                        const canEdit = isAdmin || (isPJ && t.subject === userMatkul);
+                        
+                        let countdownHTML = "";
+                        if (!isDoneTab) {
+                            countdownHTML = `<div class="cd-badge" id="cd-${t.fid}" data-date="${t.date}" data-time="${t.time || '23:59'}">⏳ Menghitung sisa waktu...</div>`;
+                        }
+
+                        htmlContent += `<div class="card-item">
+                            ${countdownHTML}
+                            <span class="card-subject">${t.subject}</span>
+                            <p class="card-meta">⏰ ${t.time || '23:59'}</p>
+                            <div class="card-desc">${t.desc}</div>
+                            ${groupHtml}
+                            ${canEdit ? `<div style="margin-top:10px;"><button class="btn-mini" style="background:#f1f5f9" onclick="editDeadline('${t.fid}')">EDIT</button><button class="btn-mini" style="background:#fff1f2; color:red" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button></div>`:''}
+                        </div>`;
                     });
-                }
-                const canEdit = isAdmin || (isPJ && t.subject === userMatkul);
-                return `<div class="card-item"><span class="card-subject">${t.subject}</span><p class="card-meta">📅 ${t.date} | ⏰ ${t.time || '23:59'}</p><div class="card-desc">${t.desc}</div>${groupHtml}${canEdit ? `<div><button class="btn-mini" style="background:#f1f5f9" onclick="editDeadline('${t.fid}')">EDIT</button><button class="btn-mini" style="background:#fff1f2; color:red" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button></div>`:''}</div>`;
-            }).join('') || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada data</p>';
+                });
+                return htmlContent;
+            };
 
-            document.getElementById('tab-now').innerHTML = renderDL(localDB.deadlines.filter(t => { const d = new Date(t.date).getTime(); return d >= startToday && d < nextWeek; }));
-            document.getElementById('tab-next').innerHTML = renderDL(localDB.deadlines.filter(t => new Date(t.date).getTime() >= nextWeek));
-            document.getElementById('tab-done').innerHTML = renderDL(localDB.deadlines.filter(t => new Date(t.date).getTime() < startToday));
-
-            const DAYS = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-            document.getElementById('schedule-view').innerHTML = localDB.schedules.sort((a,b)=>a.day-b.day).map(s => `<div class="card-item"><span class="card-subject">${s.name}</span><p class="card-meta"><span style="color:#2563eb; font-size:1.1rem">👤</span> ${s.lecturer} | ⏰ ${s.time} | 📅 ${DAYS[s.day]}</p>${isAdmin ? `<button class="btn-mini" style="background:#f1f5f9" onclick="editSchedule('${s.fid}')">EDIT</button><button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button>` : ''}</div>`).join('');
+            const doneItems = localDB.deadlines.filter(t => isDeadlineDone(t));
+            const activeItems = localDB.deadlines.filter(t => !isDeadlineDone(t));
             
-            const getAvatar = (n, i) => (i && i.length > 5) ? `https://lh3.googleusercontent.com/d/${i.split('id=')[1]||i.split('/d/')[1].split('/')[0]}` : `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=2563eb&color=fff&bold=true`;
+            document.getElementById('tab-now').innerHTML = renderGroupedDL(activeItems.filter(t => new Date(t.date).getTime() < nextWeekLimit));
+            document.getElementById('tab-next').innerHTML = renderGroupedDL(activeItems.filter(t => new Date(t.date).getTime() >= nextWeekLimit));
+            document.getElementById('tab-done').innerHTML = renderGroupedDL(doneItems, true);
+
+            const DAYS_SCH = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            document.getElementById('schedule-view').innerHTML = localDB.schedules.sort((a,b)=>a.day-b.day).map(s => `
+                <div class="card-item">
+                    <div class="badge-sch">🗓️ HARI ${DAYS_SCH[s.day]}</div>
+                    <span class="card-subject">${s.name}</span>
+                    <p class="card-meta"><span style="color:#2563eb; font-size:1.1rem">👤</span> ${s.lecturer} | ⏰ ${s.time}</p>
+                    ${isAdmin ? `<button class="btn-mini" style="background:#f1f5f9" onclick="editSchedule('${s.fid}')">EDIT</button><button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button>` : ''}
+                </div>
+            `).join('');
+            
+            const getAvatar = (n, i) => {
+                if(i && i.length > 5) return formatDriveLink(i);
+                return `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=2563eb&color=fff&bold=true`;
+            };
             const makeCard = (s) => `<div class="mhs-card"><img src="${getAvatar(s.name, s.img)}" class="pp-img" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=2563eb&color=fff'"><h4 style="font-size:0.85rem; margin-bottom:2px">${s.name}</h4><p style="font-size:0.65rem; font-weight:800; color:var(--p)">${s.pos}</p><div class="soc-btns">${s.ig?`<a href="https://instagram.com/${s.ig}" target="_blank" class="soc-icon ig-icon"><i class="fa-brands fa-instagram"></i></a>`:''}${s.wa?`<a href="https://wa.me/${s.wa}" target="_blank" class="soc-icon wa-icon"><i class="fa-brands fa-whatsapp"></i></a>`:''}</div>${isAdmin?`<div style="margin-top:10px"><button onclick="editStruct('${s.fid}')" class="btn-mini" style="background:#f1f5f9">EDIT</button><button onclick="deleteData('structs','${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">X</button></div>`:''}</div>`;
             
             let orgH = "";
@@ -333,8 +406,54 @@
             if(mhs.length) orgH += `<div class="org-row">${mhs.map(makeCard).join('')}</div>`;
             document.getElementById('org-content').innerHTML = orgH;
 
-            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `<div style="position:relative"><img src="${g.img}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:15px">${isAdmin?`<button onclick="deleteData('gallery','${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; font-weight:bold; cursor:pointer">X</button>`:''}</div>`).join('');
+            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => {
+                let finalImg = formatDriveLink(g.img);
+                return `<div style="position:relative"><img src="${finalImg}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:15px; background:#f1f5f9;" onerror="this.src='https://via.placeholder.com/300?text=Gambar+Gagal+Dimuat'">${isAdmin?`<button onclick="deleteData('gallery','${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; font-weight:bold; cursor:pointer">X</button>`:''}</div>`;
+            }).join('');
         }
+
+        // SISTEM COUNTDOWN DETIK DAN AUTO-PINDAH REAL-TIME
+        setInterval(() => {
+            let needsRefresh = false;
+            
+            document.querySelectorAll('.cd-badge').forEach(badge => {
+                const dateStr = badge.getAttribute('data-date');
+                const timeStr = badge.getAttribute('data-time');
+                if(!dateStr) return;
+
+                const targetTime = new Date(`${dateStr}T${timeStr}:00`).getTime();
+                const currentTime = new Date().getTime();
+                const diff = targetTime - currentTime;
+
+                // JIKA SUDAH LEWAT 30 MENIT -> SET FLAG BUAT REFRESH TAMPILAN
+                if (diff < -(30 * 60 * 1000)) {
+                    needsRefresh = true;
+                    return;
+                } else if (diff < 0) {
+                    badge.innerHTML = "🚨 WAKTU HABIS";
+                    badge.className = "cd-badge cd-danger";
+                    return;
+                }
+
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                let textStr = "⏳ Sisa Waktu: ";
+                if(days > 0) textStr += `${days} Hari `;
+                if(hours > 0 || days > 0) textStr += `${hours} Jam `;
+                if(minutes > 0 || hours > 0 || days > 0) textStr += `${minutes} Menit `;
+                textStr += `${seconds} Detik`;
+
+                badge.innerHTML = textStr;
+                badge.className = "cd-badge " + (days < 1 ? "cd-danger" : "cd-safe");
+            });
+
+            // JIKA ADA TUGAS YANG LEWAT 30 MENIT, RENDER ULANG (PINDAH KE SELESAI OTOMATIS)
+            if (needsRefresh) render();
+            
+        }, 1000);
 
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
         function toggleView(id) { 
@@ -399,6 +518,7 @@
 
         function saveDeadline() { 
             let groups = []; document.querySelectorAll('.grp-dynamic-select').forEach(s => { if(s.value) groups.push(s.value); });
+            if(!document.getElementById('in-dead-date').value) return alert("Tanggal deadline wajib diisi!");
             const d = { subject: document.getElementById('in-dead-matkul').value, groupIds: groups, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value };
             const id = document.getElementById('edit-dead-id').value; if(id) dbRef.child('deadlines').child(id).update(d); else dbRef.child('deadlines').push(d); 
             
@@ -437,7 +557,6 @@
         function saveSchedule() { 
             const d = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: document.getElementById('in-sch-day').value }, id = document.getElementById('edit-sch-id').value;
             if(id) dbRef.child('schedules').child(id).update(d); else dbRef.child('schedules').push(d);
-            
             showToast("✅ Jadwal Berhasil Disimpan!");
             document.getElementById('edit-sch-id').value = ""; document.getElementById('in-sch-name').value = ""; document.getElementById('in-sch-lect').value = ""; document.getElementById('in-sch-time').value = "";
         }
@@ -446,76 +565,55 @@
         function saveStruct() { 
             const d = { name: document.getElementById('in-str-name').value, pos: document.getElementById('in-str-pos').value, ig: document.getElementById('in-str-ig').value, wa: document.getElementById('in-str-wa').value, img: document.getElementById('in-str-img').value, lv: document.getElementById('in-str-lv').value }, id = document.getElementById('edit-str-id').value;
             if(id) dbRef.child('structs').child(id).update(d); else dbRef.child('structs').push(d);
-            
             showToast("✅ Data Mhs Berhasil Disimpan!");
             document.getElementById('edit-str-id').value = ""; document.getElementById('in-str-name').value = ""; document.getElementById('in-str-pos').value = ""; document.getElementById('in-str-ig').value = ""; document.getElementById('in-str-wa').value = ""; document.getElementById('in-str-img').value = "";
         }
         function editStruct(id) { const s = localDB.structs.find(x => x.fid === id); document.getElementById('edit-str-id').value = id; document.getElementById('in-str-name').value = s.name; document.getElementById('in-str-pos').value = s.pos; document.getElementById('in-str-ig').value = s.ig; document.getElementById('in-str-wa').value = s.wa; document.getElementById('in-str-img').value = s.img || ""; document.getElementById('in-str-lv').value = s.lv; toggleView('form-struct'); }
 
-        // FUNGSI UPLOAD EXCEL MAHASISWA
         function processExcel(e) {
             const file = e.target.files[0];
             if (!file) return;
-            
             const reader = new FileReader();
             reader.onload = function(event) {
                 try {
                     const data = new Uint8Array(event.target.result);
                     const workbook = XLSX.read(data, {type: 'array'});
-                    const firstSheet = workbook.SheetNames[0];
-                    const worksheet = workbook.Sheets[firstSheet];
-                    const json = XLSX.utils.sheet_to_json(worksheet);
+                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
                     
-                    if(json.length === 0) {
-                        alert("File Excel kosong atau format tidak sesuai!");
-                        return;
-                    }
+                    if(json.length === 0) return alert("File Excel kosong!");
 
                     let successCount = 0;
-                    
                     json.forEach(row => {
-                        // Mencocokkan nama kolom (bisa huruf besar/kecil)
                         const name = row['Nama'] || row['NAMA'] || row['nama'] || '';
-                        if(!name) return; // Lewati jika tidak ada nama
-
-                        const pos = row['Jabatan'] || row['JABATAN'] || row['jabatan'] || 'Mahasiswa';
-                        const ig = row['IG'] || row['Ig'] || row['ig'] || row['Instagram'] || '';
-                        const wa = row['WA'] || row['Wa'] || row['wa'] || row['No WA'] || '';
-                        const img = row['Foto'] || row['FOTO'] || row['foto'] || row['Link Foto'] || '';
-                        const lv = row['Level'] || row['LEVEL'] || row['level'] || 4; // Default Anggota (4)
-
-                        const d = { 
-                            name: String(name), 
-                            pos: String(pos), 
-                            ig: String(ig), 
-                            wa: String(wa), 
-                            img: String(img), 
-                            lv: String(lv) 
-                        };
-                        
-                        dbRef.child('structs').push(d);
+                        if(!name) return;
+                        const pos = row['Jabatan'] || row['JABATAN'] || 'Mahasiswa';
+                        const ig = row['IG'] || row['Ig'] || '';
+                        const wa = row['WA'] || row['Wa'] || '';
+                        const img = row['Foto'] || row['FOTO'] || '';
+                        const lv = row['Level'] || row['LEVEL'] || 4;
+                        dbRef.child('structs').push({ name: String(name), pos: String(pos), ig: String(ig), wa: String(wa), img: String(img), lv: String(lv) });
                         successCount++;
                     });
-
                     showToast(`✅ ${successCount} Data Berhasil Diimport!`);
-                    document.getElementById('excel-file').value = ""; // Reset input file
-                    
-                } catch (error) {
-                    alert("Gagal membaca file! Pastikan formatnya .xlsx");
-                    console.error(error);
-                }
+                    document.getElementById('excel-file').value = "";
+                } catch (error) { alert("Gagal membaca file!"); }
             };
             reader.readAsArrayBuffer(file);
         }
 
         function saveGallery() { 
-            document.getElementById('in-gal-links').value.split('\n').forEach(l => { if(l.trim()) dbRef.child('gallery').push({img: l.trim()}) }); 
-            showToast("✅ Galeri Berhasil Diupload!"); document.getElementById('in-gal-links').value = ""; 
+            const links = document.getElementById('in-gal-links').value.split('\n');
+            links.forEach(l => { 
+                let cleanLink = l.trim();
+                if(cleanLink) dbRef.child('gallery').push({img: cleanLink});
+            }); 
+            showToast("✅ Galeri Berhasil Diupload!"); 
+            document.getElementById('in-gal-links').value = ""; 
         }
 
         function savePJAuth() { dbRef.child('pjs').child(document.getElementById('in-pj-matkul').value).set(document.getElementById('in-pj-pass').value); showToast("✅ Password PJ Disimpan!"); document.getElementById('in-pj-pass').value = ""; }
         function renderPJList() { document.getElementById('pj-list-content').innerHTML = Object.keys(localDB.pjs).map(m => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #f1f5f9; align-items:center"><div style="font-size:0.8rem"><b>${m}</b><br><span style="color:var(--p)">Key: ${localDB.pjs[m]}</span></div><button onclick="dbRef.child('pjs').child('${m}').remove()" class="btn-mini" style="background:#fff1f2; color:red; margin:0">HAPUS</button></div>`).join(''); }
-        function shareWaPJ() { let txt = "Halo! Berikut adalah daftar Password Akses PJ Mata Kuliah:\n\n"; for (let m in localDB.pjs) { txt += `Mata Kuliah: ${m}\nPassword: ${localDB.pjs[m]}\n\n`; } window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`); }
+        function shareWaPJ() { let txt = "Daftar Password PJ:\n\n"; for (let m in localDB.pjs) { txt += `Matkul: ${m}\nPassword: ${localDB.pjs[m]}\n\n`; } window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`); }
 
         function deleteData(p, id) { if(confirm("Yakin ingin menghapus data ini?")) dbRef.child(p).child(id).remove(); }
         function resetData(p, l) { if(confirm("⚠ BAHAYA: Yakin mereset SEMUA Data "+l+"?")) dbRef.child(p).remove(); }
