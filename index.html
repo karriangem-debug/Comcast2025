@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | ULTIMATE SYSTEM V5.1</title>
+    <title>COMCAST 2025 | FINAL SYSTEM V6.0</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -42,28 +42,25 @@
         .menu-link { display: block; padding: 14px; font-weight: 700; text-decoration: none; color: var(--dark); border-radius: 12px; margin-bottom: 4px; font-size: 0.85rem; transition: 0.2s; }
         .menu-link:hover { background: #f1f5f9; color: var(--p); }
 
-        /* HEADER PEMISAH HARI (DIUPDATE) */
         .day-divider { background: var(--p); color: white; padding: 10px 20px; border-radius: 12px; font-weight: 800; font-size: 0.85rem; margin: 25px 0 15px 0; display: inline-flex; width: fit-content; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(37,99,235,0.2); text-transform: uppercase; }
         
-        /* COUNTDOWN BADGE */
         .cd-badge { display: inline-block; font-size: 0.75rem; font-weight: 800; padding: 6px 12px; border-radius: 8px; margin-bottom: 10px; width: 100%; text-align: center; }
         .cd-safe { background: #eff6ff; color: var(--p); border: 1px solid #bfdbfe; }
         .cd-danger { background: #fef2f2; color: var(--danger); border: 1px solid #fecaca; animation: pulse 2s infinite; }
+        .cd-done { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; animation: none; }
         @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* CARDS */
-        .card-item { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); position: relative; }
+        .card-item { background: white; border-radius: 20px; padding: 20px; margin-bottom: 15px; border: 1px solid #f1f5f9; box-shadow: 0 10px 25px rgba(0,0,0,0.03); position: relative; transition: 0.2s; }
+        .card-item:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0,0,0,0.06); }
         .card-subject { font-weight: 800; font-size: 1.1rem; color: var(--dark); display: block; margin-bottom: 5px; }
-        .card-meta { font-size: 0.75rem; font-weight: 700; color: #64748b; margin-bottom: 10px; }
         .card-desc { font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 15px; border-radius: 16px; margin-top: 10px; white-space: pre-line; }
 
         /* ORG & FORMS */
         .org-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px; }
-        .mhs-card { background: white; border-radius: 20px; padding: 15px; width: 160px; text-align: center; border: 1px solid #e2e8f0; }
+        .mhs-card { background: white; border-radius: 20px; padding: 15px; width: 160px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
         .pp-img { width: 80px; height: 80px; border-radius: 50%; object-fit: cover; border: 3px solid var(--p); margin-bottom: 10px; }
         .soc-btns { display: flex; justify-content: center; gap: 8px; margin-top: 10px; }
         .soc-icon { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; color: white; font-size: 1.1rem; text-decoration: none; transition: 0.3s; }
-        .soc-icon:hover { opacity: 0.8; transform: scale(1.1); }
         .ig-icon { background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%); }
         .wa-icon { background: #25D366; }
         
@@ -71,23 +68,21 @@
         .form-grid-full { grid-column: 1 / -1; }
         .input-modern { width: 100%; padding: 15px; border-radius: 14px; border: 1px solid #e2e8f0; font-weight: 600; outline: none; margin-bottom: 0; }
         .btn-primary { width: 100%; padding: 18px; background: var(--p); color: white; border: none; border-radius: 16px; font-weight: 800; cursor: pointer; }
-        .btn-mini { padding: 8px 12px; font-size: 0.65rem; font-weight: 800; border-radius: 8px; border: none; cursor: pointer; margin-right: 5px; margin-top: 10px; }
-        .reset-btn { width: 100%; padding: 12px; margin-bottom: 5px; border: 1px solid #fee2e2; background: #fff1f2; color: var(--danger); border-radius: 10px; font-weight: 800; cursor: pointer; }
+        .btn-mini { padding: 8px 12px; font-size: 0.65rem; font-weight: 800; border-radius: 8px; border: none; cursor: pointer; margin-right: 5px; margin-top: 10px; display: inline-block; text-align: center; text-decoration: none;}
         
         .member-chip { display: inline-block; background: #eff6ff; color: var(--p); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin: 3px; cursor: pointer; }
         .search-results { background: white; border: 1px solid #e2e8f0; border-radius: 12px; max-height: 150px; overflow-y: auto; margin-bottom: 10px; }
         .search-item { padding: 10px; font-size: 0.8rem; font-weight: 600; border-bottom: 1px solid #f1f5f9; cursor: pointer; }
-        .search-item:hover { background: #f8fafc; }
 
         #toast { visibility: hidden; min-width: 250px; background-color: var(--success); color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; font-size: 1rem; font-weight: 800; box-shadow: 0 10px 30px rgba(34,197,94,0.3); transform: translateX(-50%); transition: visibility 0s, bottom 0.5s, opacity 0.5s; opacity: 0; }
         #toast.show { visibility: visible; bottom: 50px; opacity: 1; }
+        
+        /* Modal Style */
+        .modal-wrap { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:3000; align-items:center; justify-content:center; padding:20px; animation: fadeIn 0.2s; }
+        .modal-box { background:white; width:100%; max-width:450px; border-radius:20px; padding:25px; position:relative; max-height:85vh; overflow-y:auto; }
+        .btn-close { position:absolute; right:15px; top:15px; background:#f1f5f9; color:var(--dark); border:none; border-radius:50%; width:35px; height:35px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
 
-        @media (min-width: 768px) {
-            .app-container { max-width: 800px; padding: 40px; padding-bottom: 120px; }
-            .form-grid { grid-template-columns: 1fr 1fr; gap: 15px; }
-            .org-row { gap: 25px; }
-            .mhs-card { width: 180px; }
-        }
+        @media (min-width: 768px) { .app-container { max-width: 800px; padding: 40px; padding-bottom: 120px; } .form-grid { grid-template-columns: 1fr 1fr; gap: 15px; } .mhs-card { width: 180px; } }
     </style>
 </head>
 <body>
@@ -97,7 +92,24 @@
         <div class="logo-anim">Comcast2025</div>
         <div style="width:30px"></div>
     </nav>
-    <div id="toast">✅ Berhasil Disimpan!</div>
+    <div id="toast">Berhasil Disimpan!</div>
+
+    <div id="modal-deadline" class="modal-wrap" onclick="closeModals(event)">
+        <div class="modal-box" onclick="event.stopPropagation()">
+            <button class="btn-close" onclick="document.getElementById('modal-deadline').style.display='none'">×</button>
+            <h2 id="modal-dl-title" style="color:var(--p); margin-bottom:5px; padding-right:30px; font-size:1.3rem;">Matkul</h2>
+            <div id="modal-dl-desc" style="background:#f8fafc; padding:15px; border-radius:15px; font-size:0.9rem; white-space:pre-line; margin-bottom:15px; border:1px solid #e2e8f0;"></div>
+            <h4 style="margin-bottom:10px; color:#475569; font-size:0.85rem">Daftar Kelompok Presentasi:</h4>
+            <div id="modal-dl-groups"></div>
+        </div>
+    </div>
+
+    <div id="modal-zoom" class="modal-wrap" onclick="closeModals(event)">
+        <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
+            <button class="btn-close" style="right:-10px; top:-10px; background:red; color:white;" onclick="document.getElementById('modal-zoom').style.display='none'">×</button>
+            <img id="zoom-img-target" src="" style="width:100%; max-height:85vh; object-fit:contain; border-radius:15px; box-shadow:0 20px 40px rgba(0,0,0,0.5);">
+        </div>
+    </div>
 
     <div class="taskbar active-flex" id="main-taskbar">
         <button class="task-btn" onclick="showTab('tab-done', this)">SELESAI</button>
@@ -130,13 +142,13 @@
                 <a href="#" class="menu-link" style="color:#059669" onclick="openForm('deadline')">📝 Tambah Deadline</a>
             </div>
 
-            <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 20px;">
-                <div id="reset-btns-wrap" style="display:none; margin-bottom:10px">
-                    <button class="reset-btn" onclick="resetData('deadlines', 'Deadline')">🧹 Reset Deadlines</button>
-                    <button class="reset-btn" onclick="resetData('schedules', 'Jadwal')">🧹 Reset Jadwal</button>
-                    <button class="reset-btn" onclick="resetData('groups', 'Kelompok')">🧹 Reset Kelompok</button>
-                </div>
-                <a href="#" class="menu-link" style="background:#f1f5f9; text-align:center" onclick="toggleView('login-page')">🔐 LOGIN / LOGOUT</a>
+            <div id="auth-container" style="margin-top: 15px;"></div>
+
+            <div id="admin-reset-group" style="display:none; margin-top:30px; border-top:1px solid #f1f5f9; padding-top:15px">
+                <p style="font-size:0.7rem; font-weight:800; color:red; margin-bottom:10px">⚠️ RESET DATA</p>
+                <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('deadlines', 'Semua Deadline')">Hapus Semua Deadline</a>
+                <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('schedules', 'Semua Jadwal')">Hapus Semua Jadwal</a>
+                <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('structs', 'Semua Struktur Mhs')">Hapus Semua Struktur</a>
             </div>
         </div>
     </aside>
@@ -166,15 +178,11 @@
         <section id="login-page" class="main-view">
             <h2 style="margin-bottom:15px">🔐 Login Sistem</h2>
             <div class="form-grid">
-                <select id="login-role" class="input-modern form-grid-full" onchange="checkRoleUI()">
-                    <option value="admin">Akses Admin</option>
-                    <option value="pj">Akses PJ Matkul</option>
-                </select>
+                <select id="login-role" class="input-modern form-grid-full" onchange="checkRoleUI()"><option value="admin">Akses Admin</option><option value="pj">Akses PJ Matkul</option></select>
                 <div id="pj-matkul-select" class="form-grid-full" style="display:none"><select id="login-pj-matkul" class="input-modern"></select></div>
                 <input type="password" id="pass-val" class="input-modern form-grid-full" placeholder="Password">
             </div>
             <button class="btn-primary" onclick="login()">MASUK</button>
-            <button class="btn-primary" style="background:gray; margin-top:10px" onclick="logout()">LOGOUT</button>
         </section>
 
         <section id="form-deadline" class="main-view">
@@ -187,9 +195,8 @@
                 <input type="time" id="in-dead-time" class="input-modern">
                 <textarea id="in-dead-desc" class="input-modern form-grid-full" placeholder="Detail tugas..." rows="4"></textarea>
             </div>
-
             <div style="background:#f8fafc; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #e2e8f0">
-                <label style="font-size:0.75rem; font-weight:800; color:var(--p)">PILIH KELOMPOK PRESENTASI (OPSIONAL)</label>
+                <label style="font-size:0.75rem; font-weight:800; color:var(--p)">PILIH KELOMPOK (OPSIONAL)</label>
                 <div id="group-selects-container"></div>
                 <button onclick="addMoreGroupSelect()" class="btn-mini" style="background:white; border:1px dashed var(--p); color:var(--p); width:100%; padding:10px">+ Tambah Kelompok Lain</button>
             </div>
@@ -204,7 +211,6 @@
                 <input type="text" id="in-grp-name" class="input-modern" placeholder="Cth: Kelompok 1">
                 <input type="text" id="in-grp-title" class="input-modern" placeholder="Judul Materi / Topik">
             </div>
-            
             <div style="background:#f8fafc; padding:15px; border-radius:15px; border:1px solid #e2e8f0; margin-bottom:15px">
                 <label style="font-size:0.75rem; font-weight:800;">ANGGOTA KELOMPOK:</label>
                 <div id="selected-members" style="margin-bottom:10px"></div>
@@ -231,44 +237,39 @@
             <div class="form-grid">
                 <input type="hidden" id="edit-str-id">
                 <input type="text" id="in-str-name" class="input-modern" placeholder="Nama Lengkap">
-                <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan (Ketua/Wakil/Mhs)">
-                <input type="text" id="in-str-ig" class="input-modern" placeholder="Username IG (Tanpa @)">
-                <input type="text" id="in-str-wa" class="input-modern" placeholder="Nomor WA (Awalan 62...)">
+                <input type="text" id="in-str-pos" class="input-modern" placeholder="Jabatan">
+                <input type="text" id="in-str-ig" class="input-modern" placeholder="Username IG">
+                <input type="text" id="in-str-wa" class="input-modern" placeholder="Nomor WA">
                 <input type="text" id="in-str-img" class="input-modern form-grid-full" placeholder="Link Foto Drive (Opsional)">
-                <select id="in-str-lv" class="input-modern form-grid-full"><option value="1">Ketua Kelas</option><option value="2">Wakil Ketua</option><option value="3">Sekretaris / Bendahara</option><option value="4">Anggota Kelas</option></select>
+                <select id="in-str-lv" class="input-modern form-grid-full"><option value="1">Ketua Kelas</option><option value="2">Wakil Ketua</option><option value="3">Sekretaris/Bendahara</option><option value="4">Anggota</option></select>
             </div>
             <button class="btn-primary" onclick="saveStruct()">SIMPAN SATUAN</button>
-
             <div style="background:#f8fafc; padding:20px; border-radius:15px; border:2px dashed var(--p); margin-top:25px; text-align:center;">
                 <i class="fa-solid fa-file-excel" style="font-size:2.5rem; color:#10b981; margin-bottom:10px"></i>
-                <p style="font-size:1rem; font-weight:800; margin-bottom:5px; color:var(--dark)">Import Banyak Data (Excel)</p>
-                <p style="font-size:0.75rem; color:#64748b; margin-bottom:15px; line-height:1.5">
-                    Buat file Excel (.xlsx) dengan nama header:<br>
-                    <b style="color:var(--dark)">Nama | Jabatan | IG | WA | Foto | Level</b>
-                </p>
+                <p style="font-size:1rem; font-weight:800; margin-bottom:5px">Import Data (Excel)</p>
                 <input type="file" id="excel-file" accept=".xlsx, .xls" style="display:none" onchange="processExcel(event)">
-                <button class="btn-primary" style="background:#10b981; padding:12px; font-size:0.85rem" onclick="document.getElementById('excel-file').click()">PILIH FILE EXCEL (.xlsx)</button>
+                <button class="btn-primary" style="background:#10b981; padding:12px; font-size:0.85rem" onclick="document.getElementById('excel-file').click()">PILIH FILE EXCEL</button>
             </div>
         </section>
 
         <section id="form-gallery" class="main-view">
             <h2 style="margin-bottom:15px">Upload Galeri</h2>
-            <p style="font-size:0.75rem; color:gray; margin-bottom:10px">Tumpuk link Google Drive di sini. Otomatis terkonversi jadi gambar!</p>
             <textarea id="in-gal-links" class="input-modern" placeholder="Paste link foto drive di sini..." rows="8"></textarea>
             <button class="btn-primary" onclick="saveGallery()">UPLOAD SEMUA</button>
         </section>
 
         <section id="form-pj-auth" class="main-view">
             <h2 style="margin-bottom:15px">🔑 Kelola Password PJ</h2>
-            <div style="display:flex; gap:10px; margin-bottom:15px">
-                <button onclick="shareWaPJ()" class="btn-primary" style="background:#25D366; width:60px; height:50px; display:flex; align-items:center; justify-content:center; border-radius:14px; padding:0"><i class="fa-brands fa-whatsapp" style="font-size:1.8rem"></i></button>
-                <div style="display:flex; align-items:center; font-size:0.8rem; color:gray; font-weight:800">Share Semua Password via WhatsApp</div>
-            </div>
             <div class="form-grid">
                 <select id="in-pj-matkul" class="input-modern form-grid-full"></select>
                 <input type="text" id="in-pj-pass" class="input-modern form-grid-full" placeholder="Set Password PJ Baru">
             </div>
             <button class="btn-primary" onclick="savePJAuth()">SIMPAN & CLEAR</button>
+            
+            <button id="btn-share-all-pj" class="btn-primary" style="background:#25D366; margin-top:15px; display:none" onclick="shareAllPJ()">
+                <i class="fa-brands fa-whatsapp"></i> SHARE SEMUA PASSWORD KE WA
+            </button>
+
             <div id="pj-list-content" style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:15px"></div>
         </section>
     </main>
@@ -291,81 +292,69 @@
             localDB.gallery = d.gallery ? Object.keys(d.gallery).map(k => ({...d.gallery[k], fid: k})) : [];
             localDB.groups = d.groups ? Object.keys(d.groups).map(k => ({...d.groups[k], fid: k})) : [];
             localDB.pjs = d.pjs || {};
-            render(); updateDropdowns(); filterGroups(); renderPJList();
+            render(); updateDropdowns(); filterGroups(); renderPJList(); checkAccess();
         });
 
-        function showToast(msg) {
-            const x = document.getElementById("toast");
-            x.innerText = msg; x.className = "show";
-            setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000);
+        function showToast(msg) { const x = document.getElementById("toast"); x.innerText = msg; x.className = "show"; setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000); }
+        function formatDriveLink(url) { if(!url) return ""; const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/); if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`; return url; }
+        function closeModals(e) { if(e.target.classList.contains('modal-wrap')) { document.querySelectorAll('.modal-wrap').forEach(m => m.style.display='none'); } }
+
+        function showDeadlineDetail(id) {
+            const t = localDB.deadlines.find(x => x.fid === id);
+            let groupHtml = "";
+            if(t.groupIds && t.groupIds.length > 0) {
+                t.groupIds.forEach(gid => {
+                    const g = localDB.groups.find(x => x.fid === gid);
+                    if(g) {
+                        let membersList = g.members ? g.members.split(',').filter(m=>m.trim()!=='').map((m, i) => `${i+1}. ${m.trim()}`).join('<br>') : '-';
+                        groupHtml += `<div style="background:#f8fafc; padding:15px; border-radius:12px; margin-bottom:10px; border:1px solid #e2e8f0; border-left:4px solid var(--p)"><div style="font-weight:800; color:var(--p); font-size:1rem">${g.groupName}</div><div style="font-size:0.9rem; font-weight:700; margin-top:3px; margin-bottom:8px">${g.title}</div><div style="font-size:0.8rem; color:#475569; line-height:1.6"><b>Anggota:</b><br>${membersList}</div></div>`;
+                    }
+                });
+            } else {
+                groupHtml = `<p style="font-size:0.8rem; color:gray; font-style:italic">Tidak ada kelompok presentasi untuk tugas ini.</p>`;
+            }
+            document.getElementById('modal-dl-title').innerText = t.subject;
+            document.getElementById('modal-dl-desc').innerText = t.desc || 'Tidak ada keterangan tambahan.';
+            document.getElementById('modal-dl-groups').innerHTML = groupHtml;
+            document.getElementById('modal-deadline').style.display = 'flex';
         }
 
-        function formatDriveLink(url) {
-            if(!url) return "";
-            const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/);
-            if (match && match[1]) {
-                return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`;
-            }
-            return url;
-        }
+        function zoomImage(url) { document.getElementById('zoom-img-target').src = formatDriveLink(url); document.getElementById('modal-zoom').style.display = 'flex'; }
 
         function render() {
-            const isAdmin = userRole === 'admin', isPJ = userRole === 'pj', now = new Date();
-            const nowMs = now.getTime();
-            const startToday = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime();
+            const isAdmin = userRole === 'admin', isPJ = userRole === 'pj', nowMs = new Date().getTime();
+            const startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime();
             const nextWeekLimit = startToday + (7 * 24 * 60 * 60 * 1000);
+            const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"], MONTHS_NAME = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
-            const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-            const MONTHS_NAME = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-
-            // RENDER DEADLINE
-            const isDeadlineDone = (t) => {
-                if(!t.date) return false;
-                const dt = new Date(`${t.date}T${t.time || '23:59'}:00`).getTime();
-                return nowMs > (dt + (30 * 60 * 1000)); 
-            };
+            const isDeadlineDone = (t) => { if(!t.date) return false; return nowMs > new Date(`${t.date}T${t.time || '23:59'}:00`).getTime() + (30 * 60 * 1000); };
 
             const renderGroupedDL = (items, isDoneTab = false) => {
                 if(items.length === 0) return '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada tugas</p>';
-
-                items.sort((a,b) => new Date(a.date) - new Date(b.date));
+                items.sort((a,b) => new Date(`${a.date}T${a.time||'23:59'}:00`) - new Date(`${b.date}T${b.time||'23:59'}:00`));
+                
                 const grouped = {};
-                items.forEach(t => {
-                    if(!t.date) return;
-                    if(!grouped[t.date]) grouped[t.date] = [];
-                    grouped[t.date].push(t);
-                });
+                items.forEach(t => { if(t.date) { if(!grouped[t.date]) grouped[t.date] = []; grouped[t.date].push(t); } });
 
                 let htmlContent = "";
                 Object.keys(grouped).forEach(dateStr => {
                     const dObj = new Date(dateStr);
-                    const dayName = DAYS_NAME[dObj.getDay()];
-                    const formattedDate = `${dayName}, ${dObj.getDate()} ${MONTHS_NAME[dObj.getMonth()]} ${dObj.getFullYear()}`;
-                    
-                    htmlContent += `<div class="day-divider"><i class="fa-regular fa-calendar-check"></i> ${formattedDate}</div>`;
+                    htmlContent += `<div class="day-divider"><i class="fa-regular fa-calendar-check"></i> ${DAYS_NAME[dObj.getDay()]}, ${dObj.getDate()} ${MONTHS_NAME[dObj.getMonth()]} ${dObj.getFullYear()}</div>`;
                     
                     grouped[dateStr].forEach(t => {
-                        let groupHtml = "";
-                        if(t.groupIds && t.groupIds.length > 0) {
-                            t.groupIds.forEach(gid => {
-                                const g = localDB.groups.find(x => x.fid === gid);
-                                if(g) groupHtml += `<div style="background:#eff6ff; padding:12px; border-radius:12px; margin-top:8px; border-left:3px solid var(--p)"><b style="font-size:0.85rem; color:var(--p)">🚀 ${g.groupName}</b><div style="font-size:0.8rem; font-weight:800">${g.title}</div><div style="font-size:0.75rem; color:#64748b; margin-top:4px">👥 ${g.members}</div></div>`;
-                            });
-                        }
-                        const canEdit = isAdmin || (isPJ && t.subject === userMatkul);
-                        
-                        let countdownHTML = "";
-                        if (!isDoneTab) {
-                            countdownHTML = `<div class="cd-badge" id="cd-${t.fid}" data-date="${t.date}" data-time="${t.time || '23:59'}">⏳ Menghitung sisa waktu...</div>`;
+                        let badgeHTML = isDoneTab ? `<div class="cd-badge cd-done">SELESAI</div>` : `<div class="cd-badge" id="cd-${t.fid}" data-date="${t.date}" data-time="${t.time || '23:59'}">⏳ Menghitung...</div>`;
+                        let actionBtns = "";
+
+                        if (isAdmin || (isPJ && t.subject === userMatkul)) {
+                            actionBtns = `<div style="margin-top:12px; padding-top:12px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="event.stopPropagation(); editDeadline('${t.fid}')">EDIT</button><button class="btn-mini" style="background:#fff1f2; color:red" onclick="event.stopPropagation(); deleteData('deadlines', '${t.fid}')">HAPUS</button></div>`;
                         }
 
-                        htmlContent += `<div class="card-item">
-                            ${countdownHTML}
+                        htmlContent += `<div class="card-item" onclick="showDeadlineDetail('${t.fid}')" style="cursor:pointer">
+                            ${badgeHTML}
                             <span class="card-subject">${t.subject}</span>
-                            <p class="card-meta">⏰ ${t.time || '23:59'}</p>
-                            <div class="card-desc">${t.desc}</div>
-                            ${groupHtml}
-                            ${canEdit ? `<div style="margin-top:10px;"><button class="btn-mini" style="background:#f1f5f9" onclick="editDeadline('${t.fid}')">EDIT</button><button class="btn-mini" style="background:#fff1f2; color:red" onclick="deleteData('deadlines', '${t.fid}')">HAPUS</button></div>`:''}
+                            <div style="font-size:0.8rem; font-weight:700; color:#64748b; margin-top:5px; margin-bottom:10px"><i class="fa-regular fa-clock"></i> ${t.time || '23:59'}</div>
+                            ${t.desc ? `<div class="card-desc" style="margin-top:0">${t.desc}</div>` : ''}
+                            ${actionBtns}
                         </div>`;
                     });
                 });
@@ -374,108 +363,62 @@
 
             const doneItems = localDB.deadlines.filter(t => isDeadlineDone(t));
             const activeItems = localDB.deadlines.filter(t => !isDeadlineDone(t));
-            
             document.getElementById('tab-now').innerHTML = renderGroupedDL(activeItems.filter(t => new Date(t.date).getTime() < nextWeekLimit));
             document.getElementById('tab-next').innerHTML = renderGroupedDL(activeItems.filter(t => new Date(t.date).getTime() >= nextWeekLimit));
             document.getElementById('tab-done').innerHTML = renderGroupedDL(doneItems, true);
 
-            // RENDER JADWAL KULIAH (DIKELOMPOKKAN PER HARI)
+            // JADWAL
             const DAYS_SCH = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-            let schHtml = "";
-            let currentSchDay = -1;
-
-            if (localDB.schedules.length === 0) {
-                schHtml = '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada jadwal</p>';
-            } else {
-                localDB.schedules.sort((a, b) => a.day - b.day).forEach(s => {
-                    if (s.day !== currentSchDay) {
-                        schHtml += `<div class="day-divider"><i class="fa-regular fa-calendar"></i> HARI ${DAYS_SCH[s.day]}</div>`;
-                        currentSchDay = s.day;
-                    }
-                    schHtml += `
-                        <div class="card-item">
-                            <span class="card-subject">${s.name}</span>
-                            <p class="card-meta"><span style="color:#2563eb; font-size:1.1rem">👤</span> ${s.lecturer} | ⏰ ${s.time}</p>
-                            ${isAdmin ? `<button class="btn-mini" style="background:#f1f5f9" onclick="editSchedule('${s.fid}')">EDIT</button><button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button>` : ''}
-                        </div>
-                    `;
-                });
-            }
-            document.getElementById('schedule-view').innerHTML = schHtml;
+            let schHtml = "", currentSchDay = -1;
+            localDB.schedules.sort((a, b) => a.day - b.day).forEach(s => {
+                if (s.day !== currentSchDay) { schHtml += `<div class="day-divider"><i class="fa-regular fa-calendar"></i> HARI ${DAYS_SCH[s.day]}</div>`; currentSchDay = s.day; }
+                schHtml += `<div class="card-item"><span class="card-subject">${s.name}</span><p style="font-size:0.75rem; font-weight:700; color:#64748b; margin-top:5px"><span style="color:#2563eb; font-size:1.1rem">👤</span> ${s.lecturer} | ⏰ ${s.time}</p>${isAdmin ? `<div style="margin-top:10px"><button class="btn-mini" style="background:#f1f5f9" onclick="editSchedule('${s.fid}')">EDIT</button><button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
+            });
+            document.getElementById('schedule-view').innerHTML = schHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada jadwal</p>';
             
             // STRUKTUR KELAS
-            const getAvatar = (n, i) => {
-                if(i && i.length > 5) return formatDriveLink(i);
-                return `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=2563eb&color=fff&bold=true`;
-            };
+            const getAvatar = (n, i) => (i && i.length > 5) ? formatDriveLink(i) : `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=2563eb&color=fff&bold=true`;
             const makeCard = (s) => `<div class="mhs-card"><img src="${getAvatar(s.name, s.img)}" class="pp-img" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=2563eb&color=fff'"><h4 style="font-size:0.85rem; margin-bottom:2px">${s.name}</h4><p style="font-size:0.65rem; font-weight:800; color:var(--p)">${s.pos}</p><div class="soc-btns">${s.ig?`<a href="https://instagram.com/${s.ig}" target="_blank" class="soc-icon ig-icon"><i class="fa-brands fa-instagram"></i></a>`:''}${s.wa?`<a href="https://wa.me/${s.wa}" target="_blank" class="soc-icon wa-icon"><i class="fa-brands fa-whatsapp"></i></a>`:''}</div>${isAdmin?`<div style="margin-top:10px"><button onclick="editStruct('${s.fid}')" class="btn-mini" style="background:#f1f5f9">EDIT</button><button onclick="deleteData('structs','${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">X</button></div>`:''}</div>`;
             
-            let orgH = "";
-            let wakil = localDB.structs.filter(s=>s.lv==2), ketua = localDB.structs.filter(s=>s.lv==1), bph = localDB.structs.filter(s=>s.lv==3), mhs = localDB.structs.filter(s=>s.lv==4);
-            if(wakil.length || ketua.length) orgH += `<div class="org-row">${wakil.map(makeCard).join('')}${ketua.map(makeCard).join('')}</div>`;
-            if(bph.length) orgH += `<div class="org-row">${bph.map(makeCard).join('')}</div>`;
-            if(mhs.length) orgH += `<div class="org-row">${mhs.map(makeCard).join('')}</div>`;
-            document.getElementById('org-content').innerHTML = orgH;
+            let row1 = localDB.structs.filter(s=>s.lv==1 || s.lv==2); 
+            let row2 = localDB.structs.filter(s=>s.lv==3); 
+            let row3 = localDB.structs.filter(s=>s.lv==4); 
 
-            // GALERI
-            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => {
-                let finalImg = formatDriveLink(g.img);
-                return `<div style="position:relative"><img src="${finalImg}" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:15px; background:#f1f5f9;" onerror="this.src='https://via.placeholder.com/300?text=Gambar+Gagal+Dimuat'">${isAdmin?`<button onclick="deleteData('gallery','${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; font-weight:bold; cursor:pointer">X</button>`:''}</div>`;
-            }).join('');
+            let orgHtml = "";
+            if(row1.length) orgHtml += `<div style="text-align:center; font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:15px; letter-spacing:1px">KETUA & WAKIL</div><div class="org-row">${row1.map(makeCard).join('')}</div>`;
+            if(row2.length) orgHtml += `<div style="border-top:2px dashed #e2e8f0; padding-top:25px"><div style="text-align:center; font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:15px; letter-spacing:1px">PERANGKAT KELAS</div><div class="org-row">${row2.map(makeCard).join('')}</div></div>`;
+            if(row3.length) orgHtml += `<div style="border-top:2px dashed #e2e8f0; padding-top:25px"><div style="text-align:center; font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:15px; letter-spacing:1px">MAHASISWA</div><div class="org-row">${row3.map(makeCard).join('')}</div></div>`;
+            
+            document.getElementById('org-content').innerHTML = orgHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Data belum ada</p>';
+
+            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `<div style="position:relative"><img src="${formatDriveLink(g.img)}" onclick="zoomImage('${g.img}')" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:15px; background:#f1f5f9; cursor:zoom-in" onerror="this.src='https://via.placeholder.com/300?text=Error'">${isAdmin?`<button onclick="deleteData('gallery','${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; font-weight:bold; cursor:pointer">X</button>`:''}</div>`).join('');
         }
 
-        // SISTEM COUNTDOWN DETIK DAN AUTO-PINDAH REAL-TIME
         setInterval(() => {
-            let needsRefresh = false;
-            
-            document.querySelectorAll('.cd-badge').forEach(badge => {
-                const dateStr = badge.getAttribute('data-date');
-                const timeStr = badge.getAttribute('data-time');
-                if(!dateStr) return;
-
-                const targetTime = new Date(`${dateStr}T${timeStr}:00`).getTime();
-                const currentTime = new Date().getTime();
-                const diff = targetTime - currentTime;
-
-                if (diff < -(30 * 60 * 1000)) {
-                    needsRefresh = true;
-                    return;
-                } else if (diff < 0) {
-                    badge.innerHTML = "🚨 WAKTU HABIS";
-                    badge.className = "cd-badge cd-danger";
-                    return;
-                }
-
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-                let textStr = "⏳";
-                if(days > 0) textStr += `${days} Hari `;
-                if(hours > 0 || days > 0) textStr += `${hours} Jam `;
-                if(minutes > 0 || hours > 0 || days > 0) textStr += `${minutes} Menit `;
-                textStr += `${seconds} Detik`;
-
-                badge.innerHTML = textStr;
-                badge.className = "cd-badge " + (days < 1 ? "cd-danger" : "cd-safe");
+            document.querySelectorAll('.cd-badge:not(.cd-done)').forEach(badge => {
+                const diff = new Date(`${badge.getAttribute('data-date')}T${badge.getAttribute('data-time')}:00`).getTime() - new Date().getTime();
+                if (diff < -(30 * 60 * 1000)) { render(); return; } else if (diff < 0) { badge.innerHTML = "WAKTU HABIS"; badge.className = "cd-badge cd-danger"; return; }
+                const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
+                badge.innerHTML = `Sisa: ${d>0?d+' Hari ':''}${h>0||d>0?h+' Jam ':''}${m>0||h>0||d>0?m+' Mnt ':''}${s} Dtk`;
+                badge.className = "cd-badge " + (d < 1 ? "cd-danger" : "cd-safe");
             });
-
-            if (needsRefresh) render();
-            
         }, 1000);
 
         function toggleMenu() { document.getElementById('sidebar').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
-        function toggleView(id) { 
-            document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active')); 
-            document.getElementById(id).classList.add('active'); 
-            document.getElementById('main-taskbar').classList.toggle('active-flex', id === 'deadline-view');
-            if(document.getElementById('sidebar').classList.contains('active')) toggleMenu(); 
+        function toggleView(id) { document.querySelectorAll('.main-view').forEach(v => v.classList.remove('active')); document.getElementById(id).classList.add('active'); document.getElementById('main-taskbar').classList.toggle('active-flex', id === 'deadline-view'); if(document.getElementById('sidebar').classList.contains('active')) toggleMenu(); }
+        function showTab(t, b) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.task-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(t).classList.add('active'); b.classList.add('active'); }
+        
+        function checkAccess() { 
+            document.getElementById('admin-group').style.display = userRole === 'admin' ? 'block' : 'none'; 
+            document.getElementById('admin-reset-group').style.display = userRole === 'admin' ? 'block' : 'none'; 
+            document.getElementById('pj-group').style.display = userRole === 'pj' ? 'block' : 'none'; 
+            const authContainer = document.getElementById('auth-container');
+            if (userRole === 'admin' || userRole === 'pj') authContainer.innerHTML = `<a href="#" class="menu-link" style="color:red; font-weight:800;" onclick="logout()">🚪 Logout</a>`;
+            else authContainer.innerHTML = `<a href="#" class="menu-link" style="background:#f1f5f9; text-align:center" onclick="toggleView('login-page')">🔐 LOGIN</a>`;
         }
 
-        function showTab(t, b) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.task-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(t).classList.add('active'); b.classList.add('active'); }
         function login() { const r=document.getElementById('login-role').value, p=document.getElementById('pass-val').value; if(r==='admin'&&p==='2025'){ localStorage.setItem('userRole','admin'); location.reload(); } else if(r==='pj'){ const m=document.getElementById('login-pj-matkul').value; if(localDB.pjs[m]===p){ localStorage.setItem('userRole','pj'); localStorage.setItem('userMatkul',m); location.reload(); } else alert("Password Salah!"); } }
-        function logout() { localStorage.clear(); location.reload(); }
+        function logout() { if(confirm("Yakin mau keluar?")) { localStorage.clear(); location.reload(); } }
         function checkRoleUI() { document.getElementById('pj-matkul-select').style.display = document.getElementById('login-role').value === 'pj' ? 'block' : 'none'; }
         
         function updateDropdowns() { 
@@ -487,7 +430,10 @@
         function filterGroups() {
             const v = document.getElementById('filter-group-matkul') ? document.getElementById('filter-group-matkul').value : "";
             let grps = v ? localDB.groups.filter(g => g.matkul === v) : localDB.groups;
-            document.getElementById('all-groups-content').innerHTML = grps.map(g => `<div class="card-item"><span class="card-subject" style="color:var(--p)">${g.matkul}</span><h3 style="margin-top:5px">${g.groupName}</h3><p style="font-size:0.85rem; font-weight:800; margin-bottom:5px">${g.title}</p><div style="font-size:0.8rem; color:#64748b; background:#f8fafc; padding:10px; border-radius:10px">👥 ${g.members}</div>${userRole === 'admin' || (userRole === 'pj' && g.matkul === userMatkul) ? `<div style="margin-top:10px"><button class="btn-mini" style="background:#f1f5f9" onclick="editGroup('${g.fid}')">EDIT</button><button onclick="deleteData('groups', '${g.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`).join('') || '<p style="text-align:center; opacity:0.5; margin-top:20px">Data kelompok tidak ditemukan</p>';
+            document.getElementById('all-groups-content').innerHTML = grps.map(g => {
+                let membersList = g.members ? g.members.split(',').filter(m=>m.trim()!=='').map((m, i) => `${i+1}. ${m.trim()}`).join('<br>') : '-';
+                return `<div class="card-item"><span class="card-subject" style="color:var(--p)">${g.matkul}</span><h3 style="margin-top:5px">${g.groupName}</h3><p style="font-size:0.85rem; font-weight:800; margin-bottom:5px">${g.title}</p><div style="font-size:0.8rem; color:#64748b; background:#f8fafc; padding:10px; border-radius:10px; margin-top:10px; line-height:1.6"><b>Anggota:</b><br>${membersList}</div>${userRole === 'admin' || (userRole === 'pj' && g.matkul === userMatkul) ? `<div style="margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="editGroup('${g.fid}')">EDIT</button><button onclick="deleteData('groups', '${g.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
+            }).join('') || '<p style="text-align:center; opacity:0.5; margin-top:20px">Data kelompok belum ada</p>';
         }
 
         function openForm(t) { 
@@ -506,11 +452,7 @@
             }
         }
 
-        function autoFillTime() {
-            let m = document.getElementById('in-dead-matkul').value, sch = localDB.schedules.find(s => s.name === m);
-            if(sch && sch.time) document.getElementById('in-dead-time').value = sch.time;
-            document.querySelectorAll('.grp-dynamic-select').forEach(sel => loadGroupsIntoSelect(sel, m));
-        }
+        function autoFillTime() { let m = document.getElementById('in-dead-matkul').value, sch = localDB.schedules.find(s => s.name === m); if(sch && sch.time) document.getElementById('in-dead-time').value = sch.time; document.querySelectorAll('.grp-dynamic-select').forEach(sel => loadGroupsIntoSelect(sel, m)); }
 
         function addMoreGroupSelect(preVal = "") {
             const m = document.getElementById('in-dead-matkul').value, wrap = document.createElement('div'), sel = document.createElement('select'), delBtn = document.createElement('button');
@@ -520,118 +462,68 @@
             wrap.appendChild(sel); wrap.appendChild(delBtn); document.getElementById('group-selects-container').appendChild(wrap);
         }
 
-        function loadGroupsIntoSelect(selectEl, matkul, preVal = "") {
-            let h = '<option value="">-- Pilih Kelompok --</option>';
-            localDB.groups.filter(g => g.matkul === matkul).forEach(g => h += `<option value="${g.fid}">${g.groupName} - ${g.title}</option>`);
-            selectEl.innerHTML = h; if(preVal) selectEl.value = preVal;
-        }
+        function loadGroupsIntoSelect(selectEl, matkul, preVal = "") { let h = '<option value="">-- Pilih Kelompok --</option>'; localDB.groups.filter(g => g.matkul === matkul).forEach(g => h += `<option value="${g.fid}">${g.groupName} - ${g.title}</option>`); selectEl.innerHTML = h; if(preVal) selectEl.value = preVal; }
 
         function saveDeadline() { 
             let groups = []; document.querySelectorAll('.grp-dynamic-select').forEach(s => { if(s.value) groups.push(s.value); });
-            if(!document.getElementById('in-dead-date').value) return alert("Tanggal deadline wajib diisi!");
+            if(!document.getElementById('in-dead-date').value) return alert("Tanggal wajib diisi!");
             const d = { subject: document.getElementById('in-dead-matkul').value, groupIds: groups, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value };
             const id = document.getElementById('edit-dead-id').value; if(id) dbRef.child('deadlines').child(id).update(d); else dbRef.child('deadlines').push(d); 
-            
-            showToast("✅ Deadline Berhasil Disimpan!");
-            document.getElementById('edit-dead-id').value = ""; document.getElementById('in-dead-date').value = ""; document.getElementById('in-dead-time').value = ""; document.getElementById('in-dead-desc').value = ""; document.getElementById('group-selects-container').innerHTML = "";
-            addMoreGroupSelect(); if(userRole === 'admin') document.getElementById('in-dead-matkul').value = "";
+            showToast("Berhasil Disimpan!"); openForm('deadline');
         }
+        function editDeadline(id) { const t = localDB.deadlines.find(x => x.fid === id); document.getElementById('edit-dead-id').value = id; document.getElementById('in-dead-matkul').value = t.subject; document.getElementById('in-dead-date').value = t.date; document.getElementById('in-dead-time').value = t.time; document.getElementById('in-dead-desc').value = t.desc; document.getElementById('group-selects-container').innerHTML = ""; if(t.groupIds && t.groupIds.length > 0) t.groupIds.forEach(gid => addMoreGroupSelect(gid)); else addMoreGroupSelect(); toggleView('form-deadline'); }
 
-        function editDeadline(id) { 
-            const t = localDB.deadlines.find(x => x.fid === id); document.getElementById('edit-dead-id').value = id; document.getElementById('in-dead-matkul').value = t.subject; document.getElementById('in-dead-date').value = t.date; document.getElementById('in-dead-time').value = t.time; document.getElementById('in-dead-desc').value = t.desc; document.getElementById('group-selects-container').innerHTML = "";
-            if(t.groupIds && t.groupIds.length > 0) t.groupIds.forEach(gid => addMoreGroupSelect(gid)); else addMoreGroupSelect();
-            toggleView('form-deadline');
-        }
-
-        function searchMhsForGroup() {
-            const val = document.getElementById('search-mhs').value.toLowerCase(), resBox = document.getElementById('mhs-search-results');
-            if(!val) { resBox.style.display = 'none'; return; }
-            const results = localDB.structs.filter(s => s.name.toLowerCase().includes(val) && !groupMembersTemp.includes(s.name));
-            resBox.innerHTML = results.map(s => `<div class="search-item" onclick="addMhsToGroup('${s.name}')">${s.name} <span style="color:gray; font-size:0.7rem">(${s.pos})</span></div>`).join(''); resBox.style.display = 'block';
-        }
+        function searchMhsForGroup() { const val = document.getElementById('search-mhs').value.toLowerCase(), resBox = document.getElementById('mhs-search-results'); if(!val) { resBox.style.display = 'none'; return; } const results = localDB.structs.filter(s => s.name.toLowerCase().includes(val) && !groupMembersTemp.includes(s.name)); resBox.innerHTML = results.map(s => `<div class="search-item" onclick="addMhsToGroup('${s.name}')">${s.name} <span style="color:gray; font-size:0.7rem">(${s.pos})</span></div>`).join(''); resBox.style.display = 'block'; }
         function addMhsToGroup(name) { if(!groupMembersTemp.includes(name)) groupMembersTemp.push(name); document.getElementById('search-mhs').value = ""; document.getElementById('mhs-search-results').style.display = "none"; renderSelectedMembers(); }
         function removeMhsFromGroup(name) { groupMembersTemp = groupMembersTemp.filter(n => n !== name); renderSelectedMembers(); }
         function renderSelectedMembers() { document.getElementById('selected-members').innerHTML = groupMembersTemp.map(n => `<span class="member-chip" onclick="removeMhsFromGroup('${n}')">${n} ✖</span>`).join(''); }
 
-        function saveGroup() { 
-            const d = { matkul: document.getElementById('in-grp-matkul').value, groupName: document.getElementById('in-grp-name').value, title: document.getElementById('in-grp-title').value, members: groupMembersTemp.join(', ') }, id = document.getElementById('edit-grp-id').value;
-            if(id) dbRef.child('groups').child(id).update(d); else dbRef.child('groups').push(d); 
-            
-            showToast("✅ Kelompok Berhasil Disimpan!");
-            document.getElementById('edit-grp-id').value = ""; document.getElementById('in-grp-name').value = ""; document.getElementById('in-grp-title').value = ""; groupMembersTemp = []; renderSelectedMembers();
-            filterGroups();
-        }
-
+        function saveGroup() { const d = { matkul: document.getElementById('in-grp-matkul').value, groupName: document.getElementById('in-grp-name').value, title: document.getElementById('in-grp-title').value, members: groupMembersTemp.join(', ') }, id = document.getElementById('edit-grp-id').value; if(id) dbRef.child('groups').child(id).update(d); else dbRef.child('groups').push(d); showToast("Berhasil Disimpan!"); openForm('group'); }
         function editGroup(id) { const g = localDB.groups.find(x => x.fid === id); document.getElementById('edit-grp-id').value = id; document.getElementById('in-grp-matkul').value = g.matkul; document.getElementById('in-grp-name').value = g.groupName; document.getElementById('in-grp-title').value = g.title; groupMembersTemp = g.members ? g.members.split(',').map(m=>m.trim()) : []; renderSelectedMembers(); toggleView('form-group'); }
 
-        function saveSchedule() { 
-            const d = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: document.getElementById('in-sch-day').value }, id = document.getElementById('edit-sch-id').value;
-            if(id) dbRef.child('schedules').child(id).update(d); else dbRef.child('schedules').push(d);
-            showToast("✅ Jadwal Berhasil Disimpan!");
-            document.getElementById('edit-sch-id').value = ""; document.getElementById('in-sch-name').value = ""; document.getElementById('in-sch-lect').value = ""; document.getElementById('in-sch-time').value = "";
-        }
+        function saveSchedule() { const d = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: parseInt(document.getElementById('in-sch-day').value) }, id = document.getElementById('edit-sch-id').value; if(id) dbRef.child('schedules').child(id).update(d); else dbRef.child('schedules').push(d); showToast("Berhasil Disimpan!"); openForm('schedule'); }
         function editSchedule(id) { const s = localDB.schedules.find(x => x.fid === id); document.getElementById('edit-sch-id').value = id; document.getElementById('in-sch-name').value = s.name; document.getElementById('in-sch-lect').value = s.lecturer; document.getElementById('in-sch-time').value = s.time; document.getElementById('in-sch-day').value = s.day; toggleView('form-schedule'); }
 
-        function saveStruct() { 
-            const d = { name: document.getElementById('in-str-name').value, pos: document.getElementById('in-str-pos').value, ig: document.getElementById('in-str-ig').value, wa: document.getElementById('in-str-wa').value, img: document.getElementById('in-str-img').value, lv: document.getElementById('in-str-lv').value }, id = document.getElementById('edit-str-id').value;
-            if(id) dbRef.child('structs').child(id).update(d); else dbRef.child('structs').push(d);
-            showToast("✅ Data Mhs Berhasil Disimpan!");
-            document.getElementById('edit-str-id').value = ""; document.getElementById('in-str-name').value = ""; document.getElementById('in-str-pos').value = ""; document.getElementById('in-str-ig').value = ""; document.getElementById('in-str-wa').value = ""; document.getElementById('in-str-img').value = "";
-        }
-        function editStruct(id) { const s = localDB.structs.find(x => x.fid === id); document.getElementById('edit-str-id').value = id; document.getElementById('in-str-name').value = s.name; document.getElementById('in-str-pos').value = s.pos; document.getElementById('in-str-ig').value = s.ig; document.getElementById('in-str-wa').value = s.wa; document.getElementById('in-str-img').value = s.img || ""; document.getElementById('in-str-lv').value = s.lv; toggleView('form-struct'); }
-
+        function saveStruct() { const d = { name: document.getElementById('in-str-name').value, pos: document.getElementById('in-str-pos').value, ig: document.getElementById('in-str-ig').value, wa: document.getElementById('in-str-wa').value, img: document.getElementById('in-str-img').value, lv: parseInt(document.getElementById('in-str-lv').value) }, id = document.getElementById('edit-str-id').value; if(id) dbRef.child('structs').child(id).update(d); else dbRef.child('structs').push(d); showToast("Berhasil Disimpan!"); openForm('struct'); }
+        function editStruct(id) { const s = localDB.structs.find(x => x.fid === id); document.getElementById('edit-str-id').value = id; document.getElementById('in-str-name').value = s.name; document.getElementById('in-str-pos').value = s.pos; document.getElementById('in-str-ig').value = s.ig; document.getElementById('in-str-wa').value = s.wa; document.getElementById('in-str-img').value = s.img; document.getElementById('in-str-lv').value = s.lv; toggleView('form-struct'); }
+        
         function processExcel(e) {
-            const file = e.target.files[0];
-            if (!file) return;
+            const file = e.target.files[0]; if(!file) return;
             const reader = new FileReader();
-            reader.onload = function(event) {
-                try {
-                    const data = new Uint8Array(event.target.result);
-                    const workbook = XLSX.read(data, {type: 'array'});
-                    const json = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
-                    
-                    if(json.length === 0) return alert("File Excel kosong!");
-
-                    let successCount = 0;
-                    json.forEach(row => {
-                        const name = row['Nama'] || row['NAMA'] || row['nama'] || '';
-                        if(!name) return;
-                        const pos = row['Jabatan'] || row['JABATAN'] || 'Mahasiswa';
-                        const ig = row['IG'] || row['Ig'] || '';
-                        const wa = row['WA'] || row['Wa'] || '';
-                        const img = row['Foto'] || row['FOTO'] || '';
-                        const lv = row['Level'] || row['LEVEL'] || 4;
-                        dbRef.child('structs').push({ name: String(name), pos: String(pos), ig: String(ig), wa: String(wa), img: String(img), lv: String(lv) });
-                        successCount++;
-                    });
-                    showToast(`✅ ${successCount} Data Berhasil Diimport!`);
-                    document.getElementById('excel-file').value = "";
-                } catch (error) { alert("Gagal membaca file!"); }
+            reader.onload = function(evt) {
+                const data = new Uint8Array(evt.target.result), workbook = XLSX.read(data, {type: 'array'}), sheet = workbook.Sheets[workbook.SheetNames[0]], json = XLSX.utils.sheet_to_json(sheet);
+                json.forEach(r => { if(r.Nama) dbRef.child('structs').push({ name: r.Nama, pos: r.Jabatan || "Mahasiswa", ig: r.IG ? r.IG.toString().replace('@','') : "", wa: r.WA ? r.WA.toString().replace(/^0/,'62') : "", img: "", lv: 4 }); });
+                showToast("Excel Berhasil Diimport!"); e.target.value = ""; toggleView('structure-view');
             };
             reader.readAsArrayBuffer(file);
         }
 
-        function saveGallery() { 
-            const links = document.getElementById('in-gal-links').value.split('\n');
-            links.forEach(l => { 
-                let cleanLink = l.trim();
-                if(cleanLink) dbRef.child('gallery').push({img: cleanLink});
-            }); 
-            showToast("✅ Galeri Berhasil Diupload!"); 
-            document.getElementById('in-gal-links').value = ""; 
+        function saveGallery() { const links = document.getElementById('in-gal-links').value.split('\n'); links.forEach(l => { if(l.trim()) dbRef.child('gallery').push({ img: l.trim() }); }); showToast("Galeri Diupload!"); document.getElementById('in-gal-links').value = ""; toggleView('gallery-view'); }
+        
+        // --- FITUR PASSWORD PJ (TOMBOL SHARE KE WA) ---
+        function savePJAuth() { const m = document.getElementById('in-pj-matkul').value, p = document.getElementById('in-pj-pass').value; if(m&&p) { dbRef.child('pjs').child(m).set(p); showToast("Password PJ Disimpan!"); document.getElementById('in-pj-pass').value = ""; } }
+        
+        function renderPJList() { 
+            const pjKeys = Object.keys(localDB.pjs);
+            document.getElementById('btn-share-all-pj').style.display = pjKeys.length > 0 ? 'block' : 'none';
+            
+            document.getElementById('pj-list-content').innerHTML = pjKeys.map(k => {
+                let p = localDB.pjs[k];
+                return `<div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px; margin-bottom:5px; border-radius:8px"><div><b>${k}</b>: ${p}</div><span style="color:red; cursor:pointer" onclick="deleteData('pjs', '${k}')">Hapus</span></div>`;
+            }).join(''); 
         }
 
-        function savePJAuth() { dbRef.child('pjs').child(document.getElementById('in-pj-matkul').value).set(document.getElementById('in-pj-pass').value); showToast("✅ Password PJ Disimpan!"); document.getElementById('in-pj-pass').value = ""; }
-        function renderPJList() { document.getElementById('pj-list-content').innerHTML = Object.keys(localDB.pjs).map(m => `<div style="display:flex; justify-content:space-between; padding:10px; border-bottom:1px solid #f1f5f9; align-items:center"><div style="font-size:0.8rem"><b>${m}</b><br><span style="color:var(--p)">Key: ${localDB.pjs[m]}</span></div><button onclick="dbRef.child('pjs').child('${m}').remove()" class="btn-mini" style="background:#fff1f2; color:red; margin:0">HAPUS</button></div>`).join(''); }
-        function shareWaPJ() { let txt = "Daftar Password PJ:\n\n"; for (let m in localDB.pjs) { txt += `Matkul: ${m}\nPassword: ${localDB.pjs[m]}\n\n`; } window.open(`https://wa.me/?text=${encodeURIComponent(txt)}`); }
-
-        function deleteData(p, id) { if(confirm("Yakin ingin menghapus data ini?")) dbRef.child(p).child(id).remove(); }
-        function resetData(p, l) { if(confirm("⚠ BAHAYA: Yakin mereset SEMUA Data "+l+"?")) dbRef.child(p).remove(); }
-
-        window.onload = () => {
-            if(userRole==='admin'){ document.getElementById('admin-group').style.display='block'; document.getElementById('reset-btns-wrap').style.display='block'; }
-            if(userRole==='pj') document.getElementById('pj-group').style.display='block';
-        };
+        function shareAllPJ() {
+            let text = "*DAFTAR PASSWORD PJ MATKUL* 🔐\n_(Gunakan password ini untuk login sebagai PJ di web)_\n\n";
+            Object.keys(localDB.pjs).forEach(k => {
+                text += `📚 *${k}*\n🔑 Password: ${localDB.pjs[k]}\n\n`;
+            });
+            text += "_Harap simpan dengan baik dan jangan disebar ke luar kelas!_";
+            window.open(`https://wa.me/?text=${window.encodeURIComponent(text)}`, '_blank');
+        }
+        
+        function deleteData(path, id) { if(confirm("Yakin hapus data ini?")) dbRef.child(path).child(id).remove(); }
+        function resetCollection(path, name) { if(confirm(`Yakin hapus SEMUA data ${name}?`)) { if(prompt(`Ketik "RESET" untuk lanjut:`) === "RESET") { dbRef.child(path).remove(); showToast(`Data ${name} Dihapus!`); } } }
     </script>
 </body>
 </html>
