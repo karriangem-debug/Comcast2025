@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | FINAL SYSTEM V6.0</title>
+    <title>COMCAST 2025 | ULTIMATE SYSTEM V6.1</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -18,7 +18,8 @@
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: var(--dark); overflow-x: hidden; }
 
-        .logo-anim { font-weight: 800; font-size: 1.4rem; letter-spacing: -1px; background: linear-gradient(90deg, #1e293b, #2563eb, #9333ea, #1e293b); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
+        /* Ukuran Logo Diperbesar */
+        .logo-anim { font-weight: 800; font-size: 1.6rem; letter-spacing: -1px; background: linear-gradient(90deg, #1e293b, #2563eb, #9333ea, #1e293b); background-size: 200% auto; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: shimmer 3s linear infinite; }
         @keyframes shimmer { to { background-position: 200% center; } }
 
         .glass-nav { background: rgba(255,255,255,0.85); backdrop-filter: blur(15px); height: 65px; position: sticky; top:0; z-index: 1000; border-bottom: 1px solid #e2e8f0; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; }
@@ -34,7 +35,8 @@
         .active { display: block !important; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-        .sidebar { position: fixed; left: -310px; top: 0; width: 300px; height: 100%; background: white; z-index: 2000; transition: 0.4s; overflow-y: auto; padding-bottom: 50px; box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
+        /* Sidebar Dipersempit biar setengah layar di HP */
+        .sidebar { position: fixed; left: -260px; top: 0; width: 250px; height: 100%; background: white; z-index: 2000; transition: 0.4s; overflow-y: auto; padding-bottom: 50px; box-shadow: 20px 0 50px rgba(0,0,0,0.1); }
         .sidebar.active { left: 0; }
         .sidebar-content { padding: 25px; }
         .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 1500; }
@@ -122,9 +124,10 @@
             <div style="font-weight: 800; color: var(--p); margin-bottom: 20px; font-size: 1.1rem">DASHBOARD</div>
             <a href="#" class="menu-link" onclick="toggleView('deadline-view')">📅 Deadline & Tugas</a>
             <a href="#" class="menu-link" onclick="toggleView('schedule-view')">📚 Jadwal Kuliah</a>
-            <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
-            <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
             <a href="#" class="menu-link" onclick="toggleView('group-list-view')">📁 Daftar Kelompok</a>
+            <a href="#" class="menu-link" onclick="toggleView('kumpul-tugas-view')">📤 Kumpul Tugas</a>
+            <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
+            <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
 
             <div id="admin-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:gray; margin-bottom:10px">ADMIN PANEL</p>
@@ -133,6 +136,7 @@
                 <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah/Import Mhs</a>
                 <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Galeri</a>
                 <a href="#" class="menu-link" onclick="openForm('group')">👥 Kelola Kelompok</a>
+                <a href="#" class="menu-link" style="color:#10b981" onclick="openForm('kumpul-tugas')">🔗 Tambah Link Tugas</a>
                 <a href="#" class="menu-link" style="color:var(--warning)" onclick="toggleView('form-pj-auth')">🔑 Kelola Password PJ</a>
             </div>
 
@@ -140,6 +144,7 @@
                 <p style="font-size:0.7rem; font-weight:800; color:#059669; margin-bottom:10px">PJ PANEL</p>
                 <a href="#" class="menu-link" style="color:#059669" onclick="openForm('group')">👥 Bagi Kelompok</a>
                 <a href="#" class="menu-link" style="color:#059669" onclick="openForm('deadline')">📝 Tambah Deadline</a>
+                <a href="#" class="menu-link" style="color:#10b981" onclick="openForm('kumpul-tugas')">🔗 Tambah Link Tugas</a>
             </div>
 
             <div id="auth-container" style="margin-top: 15px;"></div>
@@ -150,6 +155,7 @@
                 <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('schedules', 'Semua Jadwal')">Hapus Semua Jadwal</a>
                 <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('structs', 'Semua Struktur Mhs')">Hapus Semua Struktur</a>
             </div>
+
         </div>
     </aside>
 
@@ -164,6 +170,12 @@
         </section>
 
         <section id="schedule-view" class="main-view"></section>
+        
+        <section id="kumpul-tugas-view" class="main-view">
+            <h2 style="margin-bottom:15px; color:var(--p)"><i class="fa-solid fa-upload"></i> Kumpul Tugas</h2>
+            <div id="kumpul-tugas-content"></div>
+        </section>
+
         <section id="structure-view" class="main-view"><div id="org-content"></div></section>
         
         <section id="group-list-view" class="main-view">
@@ -183,6 +195,16 @@
                 <input type="password" id="pass-val" class="input-modern form-grid-full" placeholder="Password">
             </div>
             <button class="btn-primary" onclick="login()">MASUK</button>
+        </section>
+
+        <section id="form-kumpul-tugas" class="main-view">
+            <h2 style="margin-bottom:15px">Setting Link Tugas</h2>
+            <div class="form-grid">
+                <input type="hidden" id="edit-kt-id">
+                <input type="text" id="in-kt-nama" class="input-modern form-grid-full" placeholder="Nama Tugas (Cth: Makalah Kelompok 1)">
+                <input type="text" id="in-kt-link" class="input-modern form-grid-full" placeholder="Tempel Link Pengumpulan (Drive/Gform)">
+            </div>
+            <button class="btn-primary" onclick="saveKumpulTugas()">SIMPAN & CLEAR</button>
         </section>
 
         <section id="form-deadline" class="main-view">
@@ -279,7 +301,7 @@
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database().ref();
         
-        let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], pjs: {}, groups: [] };
+        let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], pjs: {}, groups: [], kumpulTugas: [] };
         let userRole = localStorage.getItem('userRole') || 'guest';
         let userMatkul = localStorage.getItem('userMatkul') || '';
         let groupMembersTemp = [];
@@ -291,6 +313,7 @@
             localDB.structs = d.structs ? Object.keys(d.structs).map(k => ({...d.structs[k], fid: k})) : [];
             localDB.gallery = d.gallery ? Object.keys(d.gallery).map(k => ({...d.gallery[k], fid: k})) : [];
             localDB.groups = d.groups ? Object.keys(d.groups).map(k => ({...d.groups[k], fid: k})) : [];
+            localDB.kumpulTugas = d.kumpulTugas ? Object.keys(d.kumpulTugas).map(k => ({...d.kumpulTugas[k], fid: k})) : [];
             localDB.pjs = d.pjs || {};
             render(); updateDropdowns(); filterGroups(); renderPJList(); checkAccess();
         });
@@ -376,6 +399,17 @@
             });
             document.getElementById('schedule-view').innerHTML = schHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada jadwal</p>';
             
+            // KUMPUL TUGAS RENDER
+            let ktHtml = "";
+            localDB.kumpulTugas.forEach(kt => {
+                let actionBtns = "";
+                if (isAdmin || isPJ) {
+                    actionBtns = `<div style="margin-top:15px; padding-top:10px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="editKumpulTugas('${kt.fid}')">EDIT</button><button onclick="deleteData('kumpulTugas', '${kt.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>`;
+                }
+                ktHtml += `<div class="card-item"><span class="card-subject" style="font-size:1rem">${kt.nama}</span><div style="margin-top:15px"><a href="${kt.link}" target="_blank" class="btn-primary" style="display:inline-block; text-align:center; text-decoration:none; padding:12px; font-size:0.85rem; width:100%"><i class="fa-solid fa-paper-plane"></i> KIRIM TUGAS</a></div>${actionBtns}</div>`;
+            });
+            document.getElementById('kumpul-tugas-content').innerHTML = ktHtml || '<p style="text-align:center; opacity:0.5; margin-top:20px; font-style:italic">Belum ada tugas yang perlu dikumpulkan</p>';
+
             // STRUKTUR KELAS
             const getAvatar = (n, i) => (i && i.length > 5) ? formatDriveLink(i) : `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=2563eb&color=fff&bold=true`;
             const makeCard = (s) => `<div class="mhs-card"><img src="${getAvatar(s.name, s.img)}" class="pp-img" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=2563eb&color=fff'"><h4 style="font-size:0.85rem; margin-bottom:2px">${s.name}</h4><p style="font-size:0.65rem; font-weight:800; color:var(--p)">${s.pos}</p><div class="soc-btns">${s.ig?`<a href="https://instagram.com/${s.ig}" target="_blank" class="soc-icon ig-icon"><i class="fa-brands fa-instagram"></i></a>`:''}${s.wa?`<a href="https://wa.me/${s.wa}" target="_blank" class="soc-icon wa-icon"><i class="fa-brands fa-whatsapp"></i></a>`:''}</div>${isAdmin?`<div style="margin-top:10px"><button onclick="editStruct('${s.fid}')" class="btn-mini" style="background:#f1f5f9">EDIT</button><button onclick="deleteData('structs','${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">X</button></div>`:''}</div>`;
@@ -391,6 +425,7 @@
             
             document.getElementById('org-content').innerHTML = orgHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Data belum ada</p>';
 
+            // GALERI
             document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `<div style="position:relative"><img src="${formatDriveLink(g.img)}" onclick="zoomImage('${g.img}')" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:15px; background:#f1f5f9; cursor:zoom-in" onerror="this.src='https://via.placeholder.com/300?text=Error'">${isAdmin?`<button onclick="deleteData('gallery','${g.fid}')" style="position:absolute; top:5px; right:5px; background:red; color:white; border:none; border-radius:50%; width:25px; height:25px; font-weight:bold; cursor:pointer">X</button>`:''}</div>`).join('');
         }
 
@@ -445,11 +480,31 @@
                 document.getElementById('edit-grp-id').value = ""; document.getElementById('in-grp-name').value = ""; document.getElementById('in-grp-title').value = ""; groupMembersTemp = []; renderSelectedMembers();
                 if(userRole==='pj') document.getElementById('in-grp-matkul').value = userMatkul;
                 toggleView('form-group');
+            } else if(t==='kumpul-tugas') {
+                document.getElementById('edit-kt-id').value = ""; document.getElementById('in-kt-nama').value = ""; document.getElementById('in-kt-link').value = "";
+                toggleView('form-kumpul-tugas');
             } else {
                 ['sch-name','sch-lect','sch-time','str-name','str-pos','str-ig','str-wa','str-img'].forEach(id => { if(document.getElementById(`in-${id}`)) document.getElementById(`in-${id}`).value = ""; });
                 ['edit-sch-id','edit-str-id'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = ""; });
                 toggleView('form-'+t); 
             }
+        }
+
+        // FUNGSI SIMPAN KUMPUL TUGAS
+        function saveKumpulTugas() {
+            const d = { nama: document.getElementById('in-kt-nama').value, link: document.getElementById('in-kt-link').value };
+            if (!d.nama || !d.link) return alert("Nama tugas dan link wajib diisi!");
+            const id = document.getElementById('edit-kt-id').value;
+            if(id) dbRef.child('kumpulTugas').child(id).update(d); else dbRef.child('kumpulTugas').push(d);
+            showToast("Berhasil Disimpan!"); openForm('kumpul-tugas');
+        }
+
+        function editKumpulTugas(id) {
+            const kt = localDB.kumpulTugas.find(x => x.fid === id);
+            document.getElementById('edit-kt-id').value = id;
+            document.getElementById('in-kt-nama').value = kt.nama;
+            document.getElementById('in-kt-link').value = kt.link;
+            toggleView('form-kumpul-tugas');
         }
 
         function autoFillTime() { let m = document.getElementById('in-dead-matkul').value, sch = localDB.schedules.find(s => s.name === m); if(sch && sch.time) document.getElementById('in-dead-time').value = sch.time; document.querySelectorAll('.grp-dynamic-select').forEach(sel => loadGroupsIntoSelect(sel, m)); }
