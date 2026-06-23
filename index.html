@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | ULTIMATE SYSTEM V6.3</title>
+    <title>COMCAST 2025 | ULTIMATE SYSTEM V7.5</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -14,7 +14,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     
     <style>
-        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; --success: #22c55e; --dark: #1e293b; --warning: #d97706; }
+        :root { --p: #2563eb; --bg: #f8fafc; --danger: #ef4444; --success: #22c55e; --dark: #1e293b; --warning: #d97706; --dev: #8b5cf6; }
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
         body { background: var(--bg); color: var(--dark); overflow-x: hidden; }
 
@@ -26,7 +26,7 @@
         .taskbar { display: none; background: white; padding: 10px; gap: 10px; border-bottom: 1px solid #e2e8f0; position: sticky; top: 65px; z-index: 999; overflow-x: auto; white-space: nowrap; -webkit-overflow-scrolling: touch; }
         .taskbar.active-flex { display: flex; }
         .taskbar::-webkit-scrollbar { display: none; }
-        .task-btn { flex: 0 0 auto; padding: 12px 25px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: 0.3s; }
+        .task-btn { flex: 0 0 auto; padding: 12px 20px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: 0.3s; }
         .task-btn.active { background: var(--p); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
 
         .app-container { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 120px; }
@@ -71,7 +71,6 @@
         
         .member-chip { display: inline-block; background: #eff6ff; color: var(--p); padding: 5px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; margin: 3px; cursor: pointer; }
         
-        /* SEARCH PREVIEW STYLES */
         .search-results { background: white; border: 1px solid #e2e8f0; border-radius: 12px; max-height: 200px; overflow-y: auto; margin-bottom: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.1); position: absolute; width: 100%; z-index: 200; top: 100%; left: 0; margin-top: 5px; }
         .search-item { padding: 12px; font-size: 0.85rem; font-weight: 600; border-bottom: 1px solid #f1f5f9; cursor: pointer; transition: 0.2s; }
         .search-item:hover { background: #f8fafc; color: var(--p); }
@@ -79,9 +78,20 @@
         #toast { visibility: hidden; min-width: 250px; background-color: var(--success); color: #fff; text-align: center; border-radius: 12px; padding: 16px; position: fixed; z-index: 3000; left: 50%; bottom: 30px; font-size: 1rem; font-weight: 800; box-shadow: 0 10px 30px rgba(34,197,94,0.3); transform: translateX(-50%); transition: visibility 0s, bottom 0.5s, opacity 0.5s; opacity: 0; }
         #toast.show { visibility: visible; bottom: 50px; opacity: 1; }
         
-        .modal-wrap { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:3000; align-items:center; justify-content:center; padding:20px; animation: fadeIn 0.2s; }
+        .modal-wrap { display:none; position:fixed; inset:0; background:rgba(15,23,42,0.6); backdrop-filter:blur(4px); z-index:3000; align-items:center; justify-content:center; padding:20px; animation: fadeIn 0.2s; }
         .modal-box { background:white; width:100%; max-width:450px; border-radius:20px; padding:25px; position:relative; max-height:85vh; overflow-y:auto; }
-        .btn-close { position:absolute; right:15px; top:15px; background:#f1f5f9; color:var(--dark); border:none; border-radius:50%; width:35px; height:35px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; }
+        .btn-close { position:absolute; right:15px; top:15px; background:#f1f5f9; color:var(--dark); border:none; border-radius:50%; width:35px; height:35px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; transition:0.3s; }
+        .btn-close:hover { background: #e2e8f0; }
+
+        /* DESAIN NOTIFIKASI BARU LEBIH MENARIK */
+        .modal-box-notif { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 100%; max-width: 440px; border-radius: 24px; padding: 35px 25px 25px 25px; position: relative; text-align: center; border: 2px solid var(--dev); box-shadow: 0 25px 50px -12px rgba(139,92,246,0.25); animation: popScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
+        @keyframes popScale { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        
+        .notif-bell-badge { width: 70px; height: 70px; background: #f5f3ff; color: var(--dev); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 2.2rem; margin: 0 auto 15px auto; box-shadow: 0 10px 20px rgba(139,92,246,0.15); animation: ringBell 2.5s ease infinite; }
+        @keyframes ringBell { 0%, 100% { transform: rotate(0); } 10%, 30%, 50%, 70%, 90% { transform: rotate(12deg); } 20%, 40%, 60%, 80% { transform: rotate(-12deg); } }
+
+        .gal-caption { background:white; padding:12px; font-size:0.8rem; font-weight:600; color:#475569; border-bottom-left-radius:15px; border-bottom-right-radius:15px; border:1px solid #f1f5f9; border-top:none; box-shadow:0 4px 6px rgba(0,0,0,0.02); }
+        .wa-bc-item { background:#f8fafc; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #e2e8f0; position:relative; }
 
         @media (min-width: 768px) { .app-container { max-width: 800px; padding: 40px; padding-bottom: 120px; } .form-grid { grid-template-columns: 1fr 1fr; gap: 15px; } .mhs-card { width: 180px; } }
     </style>
@@ -95,6 +105,17 @@
     </nav>
     <div id="toast">Berhasil Disimpan!</div>
 
+    <!-- Modal Notifikasi Global Premium Design -->
+    <div id="modal-announcement" class="modal-wrap" onclick="closeAnnouncement(event)">
+        <div class="modal-box-notif" onclick="event.stopPropagation()">
+            <div class="notif-bell-badge"><i class="fa-solid fa-bell"></i></div>
+            <h2 style="color:var(--dark); margin-bottom:12px; font-weight:800; font-size:1.4rem; letter-spacing:-0.5px;">PENGUMUMAN PENTING</h2>
+            <div id="modal-announcement-text" style="font-size:0.95rem; color:#475569; line-height:1.6; white-space:pre-line; background:#ffffff; padding:18px; border-radius:16px; border:1px solid #e2e8f0; text-align:left; max-height:240px; overflow-y:auto; margin-bottom:20px; box-shadow:inset 0 2px 4px rgba(0,0,0,0.01);"></div>
+            <button class="btn-primary" style="background:var(--dev); border-radius:14px; padding:14px; box-shadow:0 4px 14px rgba(139,92,246,0.3);" onclick="closeAnnouncement(null, true)">SIAP, SAYA MENGERTI</button>
+        </div>
+    </div>
+
+    <!-- Modal Detail Tugas -->
     <div id="modal-deadline" class="modal-wrap" onclick="closeModals(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
             <button class="btn-close" onclick="document.getElementById('modal-deadline').style.display='none'">×</button>
@@ -105,9 +126,10 @@
         </div>
     </div>
 
+    <!-- Modal Zoom Galeri Minimalis -->
     <div id="modal-zoom" class="modal-wrap" onclick="closeModals(event)">
         <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
-            <button class="btn-close" style="right:-10px; top:-10px; background:#ef4444; color:white;" onclick="document.getElementById('modal-zoom').style.display='none'">×</button>
+            <button class="btn-close" style="right:10px; top:10px; background:rgba(255,255,255,0.9); box-shadow:0 4px 12px rgba(0,0,0,0.1);" onclick="document.getElementById('modal-zoom').style.display='none'">×</button>
             <img id="zoom-img-target" src="" style="width:100%; max-height:85vh; object-fit:contain; border-radius:15px; box-shadow:0 20px 40px rgba(0,0,0,0.5);">
         </div>
     </div>
@@ -124,26 +146,30 @@
             <a href="#" class="menu-link" onclick="toggleView('deadline-view')">📅 Deadline & Tugas</a>
             <a href="#" class="menu-link" onclick="toggleView('schedule-view')">📚 Jadwal Kuliah</a>
             <a href="#" class="menu-link" onclick="toggleView('group-list-view')">📁 Daftar Kelompok</a>
-            <a href="#" class="menu-link" onclick="toggleView('kumpul-tugas-view')">📤 Kumpul Tugas</a>
             <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
             <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
 
+            <!-- DEV PANEL KHUSUS KARRIAN -->
+            <div id="dev-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
+                <p style="font-size:0.7rem; font-weight:800; color:var(--dev); margin-bottom:10px">DEV PANEL (KARRIAN)</p>
+                <a href="#" class="menu-link" style="color:var(--dev)" onclick="openForm('announcement')">🔔 Kelola Notifikasi</a>
+                <a href="#" class="menu-link" style="color:var(--dev)" onclick="toggleView('form-bc-wa')">💬 Generator BC WA</a>
+            </div>
+
             <div id="admin-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:gray; margin-bottom:10px">ADMIN PANEL</p>
-                <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline</a>
+                <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline & Link</a>
                 <a href="#" class="menu-link" onclick="openForm('schedule')">➕ Tambah Matkul</a>
                 <a href="#" class="menu-link" onclick="openForm('struct')">👤 Tambah/Import Mhs</a>
-                <a href="#" class="menu-link" onclick="toggleView('form-gallery')">📷 Upload Galeri</a>
-                <a href="#" class="menu-link" onclick="openForm('group')">👥 Kelola Kelompok</a>
-                <a href="#" class="menu-link" style="color:#10b981" onclick="openForm('kumpul-tugas')">🔗 Tambah Link Tugas</a>
+                <a href="#" class="menu-link" onclick="openForm('gallery')">📷 Upload Galeri</a>
+                <a href="#" class="menu-link" onclick="openForm('group')">👥 Kelola / Acak Kelompok</a>
                 <a href="#" class="menu-link" style="color:var(--warning)" onclick="toggleView('form-pj-auth')">🔑 Kelola Password PJ</a>
             </div>
 
             <div id="pj-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:#059669; margin-bottom:10px">PJ PANEL</p>
-                <a href="#" class="menu-link" style="color:#059669" onclick="openForm('group')">👥 Bagi Kelompok</a>
-                <a href="#" class="menu-link" style="color:#059669" onclick="openForm('deadline')">📝 Tambah Deadline</a>
-                <a href="#" class="menu-link" style="color:#10b981" onclick="openForm('kumpul-tugas')">🔗 Tambah Link Tugas</a>
+                <a href="#" class="menu-link" style="color:#059669" onclick="openForm('group')">👥 Bagi / Acak Kelompok</a>
+                <a href="#" class="menu-link" style="color:#059669" onclick="openForm('deadline')">📝 Tambah Deadline & Link Tugas</a>
             </div>
 
             <div id="auth-container" style="margin-top: 15px;"></div>
@@ -169,11 +195,6 @@
 
         <section id="schedule-view" class="main-view"></section>
         
-        <section id="kumpul-tugas-view" class="main-view">
-            <h2 style="margin-bottom:15px; color:var(--p)"><i class="fa-solid fa-upload"></i> Kumpul Tugas</h2>
-            <div id="kumpul-tugas-content"></div>
-        </section>
-
         <section id="structure-view" class="main-view"><div id="org-content"></div></section>
         
         <section id="group-list-view" class="main-view">
@@ -191,25 +212,20 @@
         <section id="login-page" class="main-view">
             <h2 style="margin-bottom:15px">🔐 Login Sistem</h2>
             <div class="form-grid">
-                <select id="login-role" class="input-modern form-grid-full" onchange="checkRoleUI()"><option value="admin">Akses Admin</option><option value="pj">Akses PJ Matkul</option></select>
+                <select id="login-role" class="input-modern form-grid-full" onchange="checkRoleUI()">
+                    <option value="admin">Akses Admin</option>
+                    <option value="pj">Akses PJ Matkul</option>
+                    <option value="dev">Akses Developer (Karrian)</option>
+                </select>
                 <div id="pj-matkul-select" class="form-grid-full" style="display:none"><select id="login-pj-matkul" class="input-modern"></select></div>
                 <input type="password" id="pass-val" class="input-modern form-grid-full" placeholder="Password">
             </div>
             <button class="btn-primary" onclick="login()">MASUK</button>
         </section>
 
-        <section id="form-kumpul-tugas" class="main-view">
-            <h2 style="margin-bottom:15px">Setting Link Tugas</h2>
-            <div class="form-grid">
-                <input type="hidden" id="edit-kt-id">
-                <input type="text" id="in-kt-nama" class="input-modern form-grid-full" placeholder="Nama Tugas (Cth: Makalah Kelompok 1)">
-                <input type="text" id="in-kt-link" class="input-modern form-grid-full" placeholder="Tempel Link Pengumpulan (Drive/Gform)">
-            </div>
-            <button class="btn-primary" onclick="saveKumpulTugas()">SIMPAN & CLEAR</button>
-        </section>
-
+        <!-- Form Tambah Deadline & Link Kumpul Tugas -->
         <section id="form-deadline" class="main-view">
-            <h2 style="margin-bottom:15px">Input Deadline</h2>
+            <h2 style="margin-bottom:15px">Input Tugas & Deadline</h2>
             <div class="form-grid">
                 <input type="hidden" id="edit-dead-id">
                 <div class="form-grid-full">
@@ -218,33 +234,60 @@
                 </div>
                 <input type="date" id="in-dead-date" class="input-modern" required>
                 <input type="time" id="in-dead-time" class="input-modern">
-                <textarea id="in-dead-desc" class="input-modern form-grid-full" placeholder="Detail tugas..." rows="4"></textarea>
+                <textarea id="in-dead-desc" class="input-modern form-grid-full" placeholder="Detail tugas..." rows="3"></textarea>
+                <div class="form-grid-full">
+                    <label style="font-size:0.75rem; font-weight:800; color:#10b981; margin-bottom:5px; display:block"><i class="fa-solid fa-paper-plane"></i> LINK PENGUMPULAN TUGAS (OPSIONAL)</label>
+                    <input type="text" id="in-dead-tasklink" class="input-modern" placeholder="Cth: https://forms.gle/... atau Link Drive">
+                </div>
             </div>
-            <div style="background:#f8fafc; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #e2e8f0">
-                <label style="font-size:0.75rem; font-weight:800; color:var(--p)">PILIH KELOMPOK (OPSIONAL)</label>
-                <div id="group-selects-container"></div>
+            <div style="background:#f8fafc; padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid #e2e8f0; margin-top:10px;">
+                <label style="font-size:0.75rem; font-weight:800; color:var(--p)">PILIH KELOMPOK PRESENTASI (OPSIONAL)</label>
+                <div id="group-selects-container" style="margin-top:10px"></div>
                 <button onclick="addMoreGroupSelect()" class="btn-mini" style="background:white; border:1px dashed var(--p); color:var(--p); width:100%; padding:10px">+ Tambah Kelompok Lain</button>
             </div>
             <button class="btn-primary" onclick="saveDeadline()">SIMPAN & CLEAR</button>
         </section>
 
+        <!-- Form Bagi Kelompok (Bisa Manual & Acak) -->
         <section id="form-group" class="main-view">
-            <h2 style="margin-bottom:15px">Form Kelompok</h2>
-            <div class="form-grid">
-                <input type="hidden" id="edit-grp-id">
-                <select id="in-grp-matkul" class="input-modern form-grid-full"></select>
-                <input type="text" id="in-grp-name" class="input-modern" placeholder="Cth: Kelompok 1">
-                <input type="text" id="in-grp-title" class="input-modern" placeholder="Judul Materi / Topik">
+            <h2 style="margin-bottom:15px">Pembagian Kelompok</h2>
+            
+            <div style="display:flex; gap:10px; margin-bottom:20px">
+                <button id="btn-mode-manual" class="btn-primary" style="padding:10px; font-size:0.8rem; background:var(--p)" onclick="switchGroupMode('manual')">Manual</button>
+                <button id="btn-mode-acak" class="btn-primary" style="padding:10px; font-size:0.8rem; background:#f1f5f9; color:var(--dark)" onclick="switchGroupMode('acak')">Acak Otomatis</button>
             </div>
-            <div style="background:#f8fafc; padding:15px; border-radius:15px; border:1px solid #e2e8f0; margin-bottom:15px; position:relative;">
-                <label style="font-size:0.75rem; font-weight:800;">ANGGOTA KELOMPOK:</label>
-                <div id="selected-members" style="margin-bottom:10px"></div>
-                <input type="text" id="search-mhs" class="input-modern" placeholder="🔍 Cari nama mahasiswa..." onfocus="searchMhsForGroup()" oninput="searchMhsForGroup()" autocomplete="off">
-                <div id="mhs-search-results" class="search-results" style="display:none; width:calc(100% - 30px); margin-left:15px;"></div>
+
+            <!-- Mode Manual -->
+            <div id="grp-mode-manual">
+                <div class="form-grid">
+                    <input type="hidden" id="edit-grp-id">
+                    <select id="in-grp-matkul" class="input-modern form-grid-full"></select>
+                    <input type="text" id="in-grp-name" class="input-modern" placeholder="Cth: Kelompok 1">
+                    <input type="text" id="in-grp-title" class="input-modern" placeholder="Judul Materi / Topik">
+                </div>
+                <div style="background:#f8fafc; padding:15px; border-radius:15px; border:1px solid #e2e8f0; margin-bottom:15px; position:relative;">
+                    <label style="font-size:0.75rem; font-weight:800;">ANGGOTA KELOMPOK:</label>
+                    <div id="selected-members" style="margin-bottom:10px"></div>
+                    <input type="text" id="search-mhs" class="input-modern" placeholder="🔍 Cari nama mahasiswa..." onfocus="searchMhsForGroup()" oninput="searchMhsForGroup()" autocomplete="off">
+                    <div id="mhs-search-results" class="search-results" style="display:none; width:calc(100% - 30px); margin-left:15px;"></div>
+                </div>
+                <button class="btn-primary" onclick="saveGroup()">SIMPAN KELOMPOK</button>
             </div>
-            <button class="btn-primary" onclick="saveGroup()">SIMPAN & CLEAR</button>
+
+            <!-- Mode Acak -->
+            <div id="grp-mode-acak" style="display:none">
+                <div class="form-grid">
+                    <select id="in-grp-auto-matkul" class="input-modern form-grid-full"></select>
+                    <input type="number" id="in-grp-auto-num" class="input-modern form-grid-full" placeholder="Jumlah Kelompok (Cth: 5)" min="1">
+                </div>
+                <div style="background:#fffbeb; color:#b45309; padding:15px; border-radius:15px; font-size:0.8rem; margin-bottom:15px; border:1px solid #fde68a;">
+                    <b>Info:</b> Sistem akan membagi rata seluruh mahasiswa ke dalam jumlah kelompok yang ditentukan secara acak. Kamu bisa mengedit judul materi setelahnya.
+                </div>
+                <button class="btn-primary" style="background:#10b981" onclick="autoAcakKelompok()"><i class="fa-solid fa-shuffle"></i> ACAK SEKARANG</button>
+            </div>
         </section>
 
+        <!-- Form Matkul, Struct -->
         <section id="form-schedule" class="main-view">
             <h2 style="margin-bottom:15px">Mata Kuliah</h2>
             <div class="form-grid">
@@ -277,12 +320,18 @@
             </div>
         </section>
 
+        <!-- Form Gallery -->
         <section id="form-gallery" class="main-view">
-            <h2 style="margin-bottom:15px">Upload Galeri</h2>
-            <textarea id="in-gal-links" class="input-modern" placeholder="Paste link foto drive di sini..." rows="8"></textarea>
-            <button class="btn-primary" onclick="saveGallery()">UPLOAD SEMUA</button>
+            <h2 style="margin-bottom:15px">Upload & Edit Galeri</h2>
+            <div class="form-grid">
+                <input type="hidden" id="edit-gal-id">
+                <input type="text" id="in-gal-link" class="input-modern form-grid-full" placeholder="Link Foto Drive">
+                <textarea id="in-gal-caption" class="input-modern form-grid-full" placeholder="Keterangan Foto..." rows="3"></textarea>
+            </div>
+            <button class="btn-primary" onclick="saveGallery()">SIMPAN FOTO</button>
         </section>
 
+        <!-- Form PJ Auth -->
         <section id="form-pj-auth" class="main-view">
             <h2 style="margin-bottom:15px">🔑 Kelola Password PJ</h2>
             <div class="form-grid">
@@ -290,13 +339,44 @@
                 <input type="text" id="in-pj-pass" class="input-modern form-grid-full" placeholder="Set Password PJ Baru">
             </div>
             <button class="btn-primary" onclick="savePJAuth()">SIMPAN & CLEAR</button>
-            
-            <button id="btn-share-all-pj" class="btn-primary" style="background:#25D366; margin-top:15px; display:none" onclick="shareAllPJ()">
-                <i class="fa-brands fa-whatsapp"></i> SHARE SEMUA PASSWORD KE WA
-            </button>
-
+            <button id="btn-share-all-pj" class="btn-primary" style="background:#25D366; margin-top:15px; display:none" onclick="shareAllPJ()"><i class="fa-brands fa-whatsapp"></i> SHARE SEMUA PASSWORD</button>
             <div id="pj-list-content" style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:15px"></div>
         </section>
+
+        <!-- DEV PANEL: Notifikasi -->
+        <section id="form-announcement" class="main-view">
+            <h2 style="margin-bottom:15px; color:var(--dev)">🔔 Notifikasi Web (Global)</h2>
+            <div style="background:#f8fafc; padding:15px; border-radius:15px; font-size:0.85rem; margin-bottom:15px; border:1px solid #e2e8f0;">
+                Tulis pesan di bawah. Pesan ini akan muncul seketika untuk <b>Semua Pengguna</b> yang baru membuka web.
+            </div>
+            <textarea id="in-announcement" class="input-modern" placeholder="Tulis peringatan atau info di sini..." rows="5" style="margin-bottom:15px"></textarea>
+            <div style="display:flex; gap:10px">
+                <button class="btn-primary" style="background:var(--dev)" onclick="saveAnnouncement()">SIMPAN NOTIF</button>
+                <button class="btn-primary" style="background:#ef4444" onclick="deleteAnnouncement()"><i class="fa-solid fa-trash"></i> HAPUS NOTIF</button>
+            </div>
+        </section>
+
+        <!-- DEV PANEL: BC WA (BISA DIEDIT LANGSUNG) -->
+        <section id="form-bc-wa" class="main-view">
+            <h2 style="margin-bottom:15px; color:var(--dev)">💬 Generator BC WA</h2>
+            <input type="text" id="bc-title" class="input-modern" placeholder="Judul Broadcast (Cth: Info Kelas Terkini)" style="margin-bottom:15px">
+            
+            <div id="bc-items-container">
+                <div class="wa-bc-item">
+                    <input type="text" class="input-modern bc-point-name" placeholder="Nama Point (Cth: Libur)" style="margin-bottom:10px; padding:10px">
+                    <textarea class="input-modern bc-point-desc" placeholder="Keterangan..." rows="2" style="padding:10px"></textarea>
+                    <button class="btn-mini" style="background:#fff1f2; color:red; position:absolute; top:5px; right:5px" onclick="this.parentElement.remove()">X</button>
+                </div>
+            </div>
+            <button class="btn-mini" style="width:100%; padding:12px; background:white; border:1px dashed var(--dev); color:var(--dev); margin-bottom:15px" onclick="addBCItem()">+ Tambah Point Lain</button>
+            
+            <button class="btn-primary" style="background:#25D366; margin-bottom:15px" onclick="generateBC()"><i class="fa-brands fa-whatsapp"></i> BUAT TEKS WA</button>
+            
+            <label style="font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:5px; display:block">Hasil Teks (Bisa kamu edit kembali di bawah ini sebelum di-copy):</label>
+            <textarea id="bc-result" class="input-modern" rows="7" placeholder="Hasil teks akan muncul disini..."></textarea>
+            <button class="btn-primary" style="background:#f1f5f9; color:var(--dark); margin-top:10px" onclick="copyBC()"><i class="fa-regular fa-copy"></i> COPY TEKS</button>
+        </section>
+
     </main>
 
     <script>
@@ -304,10 +384,11 @@
         firebase.initializeApp(firebaseConfig);
         const dbRef = firebase.database().ref();
         
-        let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], pjs: {}, groups: [], kumpulTugas: [] };
+        let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], pjs: {}, groups: [], announcement: null };
         let userRole = localStorage.getItem('userRole') || 'guest';
         let userMatkul = localStorage.getItem('userMatkul') || '';
         let groupMembersTemp = [];
+        let isAdminOrDev = userRole === 'admin' || userRole === 'dev';
 
         dbRef.on('value', snap => {
             const d = snap.val() || {};
@@ -316,19 +397,38 @@
             localDB.structs = d.structs ? Object.keys(d.structs).map(k => ({...d.structs[k], fid: k})) : [];
             localDB.gallery = d.gallery ? Object.keys(d.gallery).map(k => ({...d.gallery[k], fid: k})) : [];
             localDB.groups = d.groups ? Object.keys(d.groups).map(k => ({...d.groups[k], fid: k})) : [];
-            localDB.kumpulTugas = d.kumpulTugas ? Object.keys(d.kumpulTugas).map(k => ({...d.kumpulTugas[k], fid: k})) : [];
             localDB.pjs = d.pjs || {};
+            localDB.announcement = d.announcement || null;
+            
+            checkAnnouncement();
             render(); updateDropdowns(); filterGroups(); renderPJList(); checkAccess();
         });
 
         function showToast(msg) { const x = document.getElementById("toast"); x.innerText = msg; x.className = "show"; setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000); }
         function formatDriveLink(url) { if(!url) return ""; const match = url.match(/\/d\/([a-zA-Z0-9_-]+)/) || url.match(/[?&]id=([a-zA-Z0-9_-]+)/); if (match && match[1]) return `https://drive.google.com/thumbnail?id=${match[1]}&sz=w1000`; return url; }
+        
         function closeModals(e) { if(e.target.classList.contains('modal-wrap')) { document.querySelectorAll('.modal-wrap').forEach(m => m.style.display='none'); } }
+        
+        function closeAnnouncement(e, force = false) { 
+            if(force || (e && e.target.id === 'modal-announcement')) { 
+                document.getElementById('modal-announcement').style.display='none'; 
+                sessionStorage.setItem('notifShown', 'true'); 
+            } 
+        }
 
-        // Hilangkan Dropdown Search Pas Klik di Luar
+        function checkAnnouncement() {
+            if (localDB.announcement && localDB.announcement.text) {
+                if(document.getElementById('in-announcement')) document.getElementById('in-announcement').value = localDB.announcement.text;
+                if (!sessionStorage.getItem('notifShown')) {
+                    document.getElementById('modal-announcement-text').innerText = localDB.announcement.text;
+                    document.getElementById('modal-announcement').style.display = 'flex';
+                }
+            }
+        }
+
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#search-mhs') && !e.target.closest('#mhs-search-results')) { const r = document.getElementById('mhs-search-results'); if (r) r.style.display = 'none'; }
-            if (!e.target.closest('#filter-group-matkul') && !e.target.closest('#filter-matkul-results')) { const r = document.getElementById('filter-matkul-results'); if (r) r.style.display = 'none'; }
+            if (!e.target.closest('#filter-group-matkul()') && !e.target.closest('#filter-matkul-results')) { const r = document.getElementById('filter-matkul-results'); if (r) r.style.display = 'none'; }
             if (!e.target.closest('#in-dead-matkul') && !e.target.closest('#dead-matkul-results')) { const r = document.getElementById('dead-matkul-results'); if (r) r.style.display = 'none'; }
         });
 
@@ -355,15 +455,15 @@
         function zoomImage(url) { document.getElementById('zoom-img-target').src = formatDriveLink(url); document.getElementById('modal-zoom').style.display = 'flex'; }
 
         function render() {
-            const isAdmin = userRole === 'admin', isPJ = userRole === 'pj', nowMs = new Date().getTime();
+            const isPJ = userRole === 'pj', nowMs = new Date().getTime();
             const startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime();
             const nextWeekLimit = startToday + (7 * 24 * 60 * 60 * 1000);
             const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"], MONTHS_NAME = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
 
             const isDeadlineDone = (t) => { if(!t.date) return false; return nowMs > new Date(`${t.date}T${t.time || '23:59'}:00`).getTime() + (30 * 60 * 1000); };
 
-            const renderGroupedDL = (items, isDoneTab = false) => {
-                if(items.length === 0) return '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada tugas</p>';
+            const renderGroupedDL = (items, type = 'active') => {
+                if(items.length === 0) return '<p style="text-align:center; opacity:0.3; padding:40px">Kosong</p>';
                 items.sort((a,b) => new Date(`${a.date}T${a.time||'23:59'}:00`) - new Date(`${b.date}T${b.time||'23:59'}:00`));
                 
                 const grouped = {};
@@ -375,10 +475,18 @@
                     htmlContent += `<div class="day-divider"><i class="fa-regular fa-calendar-check"></i> ${DAYS_NAME[dObj.getDay()]}, ${dObj.getDate()} ${MONTHS_NAME[dObj.getMonth()]} ${dObj.getFullYear()}</div>`;
                     
                     grouped[dateStr].forEach(t => {
-                        let badgeHTML = isDoneTab ? `<div class="cd-badge cd-done">SELESAI</div>` : `<div class="cd-badge" id="cd-${t.fid}" data-date="${t.date}" data-time="${t.time || '23:59'}">⏳ Menghitung...</div>`;
-                        let actionBtns = "";
+                        let badgeHTML = type === 'done' 
+                            ? `<div class="cd-badge cd-done">SELESAI</div>` 
+                            : `<div class="cd-badge" id="cd-${t.fid}" data-date="${t.date}" data-time="${t.time || '23:59'}">⏳ Menghitung...</div>`;
+                        
+                        let actionBtns = "", taskLinkBtn = "";
+                        
+                        if(t.taskLink) {
+                            let linkHref = t.taskLink.startsWith('http') ? t.taskLink : `https://${t.taskLink}`;
+                            taskLinkBtn = `<div style="margin-top:15px"><a href="${linkHref}" target="_blank" class="btn-primary" style="display:inline-block; text-align:center; text-decoration:none; padding:12px; font-size:0.85rem; width:100%; background:#10b981"><i class="fa-solid fa-paper-plane"></i> KIRIM TUGAS / KUMPUL</a></div>`;
+                        }
 
-                        if (isAdmin || (isPJ && t.subject === userMatkul)) {
+                        if (isAdminOrDev || (isPJ && t.subject === userMatkul)) {
                             actionBtns = `<div style="margin-top:12px; padding-top:12px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="event.stopPropagation(); editDeadline('${t.fid}')">EDIT</button><button class="btn-mini" style="background:#fff1f2; color:red" onclick="event.stopPropagation(); deleteData('deadlines', '${t.fid}')">HAPUS</button></div>`;
                         }
 
@@ -387,6 +495,7 @@
                             <span class="card-subject">${t.subject}</span>
                             <div style="font-size:0.8rem; font-weight:700; color:#64748b; margin-top:5px; margin-bottom:10px"><i class="fa-regular fa-clock"></i> ${t.time || '23:59'}</div>
                             ${t.desc ? `<div class="card-desc" style="margin-top:0">${t.desc}</div>` : ''}
+                            ${taskLinkBtn}
                             ${actionBtns}
                         </div>`;
                     });
@@ -394,35 +503,26 @@
                 return htmlContent;
             };
 
-            const doneItems = localDB.deadlines.filter(t => isDeadlineDone(t));
-            const activeItems = localDB.deadlines.filter(t => !isDeadlineDone(t));
-            document.getElementById('tab-now').innerHTML = renderGroupedDL(activeItems.filter(t => new Date(t.date).getTime() < nextWeekLimit));
-            document.getElementById('tab-next').innerHTML = renderGroupedDL(activeItems.filter(t => new Date(t.date).getTime() >= nextWeekLimit));
-            document.getElementById('tab-done').innerHTML = renderGroupedDL(doneItems, true);
+            const activeItems = localDB.deadlines;
+            const doneItems = activeItems.filter(t => isDeadlineDone(t));
+            const ongoingItems = activeItems.filter(t => !isDeadlineDone(t));
+            
+            document.getElementById('tab-now').innerHTML = renderGroupedDL(ongoingItems.filter(t => new Date(t.date).getTime() < nextWeekLimit), 'active');
+            document.getElementById('tab-next').innerHTML = renderGroupedDL(ongoingItems.filter(t => new Date(t.date).getTime() >= nextWeekLimit), 'active');
+            document.getElementById('tab-done').innerHTML = renderGroupedDL(doneItems, 'done');
 
             // JADWAL
             const DAYS_SCH = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             let schHtml = "", currentSchDay = -1;
             localDB.schedules.sort((a, b) => a.day - b.day).forEach(s => {
                 if (s.day !== currentSchDay) { schHtml += `<div class="day-divider"><i class="fa-regular fa-calendar"></i> HARI ${DAYS_SCH[s.day]}</div>`; currentSchDay = s.day; }
-                schHtml += `<div class="card-item"><span class="card-subject">${s.name}</span><p style="font-size:0.75rem; font-weight:700; color:#64748b; margin-top:5px"><span style="color:#2563eb; font-size:1.1rem">👤</span> ${s.lecturer} | ⏰ ${s.time}</p>${isAdmin ? `<div style="margin-top:10px"><button class="btn-mini" style="background:#f1f5f9" onclick="editSchedule('${s.fid}')">EDIT</button><button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
+                schHtml += `<div class="card-item"><span class="card-subject">${s.name}</span><p style="font-size:0.75rem; font-weight:700; color:#64748b; margin-top:5px"><span style="color:#2563eb; font-size:1.1rem">👤</span> ${s.lecturer} | ⏰ ${s.time}</p>${isAdminOrDev ? `<div style="margin-top:10px"><button class="btn-mini" style="background:#f1f5f9" onclick="editSchedule('${s.fid}')">EDIT</button><button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
             });
             document.getElementById('schedule-view').innerHTML = schHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada jadwal</p>';
-            
-            // KUMPUL TUGAS RENDER
-            let ktHtml = "";
-            localDB.kumpulTugas.forEach(kt => {
-                let actionBtns = "";
-                if (isAdmin || isPJ) {
-                    actionBtns = `<div style="margin-top:15px; padding-top:10px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="editKumpulTugas('${kt.fid}')">EDIT</button><button onclick="deleteData('kumpulTugas', '${kt.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>`;
-                }
-                ktHtml += `<div class="card-item"><span class="card-subject" style="font-size:1rem">${kt.nama}</span><div style="margin-top:15px"><a href="${kt.link}" target="_blank" class="btn-primary" style="display:inline-block; text-align:center; text-decoration:none; padding:12px; font-size:0.85rem; width:100%"><i class="fa-solid fa-paper-plane"></i> KIRIM TUGAS</a></div>${actionBtns}</div>`;
-            });
-            document.getElementById('kumpul-tugas-content').innerHTML = ktHtml || '<p style="text-align:center; opacity:0.5; margin-top:20px; font-style:italic">Belum ada tugas yang perlu dikumpulkan</p>';
 
             // STRUKTUR KELAS
             const getAvatar = (n, i) => (i && i.length > 5) ? formatDriveLink(i) : `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=2563eb&color=fff&bold=true`;
-            const makeCard = (s) => `<div class="mhs-card"><img src="${getAvatar(s.name, s.img)}" class="pp-img" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=2563eb&color=fff'"><h4 style="font-size:0.85rem; margin-bottom:2px">${s.name}</h4><p style="font-size:0.65rem; font-weight:800; color:var(--p)">${s.pos}</p><div class="soc-btns">${s.ig?`<a href="https://instagram.com/${s.ig}" target="_blank" class="soc-icon ig-icon"><i class="fa-brands fa-instagram"></i></a>`:''}${s.wa?`<a href="https://wa.me/${s.wa}" target="_blank" class="soc-icon wa-icon"><i class="fa-brands fa-whatsapp"></i></a>`:''}</div>${isAdmin?`<div style="margin-top:10px"><button onclick="editStruct('${s.fid}')" class="btn-mini" style="background:#f1f5f9">EDIT</button><button onclick="deleteData('structs','${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">X</button></div>`:''}</div>`;
+            const makeCard = (s) => `<div class="mhs-card"><img src="${getAvatar(s.name, s.img)}" class="pp-img" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=2563eb&color=fff'"><h4 style="font-size:0.85rem; margin-bottom:2px">${s.name}</h4><p style="font-size:0.65rem; font-weight:800; color:var(--p)">${s.pos}</p><div class="soc-btns">${s.ig?`<a href="https://instagram.com/${s.ig}" target="_blank" class="soc-icon ig-icon"><i class="fa-brands fa-instagram"></i></a>`:''}${s.wa?`<a href="https://wa.me/${s.wa}" target="_blank" class="soc-icon wa-icon"><i class="fa-brands fa-whatsapp"></i></a>`:''}</div>${isAdminOrDev?`<div style="margin-top:10px"><button onclick="editStruct('${s.fid}')" class="btn-mini" style="background:#f1f5f9">EDIT</button><button onclick="deleteData('structs','${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">X</button></div>`:''}</div>`;
             
             let row1 = localDB.structs.filter(s=>s.lv==1 || s.lv==2); 
             let row2 = localDB.structs.filter(s=>s.lv==3); 
@@ -432,15 +532,24 @@
             if(row1.length) orgHtml += `<div style="text-align:center; font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:15px; letter-spacing:1px">KETUA & WAKIL</div><div class="org-row">${row1.map(makeCard).join('')}</div>`;
             if(row2.length) orgHtml += `<div style="border-top:2px dashed #e2e8f0; padding-top:25px"><div style="text-align:center; font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:15px; letter-spacing:1px">PERANGKAT KELAS</div><div class="org-row">${row2.map(makeCard).join('')}</div></div>`;
             if(row3.length) orgHtml += `<div style="border-top:2px dashed #e2e8f0; padding-top:25px"><div style="text-align:center; font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:15px; letter-spacing:1px">MAHASISWA</div><div class="org-row">${row3.map(makeCard).join('')}</div></div>`;
-            
             document.getElementById('org-content').innerHTML = orgHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Data belum ada</p>';
 
-            // GALERI DENGAN TOMBOL HAPUS ELEGAN
-            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `<div style="position:relative"><img src="${formatDriveLink(g.img)}" onclick="zoomImage('${g.img}')" style="width:100%; aspect-ratio:1; object-fit:cover; border-radius:15px; background:#f1f5f9; cursor:zoom-in" onerror="this.src='https://via.placeholder.com/300?text=Error'">${isAdmin?`<button onclick="deleteData('gallery','${g.fid}')" style="position:absolute; top:8px; right:8px; background:rgba(30,41,59,0.7); backdrop-filter:blur(4px); color:white; border:none; border-radius:50%; width:32px; height:32px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:0.3s" onmouseover="this.style.background='rgba(30,41,59,0.95)'" onmouseout="this.style.background='rgba(30,41,59,0.7)'"><i class="fa-solid fa-trash-can" style="font-size:0.85rem"></i></button>`:''}</div>`).join('');
+            // GALERI
+            document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `
+                <div style="position:relative; background:white; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border:1px solid #f1f5f9;">
+                    <img src="${formatDriveLink(g.img)}" onclick="zoomImage('${g.img}')" style="width:100%; aspect-ratio:1; object-fit:cover; border-top-left-radius:15px; border-top-right-radius:15px; background:#f1f5f9; cursor:zoom-in" onerror="this.src='https://via.placeholder.com/300?text=Error'">
+                    ${g.caption ? `<div class="gal-caption">${g.caption}</div>` : ''}
+                    ${isAdminOrDev ? `
+                    <div style="position:absolute; top:8px; right:8px; display:flex; gap:5px;">
+                        <button onclick="editGallery('${g.fid}')" style="background:rgba(255,255,255,0.9); color:var(--dark); border:none; border-radius:8px; width:30px; height:30px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.1);"><i class="fa-solid fa-pen" style="font-size:0.7rem"></i></button>
+                        <button onclick="deleteData('gallery','${g.fid}')" style="background:rgba(239,68,68,0.9); color:white; border:none; border-radius:8px; width:30px; height:30px; cursor:pointer; box-shadow:0 2px 5px rgba(0,0,0,0.1);"><i class="fa-solid fa-trash-can" style="font-size:0.7rem"></i></button>
+                    </div>` : ''}
+                </div>
+            `).join('');
         }
 
         setInterval(() => {
-            document.querySelectorAll('.cd-badge:not(.cd-done)').forEach(badge => {
+            document.querySelectorAll('.cd-badge[id^="cd-"]').forEach(badge => {
                 const diff = new Date(`${badge.getAttribute('data-date')}T${badge.getAttribute('data-time')}:00`).getTime() - new Date().getTime();
                 if (diff < -(30 * 60 * 1000)) { render(); return; } else if (diff < 0) { badge.innerHTML = "WAKTU HABIS"; badge.className = "cd-badge cd-danger"; return; }
                 const d = Math.floor(diff / 86400000), h = Math.floor((diff % 86400000) / 3600000), m = Math.floor((diff % 3600000) / 60000), s = Math.floor((diff % 60000) / 1000);
@@ -454,50 +563,46 @@
         function showTab(t, b) { document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active')); document.querySelectorAll('.task-btn').forEach(btn => btn.classList.remove('active')); document.getElementById(t).classList.add('active'); b.classList.add('active'); }
         
         function checkAccess() { 
-            document.getElementById('admin-group').style.display = userRole === 'admin' ? 'block' : 'none'; 
-            document.getElementById('admin-reset-group').style.display = userRole === 'admin' ? 'block' : 'none'; 
+            document.getElementById('admin-group').style.display = isAdminOrDev ? 'block' : 'none'; 
+            document.getElementById('admin-reset-group').style.display = isAdminOrDev ? 'block' : 'none'; 
+            document.getElementById('dev-group').style.display = userRole === 'dev' ? 'block' : 'none';
             document.getElementById('pj-group').style.display = userRole === 'pj' ? 'block' : 'none'; 
             const authContainer = document.getElementById('auth-container');
-            if (userRole === 'admin' || userRole === 'pj') authContainer.innerHTML = `<a href="#" class="menu-link" style="color:red; font-weight:800;" onclick="logout()">🚪 Logout</a>`;
+            if (isAdminOrDev || userRole === 'pj') authContainer.innerHTML = `<a href="#" class="menu-link" style="color:red; font-weight:800;" onclick="logout()">🚪 Logout</a>`;
             else authContainer.innerHTML = `<a href="#" class="menu-link" style="background:#f1f5f9; text-align:center" onclick="toggleView('login-page')">🔐 LOGIN</a>`;
         }
 
-        function login() { const r=document.getElementById('login-role').value, p=document.getElementById('pass-val').value; if(r==='admin'&&p==='2025'){ localStorage.setItem('userRole','admin'); location.reload(); } else if(r==='pj'){ const m=document.getElementById('login-pj-matkul').value; if(localDB.pjs[m]===p){ localStorage.setItem('userRole','pj'); localStorage.setItem('userMatkul',m); location.reload(); } else alert("Password Salah!"); } }
+        function login() { 
+            const r=document.getElementById('login-role').value, p=document.getElementById('pass-val').value; 
+            if(r==='admin'&&p==='2025') { localStorage.setItem('userRole','admin'); location.reload(); } 
+            else if(r==='dev'&&p==='karrian2025') { localStorage.setItem('userRole','dev'); location.reload(); } 
+            else if(r==='pj'){ 
+                const m=document.getElementById('login-pj-matkul').value; 
+                if(localDB.pjs[m]===p){ localStorage.setItem('userRole','pj'); localStorage.setItem('userMatkul',m); location.reload(); } 
+                else alert("Password Salah!"); 
+            } else alert("Password Salah!"); 
+        }
         function logout() { if(confirm("Yakin mau keluar?")) { localStorage.clear(); location.reload(); } }
         function checkRoleUI() { document.getElementById('pj-matkul-select').style.display = document.getElementById('login-role').value === 'pj' ? 'block' : 'none'; }
         
         function updateDropdowns() { 
             const m = localDB.schedules.map(s => `<option value="${s.name}">${s.name}</option>`).join(''); 
-            ['in-grp-matkul','in-pj-matkul','login-pj-matkul'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = m; }); 
+            ['in-grp-matkul','in-grp-auto-matkul','in-pj-matkul','login-pj-matkul'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).innerHTML = m; }); 
         }
 
-        // FUNGSI SMART SEARCH PREVIEW MATA KULIAH (CROSS-PLATFORM)
         function filterMatkulSearch(val, type) {
             val = val.toLowerCase();
             let resBox = document.getElementById(type === 'group' ? 'filter-matkul-results' : 'dead-matkul-results');
-            
-            // Ambil data unik nama matkul dari schedule
             let uniqueMatkuls = [...new Set(localDB.schedules.map(s => s.name))];
             let results = uniqueMatkuls.filter(name => name.toLowerCase().includes(val));
-
-            if(results.length === 0) {
-                resBox.innerHTML = '<div style="padding:15px; font-size:0.8rem; color:gray; text-align:center">Tidak ada mata kuliah</div>';
-            } else {
-                resBox.innerHTML = results.map(name => `<div class="search-item" onclick="selectMatkul('${name}', '${type}')">${name}</div>`).join('');
-            }
+            if(results.length === 0) resBox.innerHTML = '<div style="padding:15px; font-size:0.8rem; color:gray; text-align:center">Tidak ada mata kuliah</div>';
+            else resBox.innerHTML = results.map(name => `<div class="search-item" onclick="selectMatkul('${name}', '${type}')">${name}</div>`).join('');
             resBox.style.display = 'block';
         }
 
         function selectMatkul(name, type) {
-            if(type === 'group') {
-                document.getElementById('filter-group-matkul').value = name;
-                document.getElementById('filter-matkul-results').style.display = 'none';
-                filterGroups();
-            } else {
-                document.getElementById('in-dead-matkul').value = name;
-                document.getElementById('dead-matkul-results').style.display = 'none';
-                autoFillTime();
-            }
+            if(type === 'group') { document.getElementById('filter-group-matkul').value = name; document.getElementById('filter-matkul-results').style.display = 'none'; filterGroups(); } 
+            else { document.getElementById('in-dead-matkul').value = name; document.getElementById('dead-matkul-results').style.display = 'none'; autoFillTime(); }
         }
 
         function filterGroups() {
@@ -505,43 +610,27 @@
             let grps = v ? localDB.groups.filter(g => g.matkul === v) : localDB.groups;
             document.getElementById('all-groups-content').innerHTML = grps.map(g => {
                 let membersList = g.members ? g.members.split(',').filter(m=>m.trim()!=='').map((m, i) => `${i+1}. ${m.trim()}`).join('<br>') : '-';
-                return `<div class="card-item"><span class="card-subject" style="color:var(--p)">${g.matkul}</span><h3 style="margin-top:5px">${g.groupName}</h3><p style="font-size:0.85rem; font-weight:800; margin-bottom:5px">${g.title}</p><div style="font-size:0.8rem; color:#64748b; background:#f8fafc; padding:10px; border-radius:10px; margin-top:10px; line-height:1.6"><b>Anggota:</b><br>${membersList}</div>${userRole === 'admin' || (userRole === 'pj' && g.matkul === userMatkul) ? `<div style="margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="editGroup('${g.fid}')">EDIT</button><button onclick="deleteData('groups', '${g.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
+                return `<div class="card-item"><span class="card-subject" style="color:var(--p)">${g.matkul}</span><h3 style="margin-top:5px">${g.groupName}</h3><p style="font-size:0.85rem; font-weight:800; margin-bottom:5px">${g.title}</p><div style="font-size:0.8rem; color:#64748b; background:#f8fafc; padding:10px; border-radius:10px; margin-top:10px; line-height:1.6"><b>Anggota:</b><br>${membersList}</div>${isAdminOrDev || (userRole === 'pj' && g.matkul === userMatkul) ? `<div style="margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="editGroup('${g.fid}')">EDIT</button><button onclick="deleteData('groups', '${g.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
             }).join('') || '<p style="text-align:center; opacity:0.5; margin-top:20px">Data kelompok belum ada</p>';
         }
 
         function openForm(t) { 
             if(t==='deadline') { 
-                document.getElementById('edit-dead-id').value = ""; document.getElementById('in-dead-date').value = ""; document.getElementById('in-dead-time').value = ""; document.getElementById('in-dead-desc').value = ""; document.getElementById('group-selects-container').innerHTML = ""; 
+                document.getElementById('edit-dead-id').value = ""; document.getElementById('in-dead-date').value = ""; document.getElementById('in-dead-time').value = ""; document.getElementById('in-dead-desc').value = ""; document.getElementById('in-dead-tasklink').value = ""; document.getElementById('group-selects-container').innerHTML = ""; 
                 if(userRole==='pj') { document.getElementById('in-dead-matkul').value = userMatkul; document.getElementById('in-dead-matkul').readOnly = true; autoFillTime(); } else { document.getElementById('in-dead-matkul').value = ""; document.getElementById('in-dead-matkul').readOnly = false; }
                 addMoreGroupSelect(); toggleView('form-deadline');
             } else if(t==='group') {
-                document.getElementById('edit-grp-id').value = ""; document.getElementById('in-grp-name').value = ""; document.getElementById('in-grp-title').value = ""; groupMembersTemp = []; renderSelectedMembers();
-                if(userRole==='pj') document.getElementById('in-grp-matkul').value = userMatkul;
+                document.getElementById('edit-grp-id').value = ""; document.getElementById('in-grp-name').value = ""; document.getElementById('in-grp-title').value = ""; groupMembersTemp = []; renderSelectedMembers(); switchGroupMode('manual');
+                if(userRole==='pj') { document.getElementById('in-grp-matkul').value = userMatkul; document.getElementById('in-grp-auto-matkul').value = userMatkul; }
                 toggleView('form-group');
-            } else if(t==='kumpul-tugas') {
-                document.getElementById('edit-kt-id').value = ""; document.getElementById('in-kt-nama').value = ""; document.getElementById('in-kt-link').value = "";
-                toggleView('form-kumpul-tugas');
+            } else if(t==='gallery') {
+                document.getElementById('edit-gal-id').value = ""; document.getElementById('in-gal-link').value = ""; document.getElementById('in-gal-caption').value = "";
+                toggleView('form-gallery');
             } else {
                 ['sch-name','sch-lect','sch-time','str-name','str-pos','str-ig','str-wa','str-img'].forEach(id => { if(document.getElementById(`in-${id}`)) document.getElementById(`in-${id}`).value = ""; });
                 ['edit-sch-id','edit-str-id'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = ""; });
                 toggleView('form-'+t); 
             }
-        }
-
-        function saveKumpulTugas() {
-            const d = { nama: document.getElementById('in-kt-nama').value, link: document.getElementById('in-kt-link').value };
-            if (!d.nama || !d.link) return alert("Nama tugas dan link wajib diisi!");
-            const id = document.getElementById('edit-kt-id').value;
-            if(id) dbRef.child('kumpulTugas').child(id).update(d); else dbRef.child('kumpulTugas').push(d);
-            showToast("Berhasil Disimpan!"); openForm('kumpul-tugas');
-        }
-
-        function editKumpulTugas(id) {
-            const kt = localDB.kumpulTugas.find(x => x.fid === id);
-            document.getElementById('edit-kt-id').value = id;
-            document.getElementById('in-kt-nama').value = kt.nama;
-            document.getElementById('in-kt-link').value = kt.link;
-            toggleView('form-kumpul-tugas');
         }
 
         function autoFillTime() { let m = document.getElementById('in-dead-matkul').value, sch = localDB.schedules.find(s => s.name === m); if(sch && sch.time) document.getElementById('in-dead-time').value = sch.time; document.querySelectorAll('.grp-dynamic-select').forEach(sel => loadGroupsIntoSelect(sel, m)); }
@@ -559,23 +648,50 @@
         function saveDeadline() { 
             let groups = []; document.querySelectorAll('.grp-dynamic-select').forEach(s => { if(s.value) groups.push(s.value); });
             if(!document.getElementById('in-dead-date').value) return alert("Tanggal wajib diisi!");
-            const d = { subject: document.getElementById('in-dead-matkul').value, groupIds: groups, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value };
-            const id = document.getElementById('edit-dead-id').value; if(id) dbRef.child('deadlines').child(id).update(d); else dbRef.child('deadlines').push(d); 
+            const d = { subject: document.getElementById('in-dead-matkul').value, groupIds: groups, date: document.getElementById('in-dead-date').value, time: document.getElementById('in-dead-time').value, desc: document.getElementById('in-dead-desc').value, taskLink: document.getElementById('in-dead-tasklink').value };
+            const id = document.getElementById('edit-dead-id').value; 
+            if(id) dbRef.child('deadlines').child(id).update(d); else dbRef.child('deadlines').push(d); 
             showToast("Berhasil Disimpan!"); openForm('deadline');
         }
-        function editDeadline(id) { const t = localDB.deadlines.find(x => x.fid === id); document.getElementById('edit-dead-id').value = id; document.getElementById('in-dead-matkul').value = t.subject; document.getElementById('in-dead-date').value = t.date; document.getElementById('in-dead-time').value = t.time; document.getElementById('in-dead-desc').value = t.desc; document.getElementById('group-selects-container').innerHTML = ""; if(t.groupIds && t.groupIds.length > 0) t.groupIds.forEach(gid => addMoreGroupSelect(gid)); else addMoreGroupSelect(); toggleView('form-deadline'); }
+        
+        function editDeadline(id) { const t = localDB.deadlines.find(x => x.fid === id); document.getElementById('edit-dead-id').value = id; document.getElementById('in-dead-matkul').value = t.subject; document.getElementById('in-dead-date').value = t.date; document.getElementById('in-dead-time').value = t.time; document.getElementById('in-dead-desc').value = t.desc; document.getElementById('in-dead-tasklink').value = t.taskLink || ""; document.getElementById('group-selects-container').innerHTML = ""; if(t.groupIds && t.groupIds.length > 0) t.groupIds.forEach(gid => addMoreGroupSelect(gid)); else addMoreGroupSelect(); toggleView('form-deadline'); }
 
-        // PENCARIAN MAHASISWA (CROSS-PLATFORM)
-        function searchMhsForGroup() { 
-            const val = document.getElementById('search-mhs').value.toLowerCase();
-            const resBox = document.getElementById('mhs-search-results'); 
-            const results = localDB.structs.filter(s => s.name.toLowerCase().includes(val) && !groupMembersTemp.includes(s.name)); 
+        function switchGroupMode(mode) {
+            document.getElementById('grp-mode-manual').style.display = mode === 'manual' ? 'block' : 'none';
+            document.getElementById('grp-mode-acak').style.display = mode === 'acak' ? 'block' : 'none';
+            document.getElementById('btn-mode-manual').style.background = mode === 'manual' ? 'var(--p)' : '#f1f5f9';
+            document.getElementById('btn-mode-manual').style.color = mode === 'manual' ? 'white' : 'var(--dark)';
+            document.getElementById('btn-mode-acak').style.background = mode === 'acak' ? 'var(--p)' : '#f1f5f9';
+            document.getElementById('btn-mode-acak').style.color = mode === 'acak' ? 'white' : 'var(--dark)';
+        }
+
+        function autoAcakKelompok() {
+            let mtk = document.getElementById('in-grp-auto-matkul').value;
+            let numGroups = parseInt(document.getElementById('in-grp-auto-num').value);
+            if(!mtk || !numGroups || numGroups < 1) return alert("Pilih mata kuliah dan isi jumlah kelompok dengan benar!");
             
-            if(results.length === 0) {
-                resBox.innerHTML = '<div style="padding:15px; font-size:0.8rem; color:gray; text-align:center">Tidak ada mahasiswa</div>';
-            } else {
-                resBox.innerHTML = results.map(s => `<div class="search-item" onclick="addMhsToGroup('${s.name}')">${s.name} <span style="color:gray; font-size:0.7rem">(${s.pos})</span></div>`).join(''); 
+            let students = localDB.structs.map(s => s.name);
+            if(students.length === 0) return alert("Belum ada data mahasiswa di struktur kelas!");
+
+            for(let i = students.length - 1; i > 0; i--){
+                const j = Math.floor(Math.random() * (i + 1));
+                [students[i], students[j]] = [students[j], students[i]];
             }
+
+            let groupsArr = Array.from({length: numGroups}, () => []);
+            students.forEach((val, i) => groupsArr[i % numGroups].push(val));
+            
+            groupsArr.forEach((grp, i) => {
+                dbRef.child('groups').push({ matkul: mtk, groupName: `Kelompok ${i+1}`, title: "Judul Materi (Edit Disini)", members: grp.join(', ') });
+            });
+            showToast(`${numGroups} Kelompok Berhasil Diacak!`); toggleView('group-list-view');
+        }
+
+        function searchMhsForGroup() { 
+            const val = document.getElementById('search-mhs').value.toLowerCase(); const resBox = document.getElementById('mhs-search-results'); 
+            const results = localDB.structs.filter(s => s.name.toLowerCase().includes(val) && !groupMembersTemp.includes(s.name)); 
+            if(results.length === 0) resBox.innerHTML = '<div style="padding:15px; font-size:0.8rem; color:gray; text-align:center">Tidak ada mahasiswa</div>';
+            else resBox.innerHTML = results.map(s => `<div class="search-item" onclick="addMhsToGroup('${s.name}')">${s.name} <span style="color:gray; font-size:0.7rem">(${s.pos})</span></div>`).join(''); 
             resBox.style.display = 'block'; 
         }
 
@@ -584,7 +700,7 @@
         function renderSelectedMembers() { document.getElementById('selected-members').innerHTML = groupMembersTemp.map(n => `<span class="member-chip" onclick="removeMhsFromGroup('${n}')">${n} ✖</span>`).join(''); }
 
         function saveGroup() { const d = { matkul: document.getElementById('in-grp-matkul').value, groupName: document.getElementById('in-grp-name').value, title: document.getElementById('in-grp-title').value, members: groupMembersTemp.join(', ') }, id = document.getElementById('edit-grp-id').value; if(id) dbRef.child('groups').child(id).update(d); else dbRef.child('groups').push(d); showToast("Berhasil Disimpan!"); openForm('group'); }
-        function editGroup(id) { const g = localDB.groups.find(x => x.fid === id); document.getElementById('edit-grp-id').value = id; document.getElementById('in-grp-matkul').value = g.matkul; document.getElementById('in-grp-name').value = g.groupName; document.getElementById('in-grp-title').value = g.title; groupMembersTemp = g.members ? g.members.split(',').map(m=>m.trim()) : []; renderSelectedMembers(); toggleView('form-group'); }
+        function editGroup(id) { const g = localDB.groups.find(x => x.fid === id); document.getElementById('edit-grp-id').value = id; document.getElementById('in-grp-matkul').value = g.matkul; document.getElementById('in-grp-name').value = g.groupName; document.getElementById('in-grp-title').value = g.title; groupMembersTemp = g.members ? g.members.split(',').map(m=>m.trim()) : []; renderSelectedMembers(); switchGroupMode('manual'); toggleView('form-group'); }
 
         function saveSchedule() { const d = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: parseInt(document.getElementById('in-sch-day').value) }, id = document.getElementById('edit-sch-id').value; if(id) dbRef.child('schedules').child(id).update(d); else dbRef.child('schedules').push(d); showToast("Berhasil Disimpan!"); openForm('schedule'); }
         function editSchedule(id) { const s = localDB.schedules.find(x => x.fid === id); document.getElementById('edit-sch-id').value = id; document.getElementById('in-sch-name').value = s.name; document.getElementById('in-sch-lect').value = s.lecturer; document.getElementById('in-sch-time').value = s.time; document.getElementById('in-sch-day').value = s.day; toggleView('form-schedule'); }
@@ -603,14 +719,20 @@
             reader.readAsArrayBuffer(file);
         }
 
-        function saveGallery() { const links = document.getElementById('in-gal-links').value.split('\n'); links.forEach(l => { if(l.trim()) dbRef.child('gallery').push({ img: l.trim() }); }); showToast("Galeri Diupload!"); document.getElementById('in-gal-links').value = ""; toggleView('gallery-view'); }
+        function saveGallery() { 
+            const img = document.getElementById('in-gal-link').value, caption = document.getElementById('in-gal-caption').value, id = document.getElementById('edit-gal-id').value;
+            if(!img) return alert("Link foto wajib diisi!");
+            const d = { img: img, caption: caption };
+            if(id) dbRef.child('gallery').child(id).update(d); else dbRef.child('gallery').push(d); 
+            showToast("Foto Disimpan!"); openForm('gallery'); toggleView('gallery-view');
+        }
+        function editGallery(id) { const g = localDB.gallery.find(x => x.fid === id); document.getElementById('edit-gal-id').value = id; document.getElementById('in-gal-link').value = g.img; document.getElementById('in-gal-caption').value = g.caption || ''; toggleView('form-gallery'); }
         
         function savePJAuth() { const m = document.getElementById('in-pj-matkul').value, p = document.getElementById('in-pj-pass').value; if(m&&p) { dbRef.child('pjs').child(m).set(p); showToast("Password PJ Disimpan!"); document.getElementById('in-pj-pass').value = ""; } }
         
         function renderPJList() { 
             const pjKeys = Object.keys(localDB.pjs);
             document.getElementById('btn-share-all-pj').style.display = pjKeys.length > 0 ? 'block' : 'none';
-            
             document.getElementById('pj-list-content').innerHTML = pjKeys.map(k => {
                 let p = localDB.pjs[k];
                 return `<div style="display:flex; justify-content:space-between; align-items:center; background:#f8fafc; padding:10px; margin-bottom:5px; border-radius:8px"><div><b>${k}</b>: ${p}</div><span style="color:red; cursor:pointer" onclick="deleteData('pjs', '${k}')">Hapus</span></div>`;
@@ -619,11 +741,49 @@
 
         function shareAllPJ() {
             let text = "*DAFTAR PASSWORD PJ MATKUL* 🔐\n_(Gunakan password ini untuk login sebagai PJ di web)_\n\n";
-            Object.keys(localDB.pjs).forEach(k => {
-                text += `📚 *${k}*\n🔑 Password: ${localDB.pjs[k]}\n\n`;
-            });
+            Object.keys(localDB.pjs).forEach(k => { text += `📚 *${k}*\n🔑 Password: ${localDB.pjs[k]}\n\n`; });
             text += "_Harap simpan dengan baik dan jangan disebar ke luar kelas!_";
             window.open(`https://wa.me/?text=${window.encodeURIComponent(text)}`, '_blank');
+        }
+
+        // DEV TOOLS FUNCTIONS
+        function saveAnnouncement() {
+            const txt = document.getElementById('in-announcement').value;
+            dbRef.child('announcement').set({text: txt});
+            sessionStorage.removeItem('notifShown'); 
+            showToast("Notifikasi Disimpan!");
+        }
+        function deleteAnnouncement() {
+            dbRef.child('announcement').remove();
+            document.getElementById('in-announcement').value = "";
+            showToast("Notifikasi Dihapus!");
+        }
+
+        function addBCItem() {
+            const wrap = document.createElement('div'); wrap.className = "wa-bc-item";
+            wrap.innerHTML = `<input type="text" class="input-modern bc-point-name" placeholder="Nama Point (Cth: Libur)" style="margin-bottom:10px; padding:10px"><textarea class="input-modern bc-point-desc" placeholder="Keterangan..." rows="2" style="padding:10px"></textarea><button class="btn-mini" style="background:#fff1f2; color:red; position:absolute; top:5px; right:5px" onclick="this.parentElement.remove()">X</button>`;
+            document.getElementById('bc-items-container').appendChild(wrap);
+        }
+
+        function generateBC() {
+            let title = document.getElementById('bc-title').value || "INFORMASI KELAS";
+            let text = `*${title.toUpperCase()}*\n\n`;
+            
+            document.querySelectorAll('.wa-bc-item').forEach((item, index) => {
+                let pName = item.querySelector('.bc-point-name').value;
+                let pDesc = item.querySelector('.bc-point-desc').value;
+                if(pName || pDesc) { text += `${index + 1}. *${pName}*\n_${pDesc}_\n\n`; }
+            });
+            text += `Demikian informasi yang disampaikan, terima kasih. ✨`;
+            document.getElementById('bc-result').value = text;
+        }
+
+        function copyBC() {
+            const copyText = document.getElementById("bc-result");
+            if(!copyText.value) return alert("Buat teksnya dulu!");
+            copyText.select(); copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            showToast("Teks Tercopy!");
         }
         
         function deleteData(path, id) { if(confirm("Yakin hapus data ini?")) dbRef.child(path).child(id).remove(); }
