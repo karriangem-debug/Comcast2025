@@ -9,6 +9,11 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <!-- PDF.JS LIBRARY UNTUK BACA PDF -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+    </script>
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
@@ -290,9 +295,16 @@
         <!-- Form Matkul, Struct -->
         <section id="form-schedule" class="main-view">
             <h2 style="margin-bottom:15px">Mata Kuliah</h2>
-            <!-- TOMBOL BARU IMPORT KRS -->
-            <button class="btn-primary" style="background:#10b981; padding:12px; font-size:0.85rem; margin-bottom:15px" onclick="importKRS()"><i class="fa-solid fa-file-pdf"></i> IMPORT OTOMATIS DARI KRS</button>
             
+            <!-- TOMBOL / AREA UPLOAD PDF KRS OTOMATIS -->
+            <div style="background:#f8fafc; padding:20px; border-radius:15px; border:2px dashed var(--dev); margin-bottom:20px; text-align:center;">
+                <i class="fa-solid fa-file-pdf" style="font-size:2.5rem; color:var(--dev); margin-bottom:10px"></i>
+                <p style="font-size:1rem; font-weight:800; margin-bottom:5px">Upload PDF KRS (Auto-Extract)</p>
+                <p style="font-size:0.75rem; color:#64748b; margin-bottom:12px">Sistem akan otomatis membaca jadwal dari file PDF KRS kamu.</p>
+                <input type="file" id="krs-pdf-file" accept=".pdf" style="display:none" onchange="processKrsPDF(event)">
+                <button class="btn-primary" style="background:var(--dev); padding:12px; font-size:0.85rem" onclick="document.getElementById('krs-pdf-file').click()">PILIH FILE PDF KRS</button>
+            </div>
+
             <div class="form-grid">
                 <input type="hidden" id="edit-sch-id">
                 <input type="text" id="in-sch-name" class="input-modern form-grid-full" placeholder="Nama Matkul">
@@ -792,29 +804,98 @@
         function deleteData(path, id) { if(confirm("Yakin hapus data ini?")) dbRef.child(path).child(id).remove(); }
         function resetCollection(path, name) { if(confirm(`Yakin hapus SEMUA data ${name}?`)) { if(prompt(`Ketik "RESET" untuk lanjut:`) === "RESET") { dbRef.child(path).remove(); showToast(`Data ${name} Dihapus!`); } } }
 
-        // FITUR BARU: IMPORT OTOMATIS DARI KRS
-        function importKRS() {
-            if(!confirm("Yakin ingin mengimport data otomatis dari KRS? (Pastikan data belum pernah di-import agar tidak ganda)")) return;
+        // FITUR BARU: AUTO EXTRACT PDF KRS
+        async function processKrsPDF(e) {
+            const file = e.target.files[0];
+            if (!file) return;
 
-            // Data diambil berdasarkan KRS Muhammad Astrianto (25041310047)
-            const krsData = [
-                { name: "KOMUNIKASI POLITIK", lecturer: "AHMAD HARUN YAHYA, M.Si | Rg: 018", time: "07:10", day: 1 },
-                { name: "KOMUNIKASI PUBLIK DAN MASSA", lecturer: "M. Fazal Rizvi | Rg: 008", time: "08:51", day: 1 },
-                { name: "TEORI KOMUNIKASI", lecturer: "Chairunnisah Putri Ayu Ningsih, M.I.Kom | Rg: 004", time: "13:11", day: 1 },
-                { name: "PRAKTEK IBADAH KEMASYARAKATAN", lecturer: "Dr. HIDAYAT HT, S.Ag. M.Hum. | Rg: 010", time: "07:10", day: 2 },
-                { name: "KOMUNIKASI ISLAM", lecturer: "Dr. MUSLIMIN, M. Kom. | Rg: 012", time: "09:41", day: 2 },
-                { name: "SOSIOLOGI KOMUNIKASI", lecturer: "LILIS SUKMAWATI, M.I.Kom | Rg: 006", time: "13:11", day: 2 },
-                { name: "PSIKOLOGI KOMUNIKASI", lecturer: "Dr. FIFI HASMAWATI, M.Si. | Rg: 007", time: "08:51", day: 3 },
-                { name: "FILSAFAT DAKWAH", lecturer: "Dr NURSERI HASNAH NASUTION, M.Ag | Rg: 2", time: "13:11", day: 3 },
-                { name: "FILSAFAT DAN ETIKA KOMUNIKASI", lecturer: "Hafidz Khoiril Murtadho, M. I. Kom | Rg: 014", time: "09:41", day: 4 }
-            ];
+            showToast("Memproses file PDF KRS...");
+            try {
+                const arrayBuffer = await file.arrayBuffer();
+                const loadingTask = pdfjsLib.getDocument({ data: arrayBuffer });
+                const pdf = await loadingTask.promise;
+                let fullTextLines = [];
 
-            krsData.forEach(d => {
-                dbRef.child('schedules').push(d);
-            });
+                for (let i = 1; i <= pdf.numPages; i++) {
+                    const page = await pdf.getPage(i);
+                    const textContent = await page.getTextContent();
+                    textContent.items.forEach(item => {
+                        fullTextLines.push(item.str.trim());
+                    });
+                }
 
-            showToast("KRS Berhasil Diimport!");
-            toggleView('schedule-view');
+                // Filtering & Parsing teks KRS UIN Raden Fatah
+                let schedulesFound = [];
+                const daysList = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+                
+                // Cari baris yang mengandung hari kuliah untuk memandu pembacaan
+                for (let i = 0; i < fullTextLines.length; i++) {
+                    let line = fullTextLines[i];
+                    if (daysList.includes(line)) {
+                        let dayName = line;
+                        // Jam biasanya ada 1-2 baris sebelum nama hari
+                        let timeStr = "";
+                        for (let t = i - 2; t < i; t++) {
+                            if (t >= 0 && /\d{2}:\d{2}/.test(fullTextLines[t])) {
+                                timeStr = fullTextLines[t].match(/\d{2}:\d{2}/)[0];
+                                break;
+                            }
+                        }
+                        if(!timeStr) timeStr = "08:00";
+
+                        // Nama mata kuliah biasanya beberapa baris setelah hari
+                        let matkulName = "";
+                        let dosenName = "";
+                        let ruangName = "";
+
+                        for (let m = i + 1; m < i + 8 && m < fullTextLines.length; m++) {
+                            let candidate = fullTextLines[m];
+                            // Deteksi kode MK (misal: KPI 1218) sebagai penanda batas
+                            if (/^[A-Z]{3}\s*\d{4}/.test(candidate)) {
+                                matkulName = fullTextLines[m + 1] || "";
+                                // Dosen & Ruang berada di baris setelahnya
+                                for (let d = m + 3; d < m + 7 && d < fullTextLines.length; d++) {
+                                    if (/^\d{2,3}$/.test(fullTextLines[d])) {
+                                        ruangName = fullTextLines[d];
+                                        dosenName = fullTextLines[d - 1];
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                        }
+
+                        if (matkulName && !schedulesFound.some(s => s.name === matkulName)) {
+                            let dayNum = daysList.indexOf(dayName) + 1;
+                            schedulesFound.push({
+                                name: matkulName.toUpperCase(),
+                                lecturer: (dosenName ? dosenName : "Dosen Pengajar") + (ruangName ? ` | Rg: ${ruangName}` : ""),
+                                time: timeStr,
+                                day: dayNum
+                            });
+                        }
+                    }
+                }
+
+                if (schedulesFound.length === 0) {
+                    alert("Format teks PDF tidak dikenali secara otomatis. Pastikan menggunakan file PDF KRS resmi.");
+                    e.target.value = "";
+                    return;
+                }
+
+                if (confirm(`Berhasil mendeteksi ${schedulesFound.length} Mata Kuliah dari PDF. Simpan ke Jadwal Kuliah?`)) {
+                    schedulesFound.forEach(sch => {
+                        dbRef.child('schedules').push(sch);
+                    });
+                    showToast("Jadwal KRS Berhasil Diimport!");
+                    toggleView('schedule-view');
+                }
+                e.target.value = "";
+            } catch (err) {
+                console.error(err);
+                alert("Gagal membaca file PDF. Pastikan file valid.");
+                e.target.value = "";
+            }
         }
     </script>
 </body>
