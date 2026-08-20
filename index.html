@@ -290,6 +290,9 @@
         <!-- Form Matkul, Struct -->
         <section id="form-schedule" class="main-view">
             <h2 style="margin-bottom:15px">Mata Kuliah</h2>
+            <!-- TOMBOL BARU IMPORT KRS -->
+            <button class="btn-primary" style="background:#10b981; padding:12px; font-size:0.85rem; margin-bottom:15px" onclick="importKRS()"><i class="fa-solid fa-file-pdf"></i> IMPORT OTOMATIS DARI KRS</button>
+            
             <div class="form-grid">
                 <input type="hidden" id="edit-sch-id">
                 <input type="text" id="in-sch-name" class="input-modern form-grid-full" placeholder="Nama Matkul">
@@ -788,6 +791,31 @@
         
         function deleteData(path, id) { if(confirm("Yakin hapus data ini?")) dbRef.child(path).child(id).remove(); }
         function resetCollection(path, name) { if(confirm(`Yakin hapus SEMUA data ${name}?`)) { if(prompt(`Ketik "RESET" untuk lanjut:`) === "RESET") { dbRef.child(path).remove(); showToast(`Data ${name} Dihapus!`); } } }
+
+        // FITUR BARU: IMPORT OTOMATIS DARI KRS
+        function importKRS() {
+            if(!confirm("Yakin ingin mengimport data otomatis dari KRS? (Pastikan data belum pernah di-import agar tidak ganda)")) return;
+
+            // Data diambil berdasarkan KRS Muhammad Astrianto (25041310047)
+            const krsData = [
+                { name: "KOMUNIKASI POLITIK", lecturer: "AHMAD HARUN YAHYA, M.Si | Rg: 018", time: "07:10", day: 1 },
+                { name: "KOMUNIKASI PUBLIK DAN MASSA", lecturer: "M. Fazal Rizvi | Rg: 008", time: "08:51", day: 1 },
+                { name: "TEORI KOMUNIKASI", lecturer: "Chairunnisah Putri Ayu Ningsih, M.I.Kom | Rg: 004", time: "13:11", day: 1 },
+                { name: "PRAKTEK IBADAH KEMASYARAKATAN", lecturer: "Dr. HIDAYAT HT, S.Ag. M.Hum. | Rg: 010", time: "07:10", day: 2 },
+                { name: "KOMUNIKASI ISLAM", lecturer: "Dr. MUSLIMIN, M. Kom. | Rg: 012", time: "09:41", day: 2 },
+                { name: "SOSIOLOGI KOMUNIKASI", lecturer: "LILIS SUKMAWATI, M.I.Kom | Rg: 006", time: "13:11", day: 2 },
+                { name: "PSIKOLOGI KOMUNIKASI", lecturer: "Dr. FIFI HASMAWATI, M.Si. | Rg: 007", time: "08:51", day: 3 },
+                { name: "FILSAFAT DAKWAH", lecturer: "Dr NURSERI HASNAH NASUTION, M.Ag | Rg: 2", time: "13:11", day: 3 },
+                { name: "FILSAFAT DAN ETIKA KOMUNIKASI", lecturer: "Hafidz Khoiril Murtadho, M. I. Kom | Rg: 014", time: "09:41", day: 4 }
+            ];
+
+            krsData.forEach(d => {
+                dbRef.child('schedules').push(d);
+            });
+
+            showToast("KRS Berhasil Diimport!");
+            toggleView('schedule-view');
+        }
     </script>
 </body>
 </html>
