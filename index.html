@@ -305,11 +305,11 @@
             </div>
             <button class="btn-primary" onclick="saveSchedule()">SIMPAN & CLEAR</button>
 
-            <!-- TOMBOL / AREA UPLOAD PDF KRS OTOMATIS (PINDAH KE BAWAH) -->
+            <!-- TOMBOL / AREA UPLOAD PDF KRS OTOMATIS (DI BAWAH) -->
             <div style="background:#f8fafc; padding:20px; border-radius:15px; border:2px dashed var(--dev); margin-top:25px; text-align:center;">
                 <i class="fa-solid fa-file-pdf" style="font-size:2.5rem; color:var(--dev); margin-bottom:10px"></i>
                 <p style="font-size:1rem; font-weight:800; margin-bottom:5px">Import Data (PDF KRS)</p>
-                <p style="font-size:0.75rem; color:#64748b; margin-bottom:12px">Sistem akan otomatis mengekstrak jadwal dari file PDF KRS.</p>
+                <p style="font-size:0.75rem; color:#64748b; margin-bottom:12px">Sistem akan otomatis membaca Hari, Jam, Matkul, Dosen & Ruangan dari file PDF KRS-mu.</p>
                 <input type="file" id="krs-pdf-file" accept=".pdf" style="display:none" onchange="processKrsPDF(event)">
                 <button class="btn-primary" style="background:var(--dev); padding:12px; font-size:0.85rem" onclick="document.getElementById('krs-pdf-file').click()">PILIH FILE PDF KRS</button>
             </div>
@@ -816,35 +816,36 @@
                 const pdf = await loadingTask.promise;
                 let fullTextLines = [];
 
+                // Membaca setiap halaman dan baris teks di dalam PDF
                 for (let i = 1; i <= pdf.numPages; i++) {
                     const page = await pdf.getPage(i);
                     const textContent = await page.getTextContent();
                     textContent.items.forEach(item => {
-                        if(item.str.trim() !== "") {
-                            fullTextLines.push(item.str.trim());
-                        }
+                        let str = item.str.trim();
+                        if (str !== "") fullTextLines.push(str);
                     });
                 }
 
-                // Kita gabungkan semua teks menjadi satu baris panjang agar lebih mudah dicari polanya
                 let fullText = fullTextLines.join(" ");
                 let schedulesFound = [];
                 const daysList = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
                 
-                // REGEX super akurat untuk mencari pola KRS
-                // Pola: Jam -> Hari -> Kode MK -> Matkul -> SKS -> Dosen -> Ruang
-                let regex = /(\d{2}:\d{2})[\s\-0-9:]*(Senin|Selasa|Rabu|Kamis|Jumat|Sabtu)\s+(?:[A-ZΑ-Ωa-z-]+\s*\d{3,4})\s+(.+?)\s+([1-4])\s+(.+?)\s+([A-Za-z0-9]{1,5})(?=\s|$|\b)/g;
+                // LOGIKA UTAMA (Regex yang Lebih Akurat & Pintar)
+                // Pola yang ditangkap: Jam -> Hari -> KodeMK -> Matkul -> SKS -> DosenLengkap -> Ruang
+                let regex = /(\d{2}:\d{2})[\s\-0-9:]*(Senin|Selasa|Rabu|Kamis|Jumat|Sabtu)\s+[A-Z]{2,5}\s*\d{3,5}\s+((?:(?!\d{2}:\d{2}).)+?)\s+[1-4](?:\.00)?\s+((?:(?!\d{2}:\d{2}).)+?)\s+([A-Za-z0-9]{1,7})\s*(?=(?:\d{1,3}\s+)?\d{2}:\d{2}|$)/g;
                 
                 let match;
                 while ((match = regex.exec(fullText)) !== null) {
                     let timeStr = match[1];
                     let dayName = match[2];
                     let matkulName = match[3].trim();
-                    let dosenName = match[5].trim().replace(/^-\s*/, ""); // Menghapus tanda strip '-' di awal nama dosen jika ada
-                    if(dosenName.endsWith(",")) dosenName = dosenName.slice(0, -1); // Menghapus koma nyasar di akhir
-                    let ruangName = match[6].trim();
-
-                    // Mencegah duplicate data
+                    let dosenName = match[4].trim(); 
+                    let ruangName = match[5].trim();
+                    
+                    // Membersihkan format teks pada nama dosen (seperti prefix '-' atau koma nyasar)
+                    dosenName = dosenName.replace(/^-\s*/, "");
+                    if(dosenName.endsWith(",")) dosenName = dosenName.slice(0, -1);
+                    
                     if (!schedulesFound.some(s => s.name === matkulName.toUpperCase())) {
                         schedulesFound.push({
                             name: matkulName.toUpperCase(),
@@ -852,6 +853,53 @@
                             time: timeStr,
                             day: daysList.indexOf(dayName) + 1
                         });
+                    }
+                }
+
+                // LOGIKA CADANGAN (Jika Regex Utama Gagal Menangkap Format PDF yang Berbeda)
+                if (schedulesFound.length === 0) {
+                    for (let i = 0; i < fullTextLines.length; i++) {
+                        if (daysList.includes(fullTextLines[i])) {
+                            let dayName = fullTextLines[i];
+                            let timeStr = "08:00";
+                            for (let j = Math.max(0, i - 3); j <= i + 3; j++) {
+                                if (fullTextLines[j] && /\d{2}:\d{2}/.test(fullTextLines[j])) {
+                                    timeStr = fullTextLines[j].match(/\d{2}:\d{2}/)[0];
+                                    break;
+                                }
+                            }
+                            
+                            let matkulName = "", dosenName = "", ruangName = "";
+                            
+                            for (let j = i + 1; j < Math.min(i + 15, fullTextLines.length); j++) {
+                                if (daysList.includes(fullTextLines[j])) break;
+                                
+                                if (/^[A-Z]{2,5}\s*\d{3,5}$/i.test(fullTextLines[j])) {
+                                    matkulName = fullTextLines[j + 1];
+                                    let sksIndex = j + 2;
+                                    while (sksIndex < j + 5 && !/^[1-4](\.00)?$/.test(fullTextLines[sksIndex])) sksIndex++;
+                                    
+                                    if (/^[1-4](\.00)?$/.test(fullTextLines[sksIndex])) {
+                                        dosenName = fullTextLines[sksIndex + 1];
+                                        ruangName = fullTextLines[sksIndex + 2];
+                                        if (ruangName && ruangName.length > 8) {
+                                            dosenName += " " + ruangName;
+                                            ruangName = fullTextLines[sksIndex + 3];
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                            
+                            if (matkulName && dosenName && !schedulesFound.some(s => s.name === matkulName.toUpperCase())) {
+                                schedulesFound.push({
+                                    name: matkulName.toUpperCase(),
+                                    lecturer: dosenName + " | Rg: " + (ruangName || "-"),
+                                    time: timeStr,
+                                    day: daysList.indexOf(dayName) + 1
+                                });
+                            }
+                        }
                     }
                 }
 
