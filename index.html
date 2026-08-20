@@ -296,15 +296,6 @@
         <section id="form-schedule" class="main-view">
             <h2 style="margin-bottom:15px">Mata Kuliah</h2>
             
-            <!-- TOMBOL / AREA UPLOAD PDF KRS OTOMATIS -->
-            <div style="background:#f8fafc; padding:20px; border-radius:15px; border:2px dashed var(--dev); margin-bottom:20px; text-align:center;">
-                <i class="fa-solid fa-file-pdf" style="font-size:2.5rem; color:var(--dev); margin-bottom:10px"></i>
-                <p style="font-size:1rem; font-weight:800; margin-bottom:5px">Upload PDF KRS (Auto-Extract)</p>
-                <p style="font-size:0.75rem; color:#64748b; margin-bottom:12px">Sistem akan otomatis membaca jadwal dari file PDF KRS kamu.</p>
-                <input type="file" id="krs-pdf-file" accept=".pdf" style="display:none" onchange="processKrsPDF(event)">
-                <button class="btn-primary" style="background:var(--dev); padding:12px; font-size:0.85rem" onclick="document.getElementById('krs-pdf-file').click()">PILIH FILE PDF KRS</button>
-            </div>
-
             <div class="form-grid">
                 <input type="hidden" id="edit-sch-id">
                 <input type="text" id="in-sch-name" class="input-modern form-grid-full" placeholder="Nama Matkul">
@@ -313,6 +304,15 @@
                 <select id="in-sch-day" class="input-modern"><option value="1">Senin</option><option value="2">Selasa</option><option value="3">Rabu</option><option value="4">Kamis</option><option value="5">Jumat</option><option value="6">Sabtu</option></select>
             </div>
             <button class="btn-primary" onclick="saveSchedule()">SIMPAN & CLEAR</button>
+
+            <!-- TOMBOL / AREA UPLOAD PDF KRS OTOMATIS (PINDAH KE BAWAH) -->
+            <div style="background:#f8fafc; padding:20px; border-radius:15px; border:2px dashed var(--dev); margin-top:25px; text-align:center;">
+                <i class="fa-solid fa-file-pdf" style="font-size:2.5rem; color:var(--dev); margin-bottom:10px"></i>
+                <p style="font-size:1rem; font-weight:800; margin-bottom:5px">Import Data (PDF KRS)</p>
+                <p style="font-size:0.75rem; color:#64748b; margin-bottom:12px">Sistem akan otomatis mengekstrak jadwal dari file PDF KRS.</p>
+                <input type="file" id="krs-pdf-file" accept=".pdf" style="display:none" onchange="processKrsPDF(event)">
+                <button class="btn-primary" style="background:var(--dev); padding:12px; font-size:0.85rem" onclick="document.getElementById('krs-pdf-file').click()">PILIH FILE PDF KRS</button>
+            </div>
         </section>
 
         <section id="form-struct" class="main-view">
@@ -820,70 +820,48 @@
                     const page = await pdf.getPage(i);
                     const textContent = await page.getTextContent();
                     textContent.items.forEach(item => {
-                        fullTextLines.push(item.str.trim());
+                        if(item.str.trim() !== "") {
+                            fullTextLines.push(item.str.trim());
+                        }
                     });
                 }
 
-                // Filtering & Parsing teks KRS UIN Raden Fatah
+                // Kita gabungkan semua teks menjadi satu baris panjang agar lebih mudah dicari polanya
+                let fullText = fullTextLines.join(" ");
                 let schedulesFound = [];
                 const daysList = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
                 
-                // Cari baris yang mengandung hari kuliah untuk memandu pembacaan
-                for (let i = 0; i < fullTextLines.length; i++) {
-                    let line = fullTextLines[i];
-                    if (daysList.includes(line)) {
-                        let dayName = line;
-                        // Jam biasanya ada 1-2 baris sebelum nama hari
-                        let timeStr = "";
-                        for (let t = i - 2; t < i; t++) {
-                            if (t >= 0 && /\d{2}:\d{2}/.test(fullTextLines[t])) {
-                                timeStr = fullTextLines[t].match(/\d{2}:\d{2}/)[0];
-                                break;
-                            }
-                        }
-                        if(!timeStr) timeStr = "08:00";
+                // REGEX super akurat untuk mencari pola KRS
+                // Pola: Jam -> Hari -> Kode MK -> Matkul -> SKS -> Dosen -> Ruang
+                let regex = /(\d{2}:\d{2})[\s\-0-9:]*(Senin|Selasa|Rabu|Kamis|Jumat|Sabtu)\s+(?:[A-ZΑ-Ωa-z-]+\s*\d{3,4})\s+(.+?)\s+([1-4])\s+(.+?)\s+([A-Za-z0-9]{1,5})(?=\s|$|\b)/g;
+                
+                let match;
+                while ((match = regex.exec(fullText)) !== null) {
+                    let timeStr = match[1];
+                    let dayName = match[2];
+                    let matkulName = match[3].trim();
+                    let dosenName = match[5].trim().replace(/^-\s*/, ""); // Menghapus tanda strip '-' di awal nama dosen jika ada
+                    if(dosenName.endsWith(",")) dosenName = dosenName.slice(0, -1); // Menghapus koma nyasar di akhir
+                    let ruangName = match[6].trim();
 
-                        // Nama mata kuliah biasanya beberapa baris setelah hari
-                        let matkulName = "";
-                        let dosenName = "";
-                        let ruangName = "";
-
-                        for (let m = i + 1; m < i + 8 && m < fullTextLines.length; m++) {
-                            let candidate = fullTextLines[m];
-                            // Deteksi kode MK (misal: KPI 1218) sebagai penanda batas
-                            if (/^[A-Z]{3}\s*\d{4}/.test(candidate)) {
-                                matkulName = fullTextLines[m + 1] || "";
-                                // Dosen & Ruang berada di baris setelahnya
-                                for (let d = m + 3; d < m + 7 && d < fullTextLines.length; d++) {
-                                    if (/^\d{2,3}$/.test(fullTextLines[d])) {
-                                        ruangName = fullTextLines[d];
-                                        dosenName = fullTextLines[d - 1];
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
-                        }
-
-                        if (matkulName && !schedulesFound.some(s => s.name === matkulName)) {
-                            let dayNum = daysList.indexOf(dayName) + 1;
-                            schedulesFound.push({
-                                name: matkulName.toUpperCase(),
-                                lecturer: (dosenName ? dosenName : "Dosen Pengajar") + (ruangName ? ` | Rg: ${ruangName}` : ""),
-                                time: timeStr,
-                                day: dayNum
-                            });
-                        }
+                    // Mencegah duplicate data
+                    if (!schedulesFound.some(s => s.name === matkulName.toUpperCase())) {
+                        schedulesFound.push({
+                            name: matkulName.toUpperCase(),
+                            lecturer: dosenName + " | Rg: " + ruangName,
+                            time: timeStr,
+                            day: daysList.indexOf(dayName) + 1
+                        });
                     }
                 }
 
                 if (schedulesFound.length === 0) {
-                    alert("Format teks PDF tidak dikenali secara otomatis. Pastikan menggunakan file PDF KRS resmi.");
+                    alert("Gagal mengekstrak! Coba periksa file PDF-nya. Pastikan format tabel sesuai dengan KRS kampus.");
                     e.target.value = "";
                     return;
                 }
 
-                if (confirm(`Berhasil mendeteksi ${schedulesFound.length} Mata Kuliah dari PDF. Simpan ke Jadwal Kuliah?`)) {
+                if (confirm(`Berhasil mendeteksi ${schedulesFound.length} Mata Kuliah. Simpan ke Jadwal Kuliah?`)) {
                     schedulesFound.forEach(sch => {
                         dbRef.child('schedules').push(sch);
                     });
