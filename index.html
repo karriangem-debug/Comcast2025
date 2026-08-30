@@ -159,8 +159,10 @@
                 <p style="font-size:0.7rem; font-weight:800; color:var(--dev); margin-bottom:10px">DEV PANEL (KARRIAN)</p>
                 <a href="#" class="menu-link" style="color:var(--dev)" onclick="openForm('announcement')">🔔 Kelola Notifikasi</a>
                 <a href="#" class="menu-link" style="color:var(--dev)" onclick="toggleView('form-bc-wa')">💬 Generator BC WA</a>
+                <a href="#" class="menu-link" style="color:#25D366" onclick="openAutoWA()"><i class="fa-brands fa-whatsapp"></i> Auto Generate WA</a>
             </div>
 
+            <!-- ADMIN PANEL -->
             <div id="admin-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:gray; margin-bottom:10px">ADMIN PANEL</p>
                 <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline & Link</a>
@@ -169,12 +171,15 @@
                 <a href="#" class="menu-link" onclick="openForm('gallery')">📷 Upload Galeri</a>
                 <a href="#" class="menu-link" onclick="openForm('group')">👥 Kelola / Acak Kelompok</a>
                 <a href="#" class="menu-link" style="color:var(--warning)" onclick="toggleView('form-pj-auth')">🔑 Kelola Password PJ</a>
+                <a href="#" class="menu-link" style="color:#25D366" onclick="openAutoWA()"><i class="fa-brands fa-whatsapp"></i> Auto Generate WA</a>
             </div>
 
+            <!-- PJ PANEL -->
             <div id="pj-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:#059669; margin-bottom:10px">PJ PANEL</p>
                 <a href="#" class="menu-link" style="color:#059669" onclick="openForm('group')">👥 Bagi / Acak Kelompok</a>
                 <a href="#" class="menu-link" style="color:#059669" onclick="openForm('deadline')">📝 Tambah Deadline & Link Tugas</a>
+                <a href="#" class="menu-link" style="color:#25D366" onclick="openAutoWA()"><i class="fa-brands fa-whatsapp"></i> Auto Generate WA</a>
             </div>
 
             <div id="auth-container" style="margin-top: 15px;"></div>
@@ -390,6 +395,30 @@
             <label style="font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:5px; display:block">Hasil Teks (Bisa kamu edit kembali di bawah ini sebelum di-copy):</label>
             <textarea id="bc-result" class="input-modern" rows="7" placeholder="Hasil teks akan muncul disini..."></textarea>
             <button class="btn-primary" style="background:#f1f5f9; color:var(--dark); margin-top:10px" onclick="copyBC()"><i class="fa-regular fa-copy"></i> COPY TEKS</button>
+        </section>
+
+        <!-- FITUR BARU: Generate WA Otomatis -->
+        <section id="form-auto-wa" class="main-view">
+            <h2 style="margin-bottom:15px; color:#25D366"><i class="fa-brands fa-whatsapp"></i> Generate WA Otomatis</h2>
+            <div style="background:#f8fafc; padding:15px; border-radius:15px; font-size:0.85rem; margin-bottom:15px; border:1px solid #e2e8f0;">
+                Pilih jenis data yang ingin dibuatkan teks Broadcast WhatsApp-nya. Data diambil otomatis dari sistem.
+            </div>
+            <div class="form-grid">
+                <select id="auto-wa-type" class="input-modern form-grid-full" onchange="handleAutoWAChange()">
+                    <option value="">-- Pilih Data yang Ingin di-Generate --</option>
+                    <option value="jadwal">Jadwal Kuliah</option>
+                    <option value="deadline">Deadline Tugas</option>
+                    <option value="kelompok">Pembagian Kelompok</option>
+                </select>
+                <div id="auto-wa-kelompok-container" class="form-grid-full" style="display:none;">
+                    <select id="auto-wa-matkul" class="input-modern"></select>
+                </div>
+            </div>
+            <button class="btn-primary" style="background:#25D366; margin-bottom:15px; margin-top:10px" onclick="generateAutoWA()"><i class="fa-solid fa-wand-magic-sparkles"></i> BUAT TEKS WA</button>
+            
+            <label style="font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:5px; display:block">Hasil Teks (Bisa diedit sebelum dicopy):</label>
+            <textarea id="auto-wa-result" class="input-modern" rows="10" placeholder="Hasil teks otomatis muncul disini..."></textarea>
+            <button class="btn-primary" style="background:#f1f5f9; color:var(--dark); margin-top:10px" onclick="copyAutoWA()"><i class="fa-regular fa-copy"></i> COPY TEKS</button>
         </section>
 
     </main>
@@ -816,7 +845,6 @@
                 const pdf = await loadingTask.promise;
                 let fullTextLines = [];
 
-                // Membaca setiap halaman dan baris teks di dalam PDF
                 for (let i = 1; i <= pdf.numPages; i++) {
                     const page = await pdf.getPage(i);
                     const textContent = await page.getTextContent();
@@ -830,8 +858,6 @@
                 let schedulesFound = [];
                 const daysList = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
                 
-                // LOGIKA UTAMA (Regex yang Lebih Akurat & Pintar)
-                // Pola yang ditangkap: Jam -> Hari -> KodeMK -> Matkul -> SKS -> DosenLengkap -> Ruang
                 let regex = /(\d{2}:\d{2})[\s\-0-9:]*(Senin|Selasa|Rabu|Kamis|Jumat|Sabtu)\s+[A-Z]{2,5}\s*\d{3,5}\s+((?:(?!\d{2}:\d{2}).)+?)\s+[1-4](?:\.00)?\s+((?:(?!\d{2}:\d{2}).)+?)\s+([A-Za-z0-9]{1,7})\s*(?=(?:\d{1,3}\s+)?\d{2}:\d{2}|$)/g;
                 
                 let match;
@@ -842,7 +868,6 @@
                     let dosenName = match[4].trim(); 
                     let ruangName = match[5].trim();
                     
-                    // Membersihkan format teks pada nama dosen (seperti prefix '-' atau koma nyasar)
                     dosenName = dosenName.replace(/^-\s*/, "");
                     if(dosenName.endsWith(",")) dosenName = dosenName.slice(0, -1);
                     
@@ -856,7 +881,6 @@
                     }
                 }
 
-                // LOGIKA CADANGAN (Jika Regex Utama Gagal Menangkap Format PDF yang Berbeda)
                 if (schedulesFound.length === 0) {
                     for (let i = 0; i < fullTextLines.length; i++) {
                         if (daysList.includes(fullTextLines[i])) {
@@ -923,6 +947,103 @@
                 e.target.value = "";
             }
         }
+
+        // --- FITUR GENERATE WA AUTO ---
+        function openAutoWA() {
+            document.getElementById('auto-wa-type').value = "";
+            document.getElementById('auto-wa-kelompok-container').style.display = 'none';
+            document.getElementById('auto-wa-result').value = "";
+            toggleView('form-auto-wa');
+        }
+
+        function handleAutoWAChange() {
+            const type = document.getElementById('auto-wa-type').value;
+            const container = document.getElementById('auto-wa-kelompok-container');
+            
+            if (type === 'kelompok') {
+                const matkulsWithGroups = [...new Set(localDB.groups.map(g => g.matkul))];
+                if (matkulsWithGroups.length === 0) {
+                    alert("Belum ada data kelompok yang diinput di sistem.");
+                    document.getElementById('auto-wa-type').value = "";
+                    return;
+                }
+                const select = document.getElementById('auto-wa-matkul');
+                select.innerHTML = '<option value="">-- Pilih Mata Kuliah --</option>' + 
+                                   matkulsWithGroups.map(m => `<option value="${m}">${m}</option>`).join('');
+                container.style.display = 'block';
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        function generateAutoWA() {
+            const type = document.getElementById('auto-wa-type').value;
+            let text = "";
+            
+            if (type === 'jadwal') {
+                text = "*JADWAL KULIAH*\n\n";
+                const DAYS = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"];
+                let grouped = {};
+                localDB.schedules.forEach(s => { if (!grouped[s.day]) grouped[s.day] = []; grouped[s.day].push(s); });
+                
+                Object.keys(grouped).sort((a,b) => a - b).forEach(dayIndex => {
+                    text += `*${DAYS[dayIndex]}*\n`;
+                    grouped[dayIndex].sort((a,b) => a.time.localeCompare(b.time)).forEach((s, i) => {
+                        let parts = s.lecturer.split("| Rg:");
+                        let ruang = parts.length > 1 ? parts[1].trim() : "-";
+                        text += `${i+1}. ${s.time} | ${s.name} | ${ruang}\n`;
+                    });
+                    text += "\n";
+                });
+            } 
+            else if (type === 'deadline') {
+                text = "*DEADLINE TUGAS*\n\n";
+                const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+                let grouped = {};
+                localDB.deadlines.forEach(d => { if (!grouped[d.date]) grouped[d.date] = []; grouped[d.date].push(d); });
+                
+                Object.keys(grouped).sort((a,b) => new Date(a) - new Date(b)).forEach(dateStr => {
+                    const dObj = new Date(dateStr);
+                    text += `*${DAYS_NAME[dObj.getDay()]}, ${dateStr}*\n`;
+                    grouped[dateStr].sort((a,b) => (a.time||"23:59").localeCompare(b.time||"23:59")).forEach((d, i) => {
+                        text += `${i+1}. ${d.subject} | ${d.desc || 'Tugas'}\n`;
+                    });
+                    text += "\n";
+                });
+            } 
+            else if (type === 'kelompok') {
+                const matkul = document.getElementById('auto-wa-matkul').value;
+                if (!matkul) return alert("Pilih mata kuliah terlebih dahulu!");
+                
+                text = `*KELOMPOK ${matkul.toUpperCase()}*\n\n`;
+                const groups = localDB.groups.filter(g => g.matkul === matkul);
+                groups.forEach((g) => {
+                    text += `*${g.groupName}* - ${g.title}\n`;
+                    if (g.members) {
+                        g.members.split(',').filter(m => m.trim() !== '').forEach((m, j) => {
+                            text += `${j+1}. ${m.trim()}\n`;
+                        });
+                    } else {
+                        text += "- Belum ada anggota\n";
+                    }
+                    text += "\n";
+                });
+            } else {
+                return alert("Pilih jenis data yang ingin digenerate!");
+            }
+            
+            document.getElementById('auto-wa-result').value = text.trim();
+            showToast("Berhasil Generate Teks!");
+        }
+
+        function copyAutoWA() {
+            const copyText = document.getElementById("auto-wa-result");
+            if(!copyText.value) return alert("Buat teksnya terlebih dahulu!");
+            copyText.select(); copyText.setSelectionRange(0, 99999);
+            navigator.clipboard.writeText(copyText.value);
+            showToast("Teks Tercopy!");
+        }
+        // --- END FITUR GENERATE WA AUTO ---
     </script>
 </body>
 </html>
