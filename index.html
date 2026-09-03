@@ -190,6 +190,11 @@
                 <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('schedules', 'Semua Jadwal')">Hapus Semua Jadwal</a>
                 <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('structs', 'Semua Struktur Mhs')">Hapus Semua Struktur</a>
             </div>
+
+            <!-- TOMBOL DOWNLOAD APK GLOBAL (TANPA EMOJI / PROFESIONAL) -->
+            <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
+                <a href="#" class="menu-link" style="color:var(--p); background:#eff6ff; border: 1px dashed var(--p); text-align:center; padding: 12px; border-radius: 12px;" onclick="toggleView('download-apk-view')">Unduh Aplikasi</a>
+            </div>
         </div>
     </aside>
 
@@ -419,6 +424,21 @@
             <label style="font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:5px; display:block">Hasil Teks (Bisa diedit sebelum dicopy):</label>
             <textarea id="auto-wa-result" class="input-modern" rows="10" placeholder="Hasil teks otomatis muncul disini..."></textarea>
             <button class="btn-primary" style="background:#f1f5f9; color:var(--dark); margin-top:10px" onclick="copyAutoWA()"><i class="fa-regular fa-copy"></i> COPY TEKS</button>
+        </section>
+
+        <!-- FITUR BARU: Form Download APK (Global dengan Link Drive Asli) -->
+        <section id="download-apk-view" class="main-view">
+            <h2 style="margin-bottom:15px; color:var(--p)">Unduh Aplikasi Android</h2>
+            <div style="background:white; padding:30px 20px; border-radius:20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.05); border:1px solid #e2e8f0;">
+                <i class="fa-brands fa-android" style="font-size:4rem; color:#3DDC84; margin-bottom:15px"></i>
+                <h3 style="margin-bottom:10px; font-weight:800; font-size:1.3rem">Comcast 2025</h3>
+                <p style="font-size:0.85rem; color:#64748b; margin-bottom:20px; line-height:1.6">Pasang aplikasi ini di HP Android kamu agar lebih mudah diakses. Data jadwal, tugas, dan pengumuman akan selalu otomatis tersinkronisasi (Real-time).</p>
+                
+                <!-- Link Google Drive APK Asli yang sudah dipasang -->
+                <a href="https://drive.google.com/file/d/15z-iB2RBRMDmAlhLZBLrE4seJdqFUp5X/view?usp=drive_link" target="_blank" class="btn-primary" style="display:inline-block; text-decoration:none; background:#3DDC84; color:white; font-size:0.9rem; padding:15px; box-shadow:0 4px 15px rgba(61, 220, 132, 0.4);"><i class="fa-solid fa-download"></i> DOWNLOAD SEKARANG</a>
+                
+                <p style="font-size:0.7rem; color:#94a3b8; margin-top:15px"><i>*Jika muncul peringatan Google Play Protect saat install, pilih <b>"Tetap Install" (Install Anyway)</b> karena aplikasi ini buatan developer kelas kita sendiri.</i></p>
+            </div>
         </section>
 
     </main>
