@@ -291,14 +291,19 @@
 
             <!-- Mode Acak -->
             <div id="grp-mode-acak" style="display:none">
-                <div class="form-grid">
-                    <select id="in-grp-auto-matkul" class="input-modern form-grid-full"></select>
-                    <input type="number" id="in-grp-auto-num" class="input-modern form-grid-full" placeholder="Jumlah Kelompok (Cth: 5)" min="1">
+                <div id="grp-acak-setup">
+                    <div class="form-grid">
+                        <select id="in-grp-auto-matkul" class="input-modern form-grid-full"></select>
+                        <input type="number" id="in-grp-auto-num" class="input-modern form-grid-full" placeholder="Jumlah Kelompok (Cth: 5)" min="1">
+                    </div>
+                    <div style="background:#eff6ff; color:#1e40af; padding:15px; border-radius:15px; font-size:0.8rem; margin-bottom:15px; border:1px solid #bfdbfe;">
+                        <b>Info:</b> Sistem dilengkapi Algoritma Anti-Bosan. Kemungkinan mahasiswa mendapat teman kelompok yang sama seperti di matkul lain sangat kecil.
+                    </div>
+                    <button class="btn-primary" style="background:#10b981" onclick="autoAcakKelompok()"><i class="fa-solid fa-shuffle"></i> ACAK & LIHAT PREVIEW</button>
                 </div>
-                <div style="background:#fffbeb; color:#b45309; padding:15px; border-radius:15px; font-size:0.8rem; margin-bottom:15px; border:1px solid #fde68a;">
-                    <b>Info:</b> Sistem akan membagi rata seluruh mahasiswa ke dalam jumlah kelompok yang ditentukan secara acak. Kamu bisa mengedit judul materi setelahnya.
-                </div>
-                <button class="btn-primary" style="background:#10b981" onclick="autoAcakKelompok()"><i class="fa-solid fa-shuffle"></i> ACAK SEKARANG</button>
+                
+                <!-- Container untuk Preview -->
+                <div id="grp-acak-preview" style="display:none; margin-top: 10px;"></div>
             </div>
         </section>
 
@@ -452,6 +457,7 @@
         let userRole = localStorage.getItem('userRole') || 'guest';
         let userMatkul = localStorage.getItem('userMatkul') || '';
         let groupMembersTemp = [];
+        let tempRandomGroups = []; // Tambahan variabel untuk menyimpan hasil preview acak
         let isAdminOrDev = userRole === 'admin' || userRole === 'dev';
 
         dbRef.on('value', snap => {
@@ -686,6 +692,7 @@
             } else if(t==='group') {
                 document.getElementById('edit-grp-id').value = ""; document.getElementById('in-grp-name').value = ""; document.getElementById('in-grp-title').value = ""; groupMembersTemp = []; renderSelectedMembers(); switchGroupMode('manual');
                 if(userRole==='pj') { document.getElementById('in-grp-matkul').value = userMatkul; document.getElementById('in-grp-auto-matkul').value = userMatkul; }
+                if (typeof cancelAcakKelompok === 'function') cancelAcakKelompok(); // Mencegah form acak ngestuck jika dibuka tutup
                 toggleView('form-group');
             } else if(t==='gallery') {
                 document.getElementById('edit-gal-id').value = ""; document.getElementById('in-gal-link').value = ""; document.getElementById('in-gal-caption').value = "";
@@ -729,6 +736,7 @@
             document.getElementById('btn-mode-acak').style.color = mode === 'acak' ? 'white' : 'var(--dark)';
         }
 
+        // --- MULAI FITUR ANTI BOSAN (MONTE CARLO) & PREVIEW KELOMPOK ---
         function autoAcakKelompok() {
             let mtk = document.getElementById('in-grp-auto-matkul').value;
             let numGroups = parseInt(document.getElementById('in-grp-auto-num').value);
@@ -737,19 +745,106 @@
             let students = localDB.structs.map(s => s.name);
             if(students.length === 0) return alert("Belum ada data mahasiswa di struktur kelas!");
 
-            for(let i = students.length - 1; i > 0; i--){
-                const j = Math.floor(Math.random() * (i + 1));
-                [students[i], students[j]] = [students[j], students[i]];
+            // 1. Kumpulkan riwayat pasangan kelompok di matkul lain
+            let pastPairs = {}; 
+            localDB.groups.forEach(g => {
+                if(g.matkul !== mtk && g.members) { 
+                    let members = g.members.split(',').map(m => m.trim()).filter(m => m !== '');
+                    for(let i = 0; i < members.length; i++){
+                        for(let j = i + 1; j < members.length; j++){
+                            let pair = [members[i], members[j]].sort().join('|');
+                            pastPairs[pair] = (pastPairs[pair] || 0) + 1;
+                        }
+                    }
+                }
+            });
+
+            // 2. Acak banyak iterasi cari pinalti terendah
+            let bestConfig = null;
+            let lowestPenalty = Infinity;
+
+            for(let attempt = 0; attempt < 150; attempt++) {
+                let shuffled = [...students];
+                for(let i = shuffled.length - 1; i > 0; i--){
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+                }
+
+                let currentGroups = Array.from({length: numGroups}, () => []);
+                shuffled.forEach((val, i) => currentGroups[i % numGroups].push(val));
+
+                // Hitung skor kesamaan
+                let penalty = 0;
+                currentGroups.forEach(grp => {
+                    for(let i = 0; i < grp.length; i++){
+                        for(let j = i + 1; j < grp.length; j++){
+                            let pair = [grp[i], grp[j]].sort().join('|');
+                            if(pastPairs[pair]) penalty += pastPairs[pair];
+                        }
+                    }
+                });
+
+                if(penalty < lowestPenalty) {
+                    lowestPenalty = penalty;
+                    bestConfig = currentGroups;
+                }
+                if(penalty === 0) break; // Optimal dicapai
             }
 
-            let groupsArr = Array.from({length: numGroups}, () => []);
-            students.forEach((val, i) => groupsArr[i % numGroups].push(val));
-            
-            groupsArr.forEach((grp, i) => {
-                dbRef.child('groups').push({ matkul: mtk, groupName: `Kelompok ${i+1}`, title: "Judul Materi (Edit Disini)", members: grp.join(', ') });
-            });
-            showToast(`${numGroups} Kelompok Berhasil Diacak!`); toggleView('group-list-view');
+            // 3. Simpan sementara
+            tempRandomGroups = bestConfig.map((grp, i) => ({
+                matkul: mtk,
+                groupName: `Kelompok ${i+1}`,
+                title: "",
+                members: grp.join(', ')
+            }));
+
+            renderAcakPreview();
         }
+
+        function renderAcakPreview() {
+            document.getElementById('grp-acak-setup').style.display = 'none';
+            let previewDiv = document.getElementById('grp-acak-preview');
+            previewDiv.style.display = 'block';
+
+            let html = `<h3 style="margin-bottom:15px; color:var(--p)"><i class="fa-solid fa-eye"></i> Preview Kelompok</h3>
+                        <p style="font-size:0.8rem; color:#64748b; margin-bottom:15px">Silakan cek dan isi judul presentasi (opsional) sebelum menyimpan.</p>`;
+            
+            tempRandomGroups.forEach((g, i) => {
+                let membersList = g.members.split(',').map((m, idx) => `${idx+1}. ${m}`).join('<br>');
+                html += `
+                <div class="card-item" style="border-left: 4px solid var(--p); margin-bottom:10px; padding:15px;">
+                    <div style="font-weight:800; color:var(--dark); font-size:1rem; margin-bottom:8px">${g.groupName}</div>
+                    <input type="text" id="preview-title-${i}" class="input-modern" placeholder="Judul Materi / Presentasi..." style="padding:10px; font-size:0.85rem; margin-bottom:10px">
+                    <div style="font-size:0.8rem; color:#475569; background:#f8fafc; padding:10px; border-radius:10px; line-height:1.6">
+                        <b>Anggota:</b><br>${membersList}
+                    </div>
+                </div>`;
+            });
+
+            html += `<button class="btn-primary" style="background:#10b981; margin-bottom:10px; margin-top:10px;" onclick="saveAcakKelompok()"><i class="fa-solid fa-check"></i> SIMPAN SEMUA KELOMPOK</button>`;
+            html += `<button class="btn-primary" style="background:#fff1f2; color:red;" onclick="cancelAcakKelompok()"><i class="fa-solid fa-rotate-left"></i> BATAL / ACAK ULANG</button>`;
+            
+            previewDiv.innerHTML = html;
+        }
+
+        function saveAcakKelompok() {
+            tempRandomGroups.forEach((g, i) => {
+                let titleInput = document.getElementById(`preview-title-${i}`).value;
+                g.title = titleInput || "Judul Materi (Edit Disini)";
+                dbRef.child('groups').push(g);
+            });
+            showToast(`${tempRandomGroups.length} Kelompok Berhasil Disimpan!`);
+            cancelAcakKelompok();
+            toggleView('group-list-view');
+        }
+
+        function cancelAcakKelompok() {
+            tempRandomGroups = [];
+            document.getElementById('grp-acak-preview').style.display = 'none';
+            document.getElementById('grp-acak-setup').style.display = 'block';
+        }
+        // --- AKHIR FITUR ANTI BOSAN & PREVIEW KELOMPOK ---
 
         function searchMhsForGroup() { 
             const val = document.getElementById('search-mhs').value.toLowerCase(); const resBox = document.getElementById('mhs-search-results'); 
