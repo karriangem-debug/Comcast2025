@@ -524,6 +524,7 @@
 
         function zoomImage(url) { document.getElementById('zoom-img-target').src = formatDriveLink(url); document.getElementById('modal-zoom').style.display = 'flex'; }
 
+        // FUNGSI RENDER YANG SUDAH DIPERBAIKI (SORTING MATEMATIKA)
         function render() {
             const isPJ = userRole === 'pj', nowMs = new Date().getTime();
             const startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime();
@@ -532,19 +533,35 @@
 
             const isDeadlineDone = (t) => { if(!t.date) return false; return nowMs > new Date(`${t.date}T${t.time || '23:59'}:00`).getTime() + (30 * 60 * 1000); };
 
+            // Fungsi pengubah jam ke hitungan menit untuk akurasi sorting
+            const timeToMins = (t) => {
+                if(!t) return 0;
+                let p = t.split(':');
+                return (parseInt(p[0]) || 0) * 60 + (parseInt(p[1]) || 0);
+            };
+
             const renderGroupedDL = (items, type = 'active') => {
                 if(items.length === 0) return '<p style="text-align:center; opacity:0.3; padding:40px">Kosong</p>';
-                items.sort((a,b) => new Date(`${a.date}T${a.time||'23:59'}:00`) - new Date(`${b.date}T${b.time||'23:59'}:00`));
+                
+                // Sorting Global Deadline (Tanggal lalu Jam pakai hitungan menit)
+                items.sort((a,b) => {
+                    let diffDate = new Date(a.date).getTime() - new Date(b.date).getTime();
+                    if(diffDate !== 0) return diffDate;
+                    return timeToMins(a.time || "23:59") - timeToMins(b.time || "23:59");
+                });
                 
                 const grouped = {};
                 items.forEach(t => { if(t.date) { if(!grouped[t.date]) grouped[t.date] = []; grouped[t.date].push(t); } });
 
                 let htmlContent = "";
-                Object.keys(grouped).forEach(dateStr => {
+                let sortedDates = Object.keys(grouped).sort((a,b) => new Date(a) - new Date(b));
+                
+                sortedDates.forEach(dateStr => {
                     const dObj = new Date(dateStr);
                     htmlContent += `<div class="day-divider"><i class="fa-regular fa-calendar-check"></i> ${DAYS_NAME[dObj.getDay()]}, ${dObj.getDate()} ${MONTHS_NAME[dObj.getMonth()]} ${dObj.getFullYear()}</div>`;
                     
-                    grouped[dateStr].forEach(t => {
+                    // Sorting per jam untuk deadline di hari yang sama
+                    grouped[dateStr].sort((a,b) => timeToMins(a.time||"23:59") - timeToMins(b.time||"23:59")).forEach(t => {
                         let badgeHTML = type === 'done' 
                             ? `<div class="cd-badge cd-done">SELESAI</div>` 
                             : `<div class="cd-badge" id="cd-${t.fid}" data-date="${t.date}" data-time="${t.time || '23:59'}">⏳ Menghitung...</div>`;
@@ -581,11 +598,19 @@
             document.getElementById('tab-next').innerHTML = renderGroupedDL(ongoingItems.filter(t => new Date(t.date).getTime() >= nextWeekLimit), 'active');
             document.getElementById('tab-done').innerHTML = renderGroupedDL(doneItems, 'done');
 
-            // JADWAL
+            // --- JADWAL SORTING (URUT HARI -> URUT JAM) ---
             const DAYS_SCH = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             let schHtml = "", currentSchDay = -1;
-            localDB.schedules.sort((a, b) => a.day - b.day).forEach(s => {
-                if (s.day !== currentSchDay) { schHtml += `<div class="day-divider"><i class="fa-regular fa-calendar"></i> HARI ${DAYS_SCH[s.day]}</div>`; currentSchDay = s.day; }
+            
+            localDB.schedules.sort((a, b) => {
+                if (a.day !== b.day) return a.day - b.day;
+                // Menggunakan hitungan menit agar 8:00 lebih dulu dari 10:00
+                return timeToMins(a.time) - timeToMins(b.time);
+            }).forEach(s => {
+                if (s.day !== currentSchDay) { 
+                    schHtml += `<div class="day-divider"><i class="fa-regular fa-calendar"></i> HARI ${DAYS_SCH[s.day]}</div>`; 
+                    currentSchDay = s.day; 
+                }
                 schHtml += `<div class="card-item"><span class="card-subject">${s.name}</span><p style="font-size:0.75rem; font-weight:700; color:#64748b; margin-top:5px"><span style="color:#2563eb; font-size:1.1rem">👤</span> ${s.lecturer} | ⏰ ${s.time}</p>${isAdminOrDev ? `<div style="margin-top:10px"><button class="btn-mini" style="background:#f1f5f9" onclick="editSchedule('${s.fid}')">EDIT</button><button onclick="deleteData('schedules', '${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
             });
             document.getElementById('schedule-view').innerHTML = schHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada jadwal</p>';
