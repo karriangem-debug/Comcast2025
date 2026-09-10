@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | ULTIMATE SYSTEM V7.5.5</title>
+    <title>COMCAST 2025 | ULTIMATE SYSTEM V7.5.6</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -97,7 +97,16 @@
         .gal-caption { background:white; padding:12px; font-size:0.8rem; font-weight:600; color:#475569; border-bottom-left-radius:15px; border-bottom-right-radius:15px; border:1px solid #f1f5f9; border-top:none; box-shadow:0 4px 6px rgba(0,0,0,0.02); }
         .wa-bc-item { background:#f8fafc; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #e2e8f0; position:relative; }
 
-        @media (min-width: 768px) { .app-container { max-width: 800px; padding: 40px; padding-bottom: 120px; } .form-grid { grid-template-columns: 1fr 1fr; gap: 15px; } .mhs-card { width: 180px; } }
+        /* Tweak UI Add Member Kelompok Mobile */
+        .add-member-wrap { display: flex; flex-direction: column; gap: 8px; }
+        @media (min-width: 768px) { 
+            .app-container { max-width: 800px; padding: 40px; padding-bottom: 120px; } 
+            .form-grid { grid-template-columns: 1fr 1fr; gap: 15px; } 
+            .mhs-card { width: 180px; } 
+            .add-member-wrap { flex-direction: row; }
+            .add-member-wrap select { flex: 1; margin-bottom: 0 !important; }
+            .add-member-wrap button { width: auto !important; }
+        }
     </style>
 </head>
 <body>
@@ -749,8 +758,28 @@
 
         function addMoreManualGroupRow(preName = "", preTitle = "", preMembers = []) {
             const container = document.getElementById('manual-groups-container');
-            const rowId = 'mg-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
             
+            // Logic Auto-Increment Nama Kelompok
+            if (!preName) {
+                const rows = container.querySelectorAll('.manual-g-name');
+                if (rows.length > 0) {
+                    let lastName = rows[rows.length - 1].value.trim();
+                    if (lastName) {
+                        let match = lastName.match(/^(.*?)(\d+)$/);
+                        if (match) {
+                            preName = match[1] + (parseInt(match[2]) + 1);
+                        } else {
+                            preName = lastName + " 2";
+                        }
+                    } else {
+                        preName = "Kelompok " + (rows.length + 1);
+                    }
+                } else {
+                    preName = "Kelompok 1";
+                }
+            }
+
+            const rowId = 'mg-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
             const wrap = document.createElement('div');
             wrap.className = "card-item";
             wrap.style.cssText = "background:white; border:1px solid #e2e8f0; padding:15px; margin-bottom:12px; position:relative;";
@@ -768,11 +797,12 @@
                 <div style="background:#f8fafc; padding:12px; border-radius:12px; border:1px solid #e2e8f0;">
                     <label style="font-size:0.7rem; font-weight:800; color:#64748b; display:block; margin-bottom:5px;">PILIH ANGGOTA KELOMPOK:</label>
                     <div class="manual-selected-chips" style="margin-bottom:8px; display:flex; flex-wrap:wrap; gap:4px;"></div>
-                    <div style="display:flex; gap:5px;">
-                        <select class="input-modern manual-mhs-dropdown" style="padding:10px; font-size:0.8rem;">
+                    
+                    <div class="add-member-wrap">
+                        <select class="input-modern manual-mhs-dropdown" style="padding:10px; font-size:0.8rem; margin:0;">
                             <option value="">-- Memuat Data --</option>
                         </select>
-                        <button type="button" class="btn-primary" style="padding:10px 15px; font-size:0.8rem; width:auto;" onclick="addMhsToManualRow('${rowId}')">Tambah</button>
+                        <button type="button" class="btn-primary" style="padding:10px 15px; font-size:0.8rem; margin:0;" onclick="addMhsToManualRow('${rowId}')">Tambah</button>
                     </div>
                 </div>
             `;
