@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | ULTIMATE SYSTEM V7.5</title>
+    <title>COMCAST 2025 | ULTIMATE SYSTEM V7.5.5</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -88,7 +88,6 @@
         .btn-close { position:absolute; right:15px; top:15px; background:#f1f5f9; color:var(--dark); border:none; border-radius:50%; width:35px; height:35px; font-weight:bold; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.2rem; transition:0.3s; }
         .btn-close:hover { background: #e2e8f0; }
 
-        /* DESAIN NOTIFIKASI BARU LEBIH MENARIK */
         .modal-box-notif { background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%); width: 100%; max-width: 440px; border-radius: 24px; padding: 35px 25px 25px 25px; position: relative; text-align: center; border: 2px solid var(--dev); box-shadow: 0 25px 50px -12px rgba(139,92,246,0.25); animation: popScale 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @keyframes popScale { from { transform: scale(0.85); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
@@ -110,7 +109,6 @@
     </nav>
     <div id="toast">Berhasil Disimpan!</div>
 
-    <!-- Modal Notifikasi Global Premium Design -->
     <div id="modal-announcement" class="modal-wrap" onclick="closeAnnouncement(event)">
         <div class="modal-box-notif" onclick="event.stopPropagation()">
             <div class="notif-bell-badge"><i class="fa-solid fa-bell"></i></div>
@@ -120,7 +118,6 @@
         </div>
     </div>
 
-    <!-- Modal Detail Tugas -->
     <div id="modal-deadline" class="modal-wrap" onclick="closeModals(event)">
         <div class="modal-box" onclick="event.stopPropagation()">
             <button class="btn-close" onclick="document.getElementById('modal-deadline').style.display='none'">×</button>
@@ -131,7 +128,6 @@
         </div>
     </div>
 
-    <!-- Modal Zoom Galeri Minimalis -->
     <div id="modal-zoom" class="modal-wrap" onclick="closeModals(event)">
         <div style="position:relative; max-width:90vw; max-height:90vh;" onclick="event.stopPropagation()">
             <button class="btn-close" style="right:10px; top:10px; background:rgba(255,255,255,0.9); box-shadow:0 4px 12px rgba(0,0,0,0.1);" onclick="document.getElementById('modal-zoom').style.display='none'">×</button>
@@ -154,7 +150,6 @@
             <a href="#" class="menu-link" onclick="toggleView('gallery-view')">🖼️ Galeri Foto</a>
             <a href="#" class="menu-link" onclick="toggleView('structure-view')">👥 Struktur Kelas</a>
 
-            <!-- DEV PANEL KHUSUS KARRIAN -->
             <div id="dev-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:var(--dev); margin-bottom:10px">DEV PANEL (KARRIAN)</p>
                 <a href="#" class="menu-link" style="color:var(--dev)" onclick="openForm('announcement')">🔔 Kelola Notifikasi</a>
@@ -162,7 +157,6 @@
                 <a href="#" class="menu-link" style="color:#25D366" onclick="openAutoWA()"><i class="fa-brands fa-whatsapp"></i> Auto Generate WA</a>
             </div>
 
-            <!-- ADMIN PANEL -->
             <div id="admin-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:gray; margin-bottom:10px">ADMIN PANEL</p>
                 <a href="#" class="menu-link" style="color:var(--p)" onclick="openForm('deadline')">➕ Tambah Deadline & Link</a>
@@ -174,7 +168,6 @@
                 <a href="#" class="menu-link" style="color:#25D366" onclick="openAutoWA()"><i class="fa-brands fa-whatsapp"></i> Auto Generate WA</a>
             </div>
 
-            <!-- PJ PANEL -->
             <div id="pj-group" style="display:none; margin-top:20px; border-top:1px solid #f1f5f9; padding-top:15px">
                 <p style="font-size:0.7rem; font-weight:800; color:#059669; margin-bottom:10px">PJ PANEL</p>
                 <a href="#" class="menu-link" style="color:#059669" onclick="openForm('group')">👥 Bagi / Acak Kelompok</a>
@@ -191,7 +184,6 @@
                 <a href="#" class="menu-link" style="background:#fff1f2; color:red; font-size:0.75rem" onclick="resetCollection('structs', 'Semua Struktur Mhs')">Hapus Semua Struktur</a>
             </div>
 
-            <!-- TOMBOL DOWNLOAD APK GLOBAL (TANPA EMOJI / PROFESIONAL) -->
             <div style="margin-top: 30px; border-top: 1px solid #e2e8f0; padding-top: 15px;">
                 <a href="#" class="menu-link" style="color:var(--p); background:#eff6ff; border: 1px dashed var(--p); text-align:center; padding: 12px; border-radius: 12px;" onclick="toggleView('download-apk-view')">Unduh Aplikasi</a>
             </div>
@@ -238,7 +230,6 @@
             <button class="btn-primary" onclick="login()">MASUK</button>
         </section>
 
-        <!-- Form Tambah Deadline & Link Kumpul Tugas -->
         <section id="form-deadline" class="main-view">
             <h2 style="margin-bottom:15px">Input Tugas & Deadline</h2>
             <div class="form-grid">
@@ -263,7 +254,7 @@
             <button class="btn-primary" onclick="saveDeadline()">SIMPAN & CLEAR</button>
         </section>
 
-        <!-- Form Bagi Kelompok (Bisa Manual & Acak) -->
+        <!-- Form Bagi Kelompok (Multi Manual & Acak Otomatis) -->
         <section id="form-group" class="main-view">
             <h2 style="margin-bottom:15px">Pembagian Kelompok</h2>
             
@@ -272,24 +263,21 @@
                 <button id="btn-mode-acak" class="btn-primary" style="padding:10px; font-size:0.8rem; background:#f1f5f9; color:var(--dark)" onclick="switchGroupMode('acak')">Acak Otomatis</button>
             </div>
 
-            <!-- Mode Manual -->
             <div id="grp-mode-manual">
                 <div class="form-grid">
                     <input type="hidden" id="edit-grp-id">
-                    <select id="in-grp-matkul" class="input-modern form-grid-full"></select>
-                    <input type="text" id="in-grp-name" class="input-modern" placeholder="Cth: Kelompok 1">
-                    <input type="text" id="in-grp-title" class="input-modern" placeholder="Judul Materi / Topik">
+                    <select id="in-grp-matkul" class="input-modern form-grid-full" onchange="refreshAllManualGroupSelects()"></select>
                 </div>
-                <div style="background:#f8fafc; padding:15px; border-radius:15px; border:1px solid #e2e8f0; margin-bottom:15px; position:relative;">
-                    <label style="font-size:0.75rem; font-weight:800;">ANGGOTA KELOMPOK:</label>
-                    <div id="selected-members" style="margin-bottom:10px"></div>
-                    <input type="text" id="search-mhs" class="input-modern" placeholder="🔍 Cari nama mahasiswa..." onfocus="searchMhsForGroup()" oninput="searchMhsForGroup()" autocomplete="off">
-                    <div id="mhs-search-results" class="search-results" style="display:none; width:calc(100% - 30px); margin-left:15px;"></div>
+                
+                <div style="background:#f8fafc; padding:15px; border-radius:15px; border:1px solid #e2e8f0; margin-bottom:15px;">
+                    <label style="font-size:0.75rem; font-weight:800; color:var(--p); display:block; margin-bottom:10px;">DAFTAR KELOMPOK YANG AKAN DIBUAT:</label>
+                    <div id="manual-groups-container"></div>
+                    <button type="button" onclick="addMoreManualGroupRow()" class="btn-mini" style="background:white; border:1px dashed var(--p); color:var(--p); width:100%; padding:10px; margin-top:5px;">+ Tambah Baris Kelompok Lain</button>
                 </div>
-                <button class="btn-primary" onclick="saveGroup()">SIMPAN KELOMPOK</button>
+
+                <button class="btn-primary" onclick="saveManualGroups()">SIMPAN SEMUA KELOMPOK</button>
             </div>
 
-            <!-- Mode Acak -->
             <div id="grp-mode-acak" style="display:none">
                 <div id="grp-acak-setup">
                     <div class="form-grid">
@@ -302,12 +290,10 @@
                     <button class="btn-primary" style="background:#10b981" onclick="autoAcakKelompok()"><i class="fa-solid fa-shuffle"></i> ACAK & LIHAT PREVIEW</button>
                 </div>
                 
-                <!-- Container untuk Preview -->
                 <div id="grp-acak-preview" style="display:none; margin-top: 10px;"></div>
             </div>
         </section>
 
-        <!-- Form Matkul, Struct -->
         <section id="form-schedule" class="main-view">
             <h2 style="margin-bottom:15px">Mata Kuliah</h2>
             
@@ -320,7 +306,6 @@
             </div>
             <button class="btn-primary" onclick="saveSchedule()">SIMPAN & CLEAR</button>
 
-            <!-- TOMBOL / AREA UPLOAD PDF KRS OTOMATIS (DI BAWAH) -->
             <div style="background:#f8fafc; padding:20px; border-radius:15px; border:2px dashed var(--dev); margin-top:25px; text-align:center;">
                 <i class="fa-solid fa-file-pdf" style="font-size:2.5rem; color:var(--dev); margin-bottom:10px"></i>
                 <p style="font-size:1rem; font-weight:800; margin-bottom:5px">Import Data (PDF KRS)</p>
@@ -350,7 +335,6 @@
             </div>
         </section>
 
-        <!-- Form Gallery -->
         <section id="form-gallery" class="main-view">
             <h2 style="margin-bottom:15px">Upload & Edit Galeri</h2>
             <div class="form-grid">
@@ -361,7 +345,6 @@
             <button class="btn-primary" onclick="saveGallery()">SIMPAN FOTO</button>
         </section>
 
-        <!-- Form PJ Auth -->
         <section id="form-pj-auth" class="main-view">
             <h2 style="margin-bottom:15px">🔑 Kelola Password PJ</h2>
             <div class="form-grid">
@@ -373,7 +356,6 @@
             <div id="pj-list-content" style="margin-top:20px; border-top:1px solid #e2e8f0; padding-top:15px"></div>
         </section>
 
-        <!-- DEV PANEL: Notifikasi -->
         <section id="form-announcement" class="main-view">
             <h2 style="margin-bottom:15px; color:var(--dev)">🔔 Notifikasi Web (Global)</h2>
             <div style="background:#f8fafc; padding:15px; border-radius:15px; font-size:0.85rem; margin-bottom:15px; border:1px solid #e2e8f0;">
@@ -386,7 +368,6 @@
             </div>
         </section>
 
-        <!-- DEV PANEL: BC WA (BISA DIEDIT LANGSUNG) -->
         <section id="form-bc-wa" class="main-view">
             <h2 style="margin-bottom:15px; color:var(--dev)">💬 Generator BC WA</h2>
             <input type="text" id="bc-title" class="input-modern" placeholder="Judul Broadcast (Cth: Info Kelas Terkini)" style="margin-bottom:15px">
@@ -407,7 +388,6 @@
             <button class="btn-primary" style="background:#f1f5f9; color:var(--dark); margin-top:10px" onclick="copyBC()"><i class="fa-regular fa-copy"></i> COPY TEKS</button>
         </section>
 
-        <!-- FITUR BARU: Generate WA Otomatis -->
         <section id="form-auto-wa" class="main-view">
             <h2 style="margin-bottom:15px; color:#25D366"><i class="fa-brands fa-whatsapp"></i> Generate WA Otomatis</h2>
             <div style="background:#f8fafc; padding:15px; border-radius:15px; font-size:0.85rem; margin-bottom:15px; border:1px solid #e2e8f0;">
@@ -417,7 +397,7 @@
                 <select id="auto-wa-type" class="input-modern form-grid-full" onchange="handleAutoWAChange()">
                     <option value="">-- Pilih Data yang Ingin di-Generate --</option>
                     <option value="jadwal">Jadwal Kuliah</option>
-                    <option value="deadline">Deadline Tugas</option>
+                    <option value="deadline">Deadline Tugas & Presentasi</option>
                     <option value="kelompok">Pembagian Kelompok</option>
                 </select>
                 <div id="auto-wa-kelompok-container" class="form-grid-full" style="display:none;">
@@ -431,7 +411,6 @@
             <button class="btn-primary" style="background:#f1f5f9; color:var(--dark); margin-top:10px" onclick="copyAutoWA()"><i class="fa-regular fa-copy"></i> COPY TEKS</button>
         </section>
 
-        <!-- FITUR BARU: Form Download APK (Langsung Download via GitHub) -->
         <section id="download-apk-view" class="main-view">
             <h2 style="margin-bottom:15px; color:var(--p)">Unduh Aplikasi Android</h2>
             <div style="background:white; padding:30px 20px; border-radius:20px; text-align:center; box-shadow:0 10px 25px rgba(0,0,0,0.05); border:1px solid #e2e8f0;">
@@ -439,7 +418,6 @@
                 <h3 style="margin-bottom:10px; font-weight:800; font-size:1.3rem">Comcast 2025</h3>
                 <p style="font-size:0.85rem; color:#64748b; margin-bottom:20px; line-height:1.6">Pasang aplikasi ini di HP Android kamu agar lebih mudah diakses. Data jadwal, tugas, dan pengumuman akan selalu otomatis tersinkronisasi (Real-time).</p>
                 
-                <!-- Link Direct Download GitHub Murni -->
                 <a href="https://github.com/karriangem-debug/Comcast2025/raw/refs/heads/main/KPI2551B.apk" class="btn-primary" style="display:inline-block; text-decoration:none; background:#3DDC84; color:white; font-size:0.9rem; padding:15px; box-shadow:0 4px 15px rgba(61, 220, 132, 0.4);"><i class="fa-solid fa-download"></i> DOWNLOAD SEKARANG</a>
                 
                 <p style="font-size:0.7rem; color:#94a3b8; margin-top:15px"><i>*Jika muncul peringatan Google Play Protect saat install, pilih <b>"Tetap Install" (Install Anyway)</b> karena aplikasi ini buatan developer kelas kita sendiri.</i></p>
@@ -456,8 +434,7 @@
         let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], pjs: {}, groups: [], announcement: null };
         let userRole = localStorage.getItem('userRole') || 'guest';
         let userMatkul = localStorage.getItem('userMatkul') || '';
-        let groupMembersTemp = [];
-        let tempRandomGroups = []; // Tambahan variabel untuk menyimpan hasil preview acak
+        let tempRandomGroups = []; 
         let isAdminOrDev = userRole === 'admin' || userRole === 'dev';
 
         dbRef.on('value', snap => {
@@ -497,8 +474,7 @@
         }
 
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('#search-mhs') && !e.target.closest('#mhs-search-results')) { const r = document.getElementById('mhs-search-results'); if (r) r.style.display = 'none'; }
-            if (!e.target.closest('#filter-group-matkul()') && !e.target.closest('#filter-matkul-results')) { const r = document.getElementById('filter-matkul-results'); if (r) r.style.display = 'none'; }
+            if (!e.target.closest('#filter-group-matkul') && !e.target.closest('#filter-matkul-results')) { const r = document.getElementById('filter-matkul-results'); if (r) r.style.display = 'none'; }
             if (!e.target.closest('#in-dead-matkul') && !e.target.closest('#dead-matkul-results')) { const r = document.getElementById('dead-matkul-results'); if (r) r.style.display = 'none'; }
         });
 
@@ -524,7 +500,6 @@
 
         function zoomImage(url) { document.getElementById('zoom-img-target').src = formatDriveLink(url); document.getElementById('modal-zoom').style.display = 'flex'; }
 
-        // FUNGSI RENDER YANG SUDAH DIPERBAIKI (SORTING MATEMATIKA)
         function render() {
             const isPJ = userRole === 'pj', nowMs = new Date().getTime();
             const startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime();
@@ -533,7 +508,6 @@
 
             const isDeadlineDone = (t) => { if(!t.date) return false; return nowMs > new Date(`${t.date}T${t.time || '23:59'}:00`).getTime() + (30 * 60 * 1000); };
 
-            // Fungsi pengubah jam ke hitungan menit untuk akurasi sorting
             const timeToMins = (t) => {
                 if(!t) return 0;
                 let p = t.split(':');
@@ -543,7 +517,6 @@
             const renderGroupedDL = (items, type = 'active') => {
                 if(items.length === 0) return '<p style="text-align:center; opacity:0.3; padding:40px">Kosong</p>';
                 
-                // Sorting Global Deadline (Tanggal lalu Jam pakai hitungan menit)
                 items.sort((a,b) => {
                     let diffDate = new Date(a.date).getTime() - new Date(b.date).getTime();
                     if(diffDate !== 0) return diffDate;
@@ -560,12 +533,11 @@
                     const dObj = new Date(dateStr);
                     htmlContent += `<div class="day-divider"><i class="fa-regular fa-calendar-check"></i> ${DAYS_NAME[dObj.getDay()]}, ${dObj.getDate()} ${MONTHS_NAME[dObj.getMonth()]} ${dObj.getFullYear()}</div>`;
                     
-                    // Sorting per jam untuk deadline di hari yang sama
                     grouped[dateStr].sort((a,b) => timeToMins(a.time||"23:59") - timeToMins(b.time||"23:59")).forEach(t => {
                         let badgeHTML = type === 'done' 
                             ? `<div class="cd-badge cd-done">SELESAI</div>` 
                             : `<div class="cd-badge" id="cd-${t.fid}" data-date="${t.date}" data-time="${t.time || '23:59'}">⏳ Menghitung...</div>`;
-                        
+                    
                         let actionBtns = "", taskLinkBtn = "";
                         
                         if(t.taskLink) {
@@ -598,13 +570,11 @@
             document.getElementById('tab-next').innerHTML = renderGroupedDL(ongoingItems.filter(t => new Date(t.date).getTime() >= nextWeekLimit), 'active');
             document.getElementById('tab-done').innerHTML = renderGroupedDL(doneItems, 'done');
 
-            // --- JADWAL SORTING (URUT HARI -> URUT JAM) ---
             const DAYS_SCH = ["", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
             let schHtml = "", currentSchDay = -1;
             
             localDB.schedules.sort((a, b) => {
                 if (a.day !== b.day) return a.day - b.day;
-                // Menggunakan hitungan menit agar 8:00 lebih dulu dari 10:00
                 return timeToMins(a.time) - timeToMins(b.time);
             }).forEach(s => {
                 if (s.day !== currentSchDay) { 
@@ -615,7 +585,6 @@
             });
             document.getElementById('schedule-view').innerHTML = schHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Tidak ada jadwal</p>';
 
-            // STRUKTUR KELAS
             const getAvatar = (n, i) => (i && i.length > 5) ? formatDriveLink(i) : `https://ui-avatars.com/api/?name=${encodeURIComponent(n)}&background=2563eb&color=fff&bold=true`;
             const makeCard = (s) => `<div class="mhs-card"><img src="${getAvatar(s.name, s.img)}" class="pp-img" onerror="this.src='https://ui-avatars.com/api/?name=${encodeURIComponent(s.name)}&background=2563eb&color=fff'"><h4 style="font-size:0.85rem; margin-bottom:2px">${s.name}</h4><p style="font-size:0.65rem; font-weight:800; color:var(--p)">${s.pos}</p><div class="soc-btns">${s.ig?`<a href="https://instagram.com/${s.ig}" target="_blank" class="soc-icon ig-icon"><i class="fa-brands fa-instagram"></i></a>`:''}${s.wa?`<a href="https://wa.me/${s.wa}" target="_blank" class="soc-icon wa-icon"><i class="fa-brands fa-whatsapp"></i></a>`:''}</div>${isAdminOrDev?`<div style="margin-top:10px"><button onclick="editStruct('${s.fid}')" class="btn-mini" style="background:#f1f5f9">EDIT</button><button onclick="deleteData('structs','${s.fid}')" class="btn-mini" style="background:#fff1f2; color:red">X</button></div>`:''}</div>`;
             
@@ -629,7 +598,6 @@
             if(row3.length) orgHtml += `<div style="border-top:2px dashed #e2e8f0; padding-top:25px"><div style="text-align:center; font-size:0.75rem; font-weight:800; color:#64748b; margin-bottom:15px; letter-spacing:1px">MAHASISWA</div><div class="org-row">${row3.map(makeCard).join('')}</div></div>`;
             document.getElementById('org-content').innerHTML = orgHtml || '<p style="text-align:center; opacity:0.3; padding:40px">Data belum ada</p>';
 
-            // GALERI
             document.getElementById('gallery-content').innerHTML = localDB.gallery.map(g => `
                 <div style="position:relative; background:white; border-radius:15px; box-shadow:0 4px 10px rgba(0,0,0,0.03); border:1px solid #f1f5f9;">
                     <img src="${formatDriveLink(g.img)}" onclick="zoomImage('${g.img}')" style="width:100%; aspect-ratio:1; object-fit:cover; border-top-left-radius:15px; border-top-right-radius:15px; background:#f1f5f9; cursor:zoom-in" onerror="this.src='https://via.placeholder.com/300?text=Error'">
@@ -715,9 +683,14 @@
                 if(userRole==='pj') { document.getElementById('in-dead-matkul').value = userMatkul; document.getElementById('in-dead-matkul').readOnly = true; autoFillTime(); } else { document.getElementById('in-dead-matkul').value = ""; document.getElementById('in-dead-matkul').readOnly = false; }
                 addMoreGroupSelect(); toggleView('form-deadline');
             } else if(t==='group') {
-                document.getElementById('edit-grp-id').value = ""; document.getElementById('in-grp-name').value = ""; document.getElementById('in-grp-title').value = ""; groupMembersTemp = []; renderSelectedMembers(); switchGroupMode('manual');
+                document.getElementById('edit-grp-id').value = ""; 
+                switchGroupMode('manual');
                 if(userRole==='pj') { document.getElementById('in-grp-matkul').value = userMatkul; document.getElementById('in-grp-auto-matkul').value = userMatkul; }
-                if (typeof cancelAcakKelompok === 'function') cancelAcakKelompok(); // Mencegah form acak ngestuck jika dibuka tutup
+                
+                document.getElementById('manual-groups-container').innerHTML = "";
+                addMoreManualGroupRow();
+
+                if (typeof cancelAcakKelompok === 'function') cancelAcakKelompok(); 
                 toggleView('form-group');
             } else if(t==='gallery') {
                 document.getElementById('edit-gal-id').value = ""; document.getElementById('in-gal-link').value = ""; document.getElementById('in-gal-caption').value = "";
@@ -727,6 +700,164 @@
                 ['edit-sch-id','edit-str-id'].forEach(id => { if(document.getElementById(id)) document.getElementById(id).value = ""; });
                 toggleView('form-'+t); 
             }
+        }
+
+        function refreshAllManualGroupSelects() {
+            let currentMatkul = document.getElementById('in-grp-matkul').value;
+            let editGroupId = document.getElementById('edit-grp-id').value;
+            
+            let dbTaken = new Set();
+            localDB.groups.forEach(g => {
+                if (g.matkul === currentMatkul && g.fid !== editGroupId && g.members) {
+                    g.members.split(',').forEach(m => dbTaken.add(m.trim()));
+                }
+            });
+
+            let uiTaken = new Set();
+            document.querySelectorAll('#manual-groups-container > div').forEach(row => {
+                if (row._membersList) {
+                    row._membersList.forEach(m => uiTaken.add(m));
+                }
+            });
+
+            let allTaken = new Set([...dbTaken, ...uiTaken]);
+
+            document.querySelectorAll('.manual-mhs-dropdown').forEach(dropdown => {
+                let currentVal = dropdown.value; 
+                let html = '<option value="">-- Pilih Mahasiswa --</option>';
+                
+                localDB.structs.forEach(s => {
+                    if (!allTaken.has(s.name)) {
+                        html += `<option value="${s.name}">${s.name} (${s.pos})</option>`;
+                    }
+                });
+                
+                dropdown.innerHTML = html;
+                if(currentVal && !allTaken.has(currentVal)) {
+                    dropdown.value = currentVal;
+                } else {
+                    dropdown.value = "";
+                }
+            });
+        }
+
+        function removeManualRow(rowId) {
+            const el = document.getElementById(rowId);
+            if(el) el.remove();
+            refreshAllManualGroupSelects(); 
+        }
+
+        function addMoreManualGroupRow(preName = "", preTitle = "", preMembers = []) {
+            const container = document.getElementById('manual-groups-container');
+            const rowId = 'mg-row-' + Date.now() + Math.random().toString(36).substring(2, 5);
+            
+            const wrap = document.createElement('div');
+            wrap.className = "card-item";
+            wrap.style.cssText = "background:white; border:1px solid #e2e8f0; padding:15px; margin-bottom:12px; position:relative;";
+            wrap.id = rowId;
+
+            wrap.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
+                    <span style="font-size:0.8rem; font-weight:800; color:var(--dark);">Form Kelompok</span>
+                    <button type="button" class="btn-mini" style="background:#fff1f2; color:red; margin:0;" onclick="removeManualRow('${rowId}')">Hapus Baris</button>
+                </div>
+                <div class="form-grid" style="margin-bottom:10px;">
+                    <input type="text" class="input-modern manual-g-name" placeholder="Nama Kelompok (Cth: Kelompok 1)" value="${preName}">
+                    <input type="text" class="input-modern manual-g-title" placeholder="Judul Materi / Topik" value="${preTitle}">
+                </div>
+                <div style="background:#f8fafc; padding:12px; border-radius:12px; border:1px solid #e2e8f0;">
+                    <label style="font-size:0.7rem; font-weight:800; color:#64748b; display:block; margin-bottom:5px;">PILIH ANGGOTA KELOMPOK:</label>
+                    <div class="manual-selected-chips" style="margin-bottom:8px; display:flex; flex-wrap:wrap; gap:4px;"></div>
+                    <div style="display:flex; gap:5px;">
+                        <select class="input-modern manual-mhs-dropdown" style="padding:10px; font-size:0.8rem;">
+                            <option value="">-- Memuat Data --</option>
+                        </select>
+                        <button type="button" class="btn-primary" style="padding:10px 15px; font-size:0.8rem; width:auto;" onclick="addMhsToManualRow('${rowId}')">Tambah</button>
+                    </div>
+                </div>
+            `;
+
+            container.appendChild(wrap);
+            wrap._membersList = preMembers || [];
+            renderManualRowChips(wrap);
+            
+            refreshAllManualGroupSelects();
+        }
+
+        function addMhsToManualRow(rowId) {
+            const rowEl = document.getElementById(rowId);
+            const selectEl = rowEl.querySelector('.manual-mhs-dropdown');
+            const selectedName = selectEl.value;
+
+            if(!selectedName) return alert("Pilih mahasiswa terlebih dahulu!");
+
+            rowEl._membersList.push(selectedName);
+            selectEl.value = "";
+            renderManualRowChips(rowEl);
+            
+            refreshAllManualGroupSelects();
+        }
+
+        function removeMhsFromManualRow(rowId, name) {
+            const rowEl = document.getElementById(rowId);
+            rowEl._membersList = rowEl._membersList.filter(m => m !== name);
+            renderManualRowChips(rowEl);
+            
+            refreshAllManualGroupSelects();
+        }
+
+        function renderManualRowChips(rowEl) {
+            const chipsContainer = rowEl.querySelector('.manual-selected-chips');
+            chipsContainer.innerHTML = rowEl._membersList.map(name => `
+                <span class="member-chip" style="font-size:0.7rem; padding:4px 10px; cursor:pointer;" onclick="removeMhsFromManualRow('${rowEl.id}', '${name}')">
+                    ${name} ✖
+                </span>
+            `).join('') || '<span style="font-size:0.75rem; color:gray; font-style:italic;">Belum ada anggota ditambahkan.</span>';
+        }
+
+        function saveManualGroups() {
+            const matkul = document.getElementById('in-grp-matkul').value;
+            if(!matkul) return alert("Pilih mata kuliah terlebih dahulu!");
+
+            const rows = document.querySelectorAll('#manual-groups-container > div');
+            if(rows.length === 0) return alert("Tambahkan minimal 1 baris kelompok!");
+
+            let successCount = 0;
+            rows.forEach(row => {
+                let gName = row.querySelector('.manual-g-name').value.trim();
+                let gTitle = row.querySelector('.manual-g-title').value.trim();
+                let members = row._membersList || [];
+
+                if(gName && members.length > 0) {
+                    const data = {
+                        matkul: matkul,
+                        groupName: gName,
+                        title: gTitle || "Judul Materi",
+                        members: members.join(', ')
+                    };
+                    dbRef.child('groups').push(data);
+                    successCount++;
+                }
+            });
+
+            if(successCount === 0) return alert("Pastikan nama kelompok diisi dan minimal ada 1 anggota di setiap kelompok yang disimpan!");
+
+            showToast(`${successCount} Kelompok Berhasil Disimpan!`);
+            openForm('group');
+            toggleView('group-list-view');
+        }
+
+        function editGroup(id) { 
+            const g = localDB.groups.find(x => x.fid === id); 
+            document.getElementById('edit-grp-id').value = id; 
+            document.getElementById('in-grp-matkul').value = g.matkul; 
+            switchGroupMode('manual');
+            
+            document.getElementById('manual-groups-container').innerHTML = "";
+            let membersArr = g.members ? g.members.split(',').map(m=>m.trim()).filter(m=>m) : [];
+            addMoreManualGroupRow(g.groupName, g.title, membersArr);
+
+            toggleView('form-group'); 
         }
 
         function autoFillTime() { let m = document.getElementById('in-dead-matkul').value, sch = localDB.schedules.find(s => s.name === m); if(sch && sch.time) document.getElementById('in-dead-time').value = sch.time; document.querySelectorAll('.grp-dynamic-select').forEach(sel => loadGroupsIntoSelect(sel, m)); }
@@ -761,7 +892,6 @@
             document.getElementById('btn-mode-acak').style.color = mode === 'acak' ? 'white' : 'var(--dark)';
         }
 
-        // --- MULAI FITUR ANTI BOSAN (MONTE CARLO) & PREVIEW KELOMPOK ---
         function autoAcakKelompok() {
             let mtk = document.getElementById('in-grp-auto-matkul').value;
             let numGroups = parseInt(document.getElementById('in-grp-auto-num').value);
@@ -770,7 +900,6 @@
             let students = localDB.structs.map(s => s.name);
             if(students.length === 0) return alert("Belum ada data mahasiswa di struktur kelas!");
 
-            // 1. Kumpulkan riwayat pasangan kelompok di matkul lain
             let pastPairs = {}; 
             localDB.groups.forEach(g => {
                 if(g.matkul !== mtk && g.members) { 
@@ -784,7 +913,6 @@
                 }
             });
 
-            // 2. Acak banyak iterasi cari pinalti terendah
             let bestConfig = null;
             let lowestPenalty = Infinity;
 
@@ -798,7 +926,6 @@
                 let currentGroups = Array.from({length: numGroups}, () => []);
                 shuffled.forEach((val, i) => currentGroups[i % numGroups].push(val));
 
-                // Hitung skor kesamaan
                 let penalty = 0;
                 currentGroups.forEach(grp => {
                     for(let i = 0; i < grp.length; i++){
@@ -813,10 +940,9 @@
                     lowestPenalty = penalty;
                     bestConfig = currentGroups;
                 }
-                if(penalty === 0) break; // Optimal dicapai
+                if(penalty === 0) break;
             }
 
-            // 3. Simpan sementara
             tempRandomGroups = bestConfig.map((grp, i) => ({
                 matkul: mtk,
                 groupName: `Kelompok ${i+1}`,
@@ -869,22 +995,6 @@
             document.getElementById('grp-acak-preview').style.display = 'none';
             document.getElementById('grp-acak-setup').style.display = 'block';
         }
-        // --- AKHIR FITUR ANTI BOSAN & PREVIEW KELOMPOK ---
-
-        function searchMhsForGroup() { 
-            const val = document.getElementById('search-mhs').value.toLowerCase(); const resBox = document.getElementById('mhs-search-results'); 
-            const results = localDB.structs.filter(s => s.name.toLowerCase().includes(val) && !groupMembersTemp.includes(s.name)); 
-            if(results.length === 0) resBox.innerHTML = '<div style="padding:15px; font-size:0.8rem; color:gray; text-align:center">Tidak ada mahasiswa</div>';
-            else resBox.innerHTML = results.map(s => `<div class="search-item" onclick="addMhsToGroup('${s.name}')">${s.name} <span style="color:gray; font-size:0.7rem">(${s.pos})</span></div>`).join(''); 
-            resBox.style.display = 'block'; 
-        }
-
-        function addMhsToGroup(name) { if(!groupMembersTemp.includes(name)) groupMembersTemp.push(name); document.getElementById('search-mhs').value = ""; document.getElementById('mhs-search-results').style.display = "none"; renderSelectedMembers(); }
-        function removeMhsFromGroup(name) { groupMembersTemp = groupMembersTemp.filter(n => n !== name); renderSelectedMembers(); }
-        function renderSelectedMembers() { document.getElementById('selected-members').innerHTML = groupMembersTemp.map(n => `<span class="member-chip" onclick="removeMhsFromGroup('${n}')">${n} ✖</span>`).join(''); }
-
-        function saveGroup() { const d = { matkul: document.getElementById('in-grp-matkul').value, groupName: document.getElementById('in-grp-name').value, title: document.getElementById('in-grp-title').value, members: groupMembersTemp.join(', ') }, id = document.getElementById('edit-grp-id').value; if(id) dbRef.child('groups').child(id).update(d); else dbRef.child('groups').push(d); showToast("Berhasil Disimpan!"); openForm('group'); }
-        function editGroup(id) { const g = localDB.groups.find(x => x.fid === id); document.getElementById('edit-grp-id').value = id; document.getElementById('in-grp-matkul').value = g.matkul; document.getElementById('in-grp-name').value = g.groupName; document.getElementById('in-grp-title').value = g.title; groupMembersTemp = g.members ? g.members.split(',').map(m=>m.trim()) : []; renderSelectedMembers(); switchGroupMode('manual'); toggleView('form-group'); }
 
         function saveSchedule() { const d = { name: document.getElementById('in-sch-name').value, lecturer: document.getElementById('in-sch-lect').value, time: document.getElementById('in-sch-time').value, day: parseInt(document.getElementById('in-sch-day').value) }, id = document.getElementById('edit-sch-id').value; if(id) dbRef.child('schedules').child(id).update(d); else dbRef.child('schedules').push(d); showToast("Berhasil Disimpan!"); openForm('schedule'); }
         function editSchedule(id) { const s = localDB.schedules.find(x => x.fid === id); document.getElementById('edit-sch-id').value = id; document.getElementById('in-sch-name').value = s.name; document.getElementById('in-sch-lect').value = s.lecturer; document.getElementById('in-sch-time').value = s.time; document.getElementById('in-sch-day').value = s.day; toggleView('form-schedule'); }
@@ -930,7 +1040,6 @@
             window.open(`https://wa.me/?text=${window.encodeURIComponent(text)}`, '_blank');
         }
 
-        // DEV TOOLS FUNCTIONS
         function saveAnnouncement() {
             const txt = document.getElementById('in-announcement').value;
             dbRef.child('announcement').set({text: txt});
@@ -973,7 +1082,6 @@
         function deleteData(path, id) { if(confirm("Yakin hapus data ini?")) dbRef.child(path).child(id).remove(); }
         function resetCollection(path, name) { if(confirm(`Yakin hapus SEMUA data ${name}?`)) { if(prompt(`Ketik "RESET" untuk lanjut:`) === "RESET") { dbRef.child(path).remove(); showToast(`Data ${name} Dihapus!`); } } }
 
-        // FITUR BARU: AUTO EXTRACT PDF KRS
         async function processKrsPDF(e) {
             const file = e.target.files[0];
             if (!file) return;
@@ -1088,7 +1196,6 @@
             }
         }
 
-        // --- FITUR GENERATE WA AUTO ---
         function openAutoWA() {
             document.getElementById('auto-wa-type').value = "";
             document.getElementById('auto-wa-kelompok-container').style.display = 'none';
@@ -1137,34 +1244,54 @@
                 });
             } 
             else if (type === 'deadline') {
-                text = "*DEADLINE TUGAS*\n\n";
+                text = "*DEADLINE TUGAS & PRESENTASI*\n\n";
                 const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
                 let grouped = {};
                 localDB.deadlines.forEach(d => { if (!grouped[d.date]) grouped[d.date] = []; grouped[d.date].push(d); });
                 
                 Object.keys(grouped).sort((a,b) => new Date(a) - new Date(b)).forEach(dateStr => {
                     const dObj = new Date(dateStr);
-                    text += `*${DAYS_NAME[dObj.getDay()]}, ${dateStr}*\n`;
+                    text += `📅 *${DAYS_NAME[dObj.getDay()]}, ${dateStr}*\n`;
                     grouped[dateStr].sort((a,b) => (a.time||"23:59").localeCompare(b.time||"23:59")).forEach((d, i) => {
-                        text += `${i+1}. ${d.subject} | ${d.desc || 'Tugas'}\n`;
+                        
+                        let ket = d.desc ? d.desc : "Tugas/Presentasi";
+                        text += `*${i+1}. ${d.subject}* | ${ket}\n`;
+                        
+                        if(d.taskLink) text += `Link: ${d.taskLink}\n`;
+                        
+                        if (d.groupIds && d.groupIds.length > 0) {
+                            d.groupIds.forEach(gid => {
+                                const g = localDB.groups.find(x => x.fid === gid);
+                                if (g) {
+                                    text += `  *${g.groupName}*\n`;
+                                    if (g.members) {
+                                        let membersList = g.members.split(',').map(m => m.trim()).filter(m => m !== '').join(', ');
+                                        text += `  (${membersList})\n`;
+                                    }
+                                }
+                            });
+                        }
+                        text += "\n";
                     });
-                    text += "\n";
                 });
             } 
             else if (type === 'kelompok') {
                 const matkul = document.getElementById('auto-wa-matkul').value;
                 if (!matkul) return alert("Pilih mata kuliah terlebih dahulu!");
                 
-                text = `*KELOMPOK ${matkul.toUpperCase()}*\n\n`;
+                text = `*PEMBAGIAN KELOMPOK ${matkul.toUpperCase()}*\n\n`;
                 const groups = localDB.groups.filter(g => g.matkul === matkul);
-                groups.forEach((g) => {
-                    text += `*${g.groupName}* - ${g.title}\n`;
+                
+                groups.sort((a,b) => a.groupName.localeCompare(b.groupName, undefined, {numeric: true})).forEach((g) => {
+                    text += `*${g.groupName}*\n`;
+                    
                     if (g.members) {
+                        text += `Anggota:\n`;
                         g.members.split(',').filter(m => m.trim() !== '').forEach((m, j) => {
-                            text += `${j+1}. ${m.trim()}\n`;
+                            text += `  ${j+1}. ${m.trim()}\n`;
                         });
                     } else {
-                        text += "- Belum ada anggota\n";
+                        text += `  - Belum ada anggota\n`;
                     }
                     text += "\n";
                 });
@@ -1183,7 +1310,6 @@
             navigator.clipboard.writeText(copyText.value);
             showToast("Teks Tercopy!");
         }
-        // --- END FITUR GENERATE WA AUTO ---
     </script>
 </body>
 </html>
