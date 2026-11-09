@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>COMCAST 2025 | ULTIMATE SYSTEM V7.5.6</title>
+    <title>COMCAST 2025 | ULTIMATE SYSTEM V7.5.7</title>
     
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -34,7 +34,7 @@
         .task-btn { flex: 0 0 auto; padding: 12px 20px; border: none; border-radius: 12px; background: #f1f5f9; color: #64748b; font-weight: 700; font-size: 0.75rem; cursor: pointer; transition: 0.3s; }
         .task-btn.active { background: var(--p); color: white; box-shadow: 0 4px 12px rgba(37,99,235,0.2); }
 
-        .app-container { max-width: 600px; margin: auto; padding: 20px; padding-bottom: 120px; }
+        .app-container { max-width: 900px; margin: auto; padding: 20px; padding-bottom: 120px; }
         .main-view, .tab-content { display: none; animation: fadeIn 0.4s ease; }
         .active { display: block !important; }
         @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
@@ -59,6 +59,19 @@
         .card-item:hover { transform: translateY(-2px); box-shadow: 0 15px 30px rgba(0,0,0,0.06); }
         .card-subject { font-weight: 800; font-size: 1.1rem; color: var(--dark); display: block; margin-bottom: 5px; }
         .card-desc { font-size: 0.85rem; color: #475569; background: #f8fafc; padding: 15px; border-radius: 16px; margin-top: 10px; white-space: pre-line; }
+
+        /* Estetik Grid Layout & Tombol Kelompok */
+        .groups-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; margin-bottom: 20px; }
+        .group-card { background: white; border-radius: 20px; padding: 18px; border: 1px solid #e2e8f0; box-shadow: 0 8px 20px rgba(0,0,0,0.03); position: relative; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.25s ease; }
+        .group-card:hover { transform: translateY(-3px); box-shadow: 0 12px 28px rgba(0,0,0,0.07); }
+        .group-card.done-card { background: #f8fafc; border-color: #cbd5e1; opacity: 0.95; }
+        .stamp-done { position: absolute; top: 15px; right: 15px; border: 2px dashed #22c55e; color: #15803d; font-size: 0.68rem; font-weight: 900; padding: 4px 10px; border-radius: 8px; transform: rotate(8deg); background: #dcfce7; letter-spacing: 0.8px; box-shadow: 0 2px 8px rgba(34, 197, 94, 0.2); text-transform: uppercase; }
+
+        .matkul-pill-btn { padding: 12px 18px; border-radius: 14px; border: 1px solid #e2e8f0; background: white; color: var(--dark); font-weight: 700; font-size: 0.82rem; cursor: pointer; transition: 0.25s ease; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .matkul-pill-btn:hover { border-color: var(--p); color: var(--p); background: #eff6ff; }
+        .matkul-pill-btn.active { background: var(--p); color: white; border-color: var(--p); box-shadow: 0 4px 14px rgba(37,99,235,0.25); }
+        .matkul-count-badge { background: #f1f5f9; color: #64748b; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem; font-weight: 800; }
+        .matkul-pill-btn.active .matkul-count-badge { background: rgba(255,255,255,0.25); color: white; }
 
         .org-row { display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; margin-bottom: 25px; }
         .mhs-card { background: white; border-radius: 20px; padding: 15px; width: 160px; text-align: center; border: 1px solid #e2e8f0; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
@@ -97,10 +110,9 @@
         .gal-caption { background:white; padding:12px; font-size:0.8rem; font-weight:600; color:#475569; border-bottom-left-radius:15px; border-bottom-right-radius:15px; border:1px solid #f1f5f9; border-top:none; box-shadow:0 4px 6px rgba(0,0,0,0.02); }
         .wa-bc-item { background:#f8fafc; padding:15px; border-radius:10px; margin-bottom:10px; border:1px solid #e2e8f0; position:relative; }
 
-        /* Tweak UI Add Member Kelompok Mobile */
         .add-member-wrap { display: flex; flex-direction: column; gap: 8px; }
         @media (min-width: 768px) { 
-            .app-container { max-width: 800px; padding: 40px; padding-bottom: 120px; } 
+            .app-container { padding: 40px; padding-bottom: 120px; } 
             .form-grid { grid-template-columns: 1fr 1fr; gap: 15px; } 
             .mhs-card { width: 180px; } 
             .add-member-wrap { flex-direction: row; }
@@ -213,11 +225,15 @@
         
         <section id="structure-view" class="main-view"><div id="org-content"></div></section>
         
+        <!-- Menu Daftar Kelompok Terbaru (Pilihan Tombol Matkul) -->
         <section id="group-list-view" class="main-view">
-            <div style="position:relative;">
-                <input type="text" id="filter-group-matkul" class="input-modern" placeholder="🔍 Cari / Pilih Mata Kuliah..." style="margin-bottom:15px" oninput="filterMatkulSearch(this.value, 'group')" onfocus="filterMatkulSearch(this.value, 'group')" autocomplete="off">
-                <div id="filter-matkul-results" class="search-results" style="display:none;"></div>
-            </div>
+            <h2 style="margin-bottom:6px; color:var(--dark)">📁 Daftar Kelompok</h2>
+            <p style="font-size:0.8rem; color:#64748b; margin-bottom:16px">Pilih mata kuliah di bawah untuk melihat daftar kelompoknya:</p>
+            
+            <!-- Area Tombol-Tombol Matkul -->
+            <div id="group-matkul-buttons" style="display:flex; flex-wrap:wrap; gap:8px; margin-bottom:22px"></div>
+            
+            <!-- Area Tampilan Kartu Kelompok -->
             <div id="all-groups-content"></div>
         </section>
 
@@ -263,7 +279,7 @@
             <button class="btn-primary" onclick="saveDeadline()">SIMPAN & CLEAR</button>
         </section>
 
-        <!-- Form Bagi Kelompok (Multi Manual & Acak Otomatis) -->
+        <!-- Form Bagi Kelompok -->
         <section id="form-group" class="main-view">
             <h2 style="margin-bottom:15px">Pembagian Kelompok</h2>
             
@@ -406,7 +422,7 @@
                 <select id="auto-wa-type" class="input-modern form-grid-full" onchange="handleAutoWAChange()">
                     <option value="">-- Pilih Data yang Ingin di-Generate --</option>
                     <option value="jadwal">Jadwal Kuliah</option>
-                    <option value="deadline">Deadline Tugas & Presentasi</option>
+                    <option value="deadline">Deadline Tugas & Presentasi (Minggu Ini & Depan)</option>
                     <option value="kelompok">Pembagian Kelompok</option>
                 </select>
                 <div id="auto-wa-kelompok-container" class="form-grid-full" style="display:none;">
@@ -443,6 +459,7 @@
         let localDB = { deadlines: [], schedules: [], structs: [], gallery: [], pjs: {}, groups: [], announcement: null };
         let userRole = localStorage.getItem('userRole') || 'guest';
         let userMatkul = localStorage.getItem('userMatkul') || '';
+        let selectedGroupMatkul = ""; // State matkul kelompok yang aktif dipilih
         let tempRandomGroups = []; 
         let isAdminOrDev = userRole === 'admin' || userRole === 'dev';
 
@@ -457,7 +474,7 @@
             localDB.announcement = d.announcement || null;
             
             checkAnnouncement();
-            render(); updateDropdowns(); filterGroups(); renderPJList(); checkAccess();
+            render(); updateDropdowns(); renderGroupMatkulButtons(); renderPJList(); checkAccess();
         });
 
         function showToast(msg) { const x = document.getElementById("toast"); x.innerText = msg; x.className = "show"; setTimeout(() => { x.className = x.className.replace("show", ""); }, 3000); }
@@ -483,7 +500,6 @@
         }
 
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('#filter-group-matkul') && !e.target.closest('#filter-matkul-results')) { const r = document.getElementById('filter-matkul-results'); if (r) r.style.display = 'none'; }
             if (!e.target.closest('#in-dead-matkul') && !e.target.closest('#dead-matkul-results')) { const r = document.getElementById('dead-matkul-results'); if (r) r.style.display = 'none'; }
         });
 
@@ -509,13 +525,17 @@
 
         function zoomImage(url) { document.getElementById('zoom-img-target').src = formatDriveLink(url); document.getElementById('modal-zoom').style.display = 'flex'; }
 
+        function isDeadlineDone(t) {
+            if(!t.date) return false;
+            const nowMs = new Date().getTime();
+            return nowMs > new Date(`${t.date}T${t.time || '23:59'}:00`).getTime() + (30 * 60 * 1000);
+        }
+
         function render() {
             const isPJ = userRole === 'pj', nowMs = new Date().getTime();
             const startToday = new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()).getTime();
             const nextWeekLimit = startToday + (7 * 24 * 60 * 60 * 1000);
             const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"], MONTHS_NAME = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
-
-            const isDeadlineDone = (t) => { if(!t.date) return false; return nowMs > new Date(`${t.date}T${t.time || '23:59'}:00`).getTime() + (30 * 60 * 1000); };
 
             const timeToMins = (t) => {
                 if(!t) return 0;
@@ -664,7 +684,7 @@
 
         function filterMatkulSearch(val, type) {
             val = val.toLowerCase();
-            let resBox = document.getElementById(type === 'group' ? 'filter-matkul-results' : 'dead-matkul-results');
+            let resBox = document.getElementById('dead-matkul-results');
             let uniqueMatkuls = [...new Set(localDB.schedules.map(s => s.name))];
             let results = uniqueMatkuls.filter(name => name.toLowerCase().includes(val));
             if(results.length === 0) resBox.innerHTML = '<div style="padding:15px; font-size:0.8rem; color:gray; text-align:center">Tidak ada mata kuliah</div>';
@@ -673,17 +693,134 @@
         }
 
         function selectMatkul(name, type) {
-            if(type === 'group') { document.getElementById('filter-group-matkul').value = name; document.getElementById('filter-matkul-results').style.display = 'none'; filterGroups(); } 
-            else { document.getElementById('in-dead-matkul').value = name; document.getElementById('dead-matkul-results').style.display = 'none'; autoFillTime(); }
+            document.getElementById('in-dead-matkul').value = name; 
+            document.getElementById('dead-matkul-results').style.display = 'none'; 
+            autoFillTime();
         }
 
-        function filterGroups() {
-            const v = document.getElementById('filter-group-matkul') ? document.getElementById('filter-group-matkul').value : "";
-            let grps = v ? localDB.groups.filter(g => g.matkul === v) : localDB.groups;
-            document.getElementById('all-groups-content').innerHTML = grps.map(g => {
-                let membersList = g.members ? g.members.split(',').filter(m=>m.trim()!=='').map((m, i) => `${i+1}. ${m.trim()}`).join('<br>') : '-';
-                return `<div class="card-item"><span class="card-subject" style="color:var(--p)">${g.matkul}</span><h3 style="margin-top:5px">${g.groupName}</h3><p style="font-size:0.85rem; font-weight:800; margin-bottom:5px">${g.title}</p><div style="font-size:0.8rem; color:#64748b; background:#f8fafc; padding:10px; border-radius:10px; margin-top:10px; line-height:1.6"><b>Anggota:</b><br>${membersList}</div>${isAdminOrDev || (userRole === 'pj' && g.matkul === userMatkul) ? `<div style="margin-top:10px; padding-top:10px; border-top:1px solid #f1f5f9"><button class="btn-mini" style="background:#f1f5f9" onclick="editGroup('${g.fid}')">EDIT</button><button onclick="deleteData('groups', '${g.fid}')" class="btn-mini" style="background:#fff1f2; color:red">HAPUS</button></div>` : ''}</div>`;
-            }).join('') || '<p style="text-align:center; opacity:0.5; margin-top:20px">Data kelompok belum ada</p>';
+        /* FITUR BARU: Render Tombol Matkul yang Sudah Punya Kelompok */
+        function renderGroupMatkulButtons() {
+            const btnContainer = document.getElementById('group-matkul-buttons');
+            if (!btnContainer) return;
+
+            // HANYA ambil matkul yang sudah ada kelompoknya di database
+            const availableMatkuls = [...new Set(localDB.groups.map(g => g.matkul))].filter(Boolean);
+
+            if (availableMatkuls.length === 0) {
+                btnContainer.innerHTML = '<p style="font-size:0.8rem; color:#94a3b8; font-style:italic">Belum ada pembagian kelompok yang di-input ke sistem.</p>';
+                selectedGroupMatkul = "";
+                renderGroupContent();
+                return;
+            }
+
+            // Jika matkul yang dipilih sebelumnya sudah dihapus dari DB, reset pilihan
+            if (!availableMatkuls.includes(selectedGroupMatkul)) {
+                selectedGroupMatkul = "";
+            }
+
+            let html = availableMatkuls.map(m => {
+                let isActive = m === selectedGroupMatkul;
+                let count = localDB.groups.filter(g => g.matkul === m).length;
+                let cleanMatkulName = m.replace(/'/g, "\\'");
+                
+                return `
+                    <button type="button" class="matkul-pill-btn ${isActive ? 'active' : ''}" onclick="selectGroupMatkul('${cleanMatkulName}')">
+                        <span>📚 ${m}</span>
+                        <span class="matkul-count-badge">${count} Kelompok</span>
+                    </button>
+                `;
+            }).join('');
+
+            btnContainer.innerHTML = html;
+            renderGroupContent();
+        }
+
+        function selectGroupMatkul(matkul) {
+            if (selectedGroupMatkul === matkul) {
+                selectedGroupMatkul = ""; // Unselect jika diklik ulang
+            } else {
+                selectedGroupMatkul = matkul;
+            }
+            renderGroupMatkulButtons();
+        }
+
+        /* FITUR BARU: Render Tampilan Kelompok Berdasarkan Matkul Yang Dipilih */
+        function renderGroupContent() {
+            const container = document.getElementById('all-groups-content');
+            if (!container) return;
+
+            // Jika BELUM ada matkul yang dipilih (Sembunyikan dulu kelompoknya)
+            if (!selectedGroupMatkul) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:45px 20px; background:white; border-radius:20px; border:2px dashed #cbd5e1; margin-top:5px;">
+                        <i class="fa-solid fa-hand-pointer" style="font-size:2.8rem; color:var(--p); margin-bottom:12px; opacity:0.8"></i>
+                        <h3 style="font-size:1.05rem; font-weight:800; color:var(--dark); margin-bottom:6px">Silakan Pilih Mata Kuliah</h3>
+                        <p style="font-size:0.82rem; color:#64748b; max-width:320px; margin:auto; line-height:1.5">Klik salah satu tombol mata kuliah di atas untuk menampilkan daftar kelompoknya.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Ambil kelompok khusus untuk matkul yang dipilih
+            let grps = localDB.groups.filter(g => g.matkul === selectedGroupMatkul);
+
+            if (grps.length === 0) {
+                container.innerHTML = '<p style="text-align:center; opacity:0.5; margin-top:30px; font-weight:700">Data kelompok belum ada untuk mata kuliah ini</p>';
+                return;
+            }
+
+            const isGroupPresented = (groupFid) => {
+                return localDB.deadlines.some(d => {
+                    if (!d.groupIds || !d.groupIds.includes(groupFid)) return false;
+                    return isDeadlineDone(d);
+                });
+            };
+
+            let activeGroups = grps.filter(g => !isGroupPresented(g.fid));
+            let completedGroups = grps.filter(g => isGroupPresented(g.fid));
+
+            const renderCard = (g, isDone) => {
+                let membersList = g.members ? g.members.split(',').filter(m => m.trim() !== '').map((m, i) => `${i + 1}. ${m.trim()}`).join('<br>') : '-';
+                let actionBtns = (isAdminOrDev || (userRole === 'pj' && g.matkul === userMatkul)) 
+                    ? `<div style="margin-top:12px; padding-top:10px; border-top:1px solid #f1f5f9; display:flex; gap:5px">
+                        <button class="btn-mini" style="background:#f1f5f9; flex:1" onclick="editGroup('${g.fid}')">EDIT</button>
+                        <button onclick="deleteData('groups', '${g.fid}')" class="btn-mini" style="background:#fff1f2; color:red; flex:1">HAPUS</button>
+                       </div>` 
+                    : '';
+
+                let stampHtml = isDone ? `<div class="stamp-done"><i class="fa-solid fa-circle-check"></i> SELESAI</div>` : '';
+
+                return `
+                    <div class="group-card ${isDone ? 'done-card' : ''}">
+                        ${stampHtml}
+                        <div>
+                            <span class="card-subject" style="color:var(--p); font-size:0.75rem; font-weight:800; text-transform:uppercase">${g.matkul}</span>
+                            <h3 style="margin-top:4px; font-size:1.1rem; color:var(--dark); padding-right:${isDone ? '75px' : '0'}">${g.groupName}</h3>
+                            <p style="font-size:0.85rem; font-weight:700; color:#475569; margin-top:2px; margin-bottom:10px">${g.title}</p>
+                            <div style="font-size:0.8rem; color:#64748b; background:${isDone ? '#ffffff' : '#f8fafc'}; padding:12px; border-radius:12px; border:1px solid #e2e8f0; line-height:1.6">
+                                <b style="color:var(--dark)">Anggota:</b><br>${membersList}
+                            </div>
+                        </div>
+                        ${actionBtns}
+                    </div>
+                `;
+            };
+
+            let html = '';
+
+            if (activeGroups.length > 0) {
+                if (completedGroups.length > 0) {
+                    html += `<div style="font-weight:800; font-size:0.85rem; color:var(--p); margin-bottom:12px; display:flex; align-items:center; gap:8px"><i class="fa-solid fa-users"></i> KELOMPOK AKTIF / BELUM PRESENTASI (${activeGroups.length})</div>`;
+                }
+                html += `<div class="groups-grid">${activeGroups.map(g => renderCard(g, false)).join('')}</div>`;
+            }
+
+            if (completedGroups.length > 0) {
+                html += `<div style="font-weight:800; font-size:0.85rem; color:#16a34a; margin-top:25px; margin-bottom:12px; display:flex; align-items:center; gap:8px"><i class="fa-solid fa-circle-check"></i> KELOMPOK SUDAH PRESENTASI (${completedGroups.length})</div>`;
+                html += `<div class="groups-grid">${completedGroups.map(g => renderCard(g, true)).join('')}</div>`;
+            }
+
+            container.innerHTML = html;
         }
 
         function openForm(t) { 
@@ -759,7 +896,6 @@
         function addMoreManualGroupRow(preName = "", preTitle = "", preMembers = []) {
             const container = document.getElementById('manual-groups-container');
             
-            // Logic Auto-Increment Nama Kelompok
             if (!preName) {
                 const rows = container.querySelectorAll('.manual-g-name');
                 if (rows.length > 0) {
@@ -873,6 +1009,7 @@
             if(successCount === 0) return alert("Pastikan nama kelompok diisi dan minimal ada 1 anggota di setiap kelompok yang disimpan!");
 
             showToast(`${successCount} Kelompok Berhasil Disimpan!`);
+            selectedGroupMatkul = matkul; // Langsung tampilkan matkul yang baru disimpan
             openForm('group');
             toggleView('group-list-view');
         }
@@ -1010,12 +1147,15 @@
         }
 
         function saveAcakKelompok() {
+            let selectedMtk = "";
             tempRandomGroups.forEach((g, i) => {
                 let titleInput = document.getElementById(`preview-title-${i}`).value;
                 g.title = titleInput || "Judul Materi (Edit Disini)";
+                selectedMtk = g.matkul;
                 dbRef.child('groups').push(g);
             });
             showToast(`${tempRandomGroups.length} Kelompok Berhasil Disimpan!`);
+            selectedGroupMatkul = selectedMtk; // Auto buka matkul ini
             cancelAcakKelompok();
             toggleView('group-list-view');
         }
@@ -1276,34 +1416,40 @@
             else if (type === 'deadline') {
                 text = "*DEADLINE TUGAS & PRESENTASI*\n\n";
                 const DAYS_NAME = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
-                let grouped = {};
-                localDB.deadlines.forEach(d => { if (!grouped[d.date]) grouped[d.date] = []; grouped[d.date].push(d); });
                 
-                Object.keys(grouped).sort((a,b) => new Date(a) - new Date(b)).forEach(dateStr => {
-                    const dObj = new Date(dateStr);
-                    text += `📅 *${DAYS_NAME[dObj.getDay()]}, ${dateStr}*\n`;
-                    grouped[dateStr].sort((a,b) => (a.time||"23:59").localeCompare(b.time||"23:59")).forEach((d, i) => {
-                        
-                        let ket = d.desc ? d.desc : "Tugas/Presentasi";
-                        text += `*${i+1}. ${d.subject}* | ${ket}\n`;
-                        
-                        if(d.taskLink) text += `Link: ${d.taskLink}\n`;
-                        
-                        if (d.groupIds && d.groupIds.length > 0) {
-                            d.groupIds.forEach(gid => {
-                                const g = localDB.groups.find(x => x.fid === gid);
-                                if (g) {
-                                    text += `  *${g.groupName}*\n`;
-                                    if (g.members) {
-                                        let membersList = g.members.split(',').map(m => m.trim()).filter(m => m !== '').join(', ');
-                                        text += `  (${membersList})\n`;
+                let activeDeadlines = localDB.deadlines.filter(d => !isDeadlineDone(d));
+                
+                if (activeDeadlines.length === 0) {
+                    text += "_Tidak ada deadline aktif untuk minggu ini & minggu depan._";
+                } else {
+                    let grouped = {};
+                    activeDeadlines.forEach(d => { if (!grouped[d.date]) grouped[d.date] = []; grouped[d.date].push(d); });
+                    
+                    Object.keys(grouped).sort((a,b) => new Date(a) - new Date(b)).forEach(dateStr => {
+                        const dObj = new Date(dateStr);
+                        text += `📅 *${DAYS_NAME[dObj.getDay()]}, ${dateStr}*\n`;
+                        grouped[dateStr].sort((a,b) => (a.time||"23:59").localeCompare(b.time||"23:59")).forEach((d, i) => {
+                            let ket = d.desc ? d.desc : "Tugas/Presentasi";
+                            text += `*${i+1}. ${d.subject}* | ${ket}\n`;
+                            
+                            if(d.taskLink) text += `Link: ${d.taskLink}\n`;
+                            
+                            if (d.groupIds && d.groupIds.length > 0) {
+                                d.groupIds.forEach(gid => {
+                                    const g = localDB.groups.find(x => x.fid === gid);
+                                    if (g) {
+                                        text += `  *${g.groupName}*\n`;
+                                        if (g.members) {
+                                            let membersList = g.members.split(',').map(m => m.trim()).filter(m => m !== '').join(', ');
+                                            text += `  (${membersList})\n`;
+                                        }
                                     }
-                                }
-                            });
-                        }
-                        text += "\n";
+                                });
+                            }
+                            text += "\n";
+                        });
                     });
-                });
+                }
             } 
             else if (type === 'kelompok') {
                 const matkul = document.getElementById('auto-wa-matkul').value;
